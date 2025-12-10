@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>도서추천</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+
+</head>
+<body>
+<div th:fragment="content">
+    <main class="main-content">
+        <h2>도서추천</h2>
+
+        <!-- 서버가 없으면 기본값 STUEDNT로 동작 -->
+        <script>
+            // 서버에서 주입 시 아래 값을 교체하세요.
+            // window.LOGIN_USER_ID = /*[[${loginUser?.userId}]]*/ 'guest';
+            // window.LOGIN_ROLE    = /*[[${loginUser?.role}]]*/ 'STUDENT';
+            window.LOGIN_USER_ID = window.LOGIN_USER_ID ?? 'guest';
+            window.LOGIN_ROLE = window.LOGIN_ROLE ?? 'STUDENT';
+        </script>
+
+        <!-- 검색바 -->
+        <div class="search-bar">
+            <input id="searchInput" placeholder="검색어(제목/강사)" type="text">
+            <select id="filter">
+                <option value="">전체</option>
+                <option value="title">제목</option>
+                <option value="instructor">강사</option>
+            </select>
+            <button id="searchBtn">검색</button>
+        </div>
+
+        <div class="card-grid" id="cardGrid"></div>
+        <div class="pagination" id="pagination"></div>
+
+        <!-- 강사만 노출 -->
+        <div class="action-buttons" id="teacherActions" style="display:none">
+            <button id="registerBtn">등록</button>
+            <button id="editBtn">수정</button>
+            <button id="deleteBtn">삭제</button>
+        </div>
+    </main>
+
+    <!-- 등록/수정 모달 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-card">
+            <button aria-label="닫기" class="modal-close" id="modalClose">×</button>
+            <h3 class="modal-title">도서 등록/수정</h3>
+            <form class="form-grid" id="bookForm" onsubmit="return false;">
+                <label>강사 이름
+                    <input id="instructorInput" placeholder="강사 이름" type="text">
+                </label>
+                <label>책 제목
+                    <input id="titleInput" placeholder="책 제목" type="text">
+                </label>
+                <label>소개글
+                    <textarea id="descInput" placeholder="소개글" rows="4"></textarea>
+                </label>
+                <label>이미지(선택)
+                    <input accept="image/*" id="imgInput" type="file">
+                </label>
+            </form>
+            <div class="actions" style="justify-content:flex-end">
+                <button class="btn-primary" id="saveBtn" type="button">저장</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 내 도서 수정 선택 -->
+    <div class="modal-overlay" id="myEditOverlay">
+        <div class="modal-card">
+            <button aria-label="닫기" class="modal-close" id="myEditClose">×</button>
+            <h3 class="modal-title">내 도서 수정</h3>
+            <div class="vcard-list" id="myEditList"></div>
+        </div>
+    </div>
+
+    <!-- 도서 삭제 -->
+    <div class="modal-overlay" id="deleteOverlay">
+        <div class="modal-card">
+            <button aria-label="닫기" class="modal-close" id="deleteClose">×</button>
+            <h3 class="modal-title">도서 삭제</h3>
+            <div class="vcard-list" id="deleteList" style="max-height:50vh;overflow:auto;"></div>
+            <div class="actions" style="justify-content:flex-end">
+                <button class="btn-danger" id="deleteConfirmBtn" type="button">선택 삭제</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 같은 폴더에 둔 JS 파일을 로드 -->
+<script src="bookRecommendation.js"></script>
+</body>
+</html>

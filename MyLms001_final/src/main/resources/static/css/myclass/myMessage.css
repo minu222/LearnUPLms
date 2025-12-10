@@ -1,0 +1,567 @@
+/* =========================
+   공통: 색상/토큰
+========================= */
+:root {
+    --brand: #ffb400;
+    --brand2: #ffd36a;
+    --text: #222;
+    --muted: #667085;
+    --border: #e9ecef;
+    --bg: #f7f7fb;
+    --card: #fff;
+    --danger: #b40000;
+    --danger-soft: #ffd1d1;
+}
+
+/* =========================
+   공통 레이아웃 및 메인 콘텐츠 (myInfo.css 규격과 동일)
+========================= */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.main-content {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+.mesesage-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.main-content img, .main-content video, .main-content canvas {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.board-container {
+    width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+/* 테이블(아이디/클래스 둘 다 대응) */
+#messageTable, .message-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+}
+
+#messageTable th, #messageTable td,
+.message-table th, .message-table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.main-content h2 {
+    font-size: 26px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--brand);
+    padding-bottom: 10px;
+}
+
+.main-content img {
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.main-content p {
+    font-size: 15px;
+    color: #444;
+    line-height: 1.6;
+}
+
+/* =========================
+   헤더 스타일 (공통)
+========================= */
+.header {
+    background: linear-gradient(135deg, #ff8c00 0%, var(--brand) 100%);
+    color: #fff;
+    padding: 30px 15px;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+.header p {
+    opacity: 0.9;
+    font-size: 14px;
+}
+
+/* =========================
+   콘텐츠 여백 (공통)
+========================= */
+.content {
+    padding: 30px 15px;
+}
+
+/* =========================
+   버튼 톤 & 그룹 (공통)
+========================= */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 35px;
+    padding-top: 22px;
+    border-top: 1px solid #e9ecef;
+}
+
+.btn {
+    padding: 14px 28px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 110px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #ff8c00 0%, var(--brand) 100%);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background: #545b62;
+    transform: translateY(-2px);
+}
+
+/* =========================
+   반응형 (공통)
+========================= */
+@media (max-width: 768px) {
+    .content {
+        padding: 25px 15px;
+    }
+
+    .button-group {
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+
+/* =========================
+   메시지 페이지 전용: 상단 헤더/탭/검색
+========================= */
+.board-header, .gmail-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    flex-wrap: wrap;
+}
+
+/* 페이지 타이틀 영역 */
+.board-header {
+    background: linear-gradient(90deg, var(--brand), var(--brand2));
+    border: 1px solid rgba(0, 0, 0, .04);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin: 12px 0 8px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .06);
+}
+
+.board-title {
+    color: var(--text);
+    font-weight: 900;
+    letter-spacing: .2px;
+}
+
+/* 검색박스 */
+.gmail-topbar {
+    padding: 10px 4px;
+}
+
+.gmail-topbar .search-container {
+    margin: 0;
+    gap: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.gmail-topbar .search-container input[type="text"],
+.gmail-topbar .search-container select {
+    border: 1px solid #cfe9e3;
+    border-radius: 999px;
+    padding: 9px 14px;
+}
+
+/* =========================
+   탭 버튼 (항상 보임, 주황 테마)
+========================= */
+.tab-container {
+    display: flex;
+    gap: 6px;
+}
+
+.tab-btn {
+    padding: 7px 12px;
+    background: #fff;
+    border: 1px solid var(--brand);
+    border-radius: 10px;
+    cursor: pointer;
+    color: #333;
+    font-weight: 700;
+    transition: transform .15s ease, box-shadow .15s ease, filter .15s ease, background .2s, border-color .2s, color .2s;
+}
+
+.tab-btn:hover {
+    background: #fff6dd;
+}
+
+.tab-btn.active {
+    background: var(--brand);
+    color: #222;
+    border-color: var(--brand);
+}
+
+/* =========================
+   목록 테이블
+========================= */
+#messageTable thead th, .message-table thead th {
+    text-align: left;
+    font-size: 13px;
+    color: #5f6b7a;
+    background: #fafafa;
+    border-bottom: 1px solid var(--border);
+    padding: 10px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+#messageTable tbody td, .message-table tbody td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+    word-break: break-word;
+}
+
+#messageTable tbody tr:hover, .message-table tbody tr:hover {
+    background: #fffef6;
+}
+
+/* 반응형 컬럼 줄이기 (index 기준) */
+@media (max-width: 960px) {
+    #messageTable thead th:nth-child(4),
+    #messageTable tbody td:nth-child(4) {
+        display: none;
+    }
+
+    /* 받는사람 숨김 */
+}
+
+@media (max-width: 680px) {
+    #messageTable thead th:nth-child(3),
+    #messageTable tbody td:nth-child(3) {
+        display: none;
+    }
+
+    /* 보낸사람 숨김 */
+}
+
+/* 제목 링크 */
+.title-link {
+    all: unset;
+    cursor: pointer;
+    color: #0a58ca;
+    display: inline-block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.title-link:hover {
+    text-decoration: underline;
+}
+
+/* 사람 셀 */
+.person .nick {
+    font-weight: 700;
+}
+
+.person .meta {
+    font-size: 12px;
+    color: #7a8794;
+}
+
+/* =========================
+   목록 내 동작 버튼(읽기/삭제 등)
+   - 항상 보임, 주황 테마 통일
+========================= */
+.message-table .msg-btn-read, #messageTable .msg-btn-read,
+.message-table .msg-btn-delete, #messageTable .msg-btn-delete,
+.mesesage-buttons button,
+.gmail-topbar button,
+.msg-btn {
+    opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+    text-indent: 0 !important;
+    width: auto !important;
+    overflow: visible !important;
+    white-space: nowrap !important;
+
+    background: var(--brand);
+    border: 1px solid var(--brand);
+    color: #222;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    padding: 9px 12px;
+    margin-right: 6px; /* 테이블 버튼 간격 유지 */
+}
+
+.message-table .msg-btn-read:hover, #messageTable .msg-btn-read:hover,
+.message-table .msg-btn-delete:hover, #messageTable .msg-btn-delete:hover,
+.mesesage-buttons button:hover,
+.gmail-topbar button:hover,
+.msg-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 140, 0, .25);
+    filter: brightness(0.98);
+}
+
+.message-table .msg-btn-read[disabled], #messageTable .msg-btn-read[disabled],
+.message-table .msg-btn-delete[disabled], #messageTable .msg-btn-delete[disabled],
+.msg-btn[disabled] {
+    opacity: .55 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+}
+
+/* =========================
+   테이블 모서리 라운드 느낌
+========================= */
+#messageTable thead tr th:first-child, .message-table thead tr th:first-child {
+    border-top-left-radius: 12px;
+}
+
+#messageTable thead tr th:last-child, .message-table thead tr th:last-child {
+    border-top-right-radius: 12px;
+}
+
+#messageTable tbody tr:last-child td:first-child, .message-table tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 12px;
+}
+
+#messageTable tbody tr:last-child td:last-child, .message-table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 12px;
+}
+
+/* 로딩/메타 행 */
+#messageTable .meta-row td, .message-table .meta-row td {
+    padding: 16px;
+    color: #666;
+    text-align: center;
+}
+
+/* =========================
+   모달(공통) – 작성 모달/상세 모달 기본 틀
+========================= */
+.hidden {
+    display: none !important;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.modal-panel {
+    width: 560px;
+    max-width: 92vw;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
+    overflow: hidden;
+}
+
+.modal-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    background: #fff;
+}
+
+.modal-body {
+    padding: 16px;
+    display: grid;
+    gap: 12px;
+}
+
+.modal-body label {
+    display: grid;
+    gap: 6px;
+    font-size: 14px;
+}
+
+.modal-body input, .modal-body textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 10px 16px;
+    border-top: 1px solid #eee;
+}
+
+/* =========================
+   상세 모달 (myMessage.js의 openDetailModal과 매칭)
+   - X 버튼 없음, 닫기 버튼은 하단 sticky로 항상 보임
+========================= */
+.msg-card {
+    width: 760px;
+    max-width: 92vw;
+    max-height: 88vh;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, .25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: inherit;
+}
+
+.msg-hd {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 18px;
+    color: #222;
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--brand), var(--brand2));
+    border-bottom: 1px solid rgba(0, 0, 0, .06);
+}
+
+.msg-title {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.msg-content {
+    flex: 1;
+    overflow: auto;
+    padding: 16px 18px;
+}
+
+.msg-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.pill {
+    background: #fff7e6;
+    border: 1px solid #ffe0a3;
+    color: #6b4b00;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+}
+
+.msg-bd {
+    white-space: pre-wrap;
+    line-height: 1.7;
+    color: #222;
+}
+
+/* 하단 푸터(닫기 버튼 고정) */
+.msg-ft {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    padding: 12px 16px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    align-items: center;
+    background: linear-gradient(to top, #ffffff 92%, rgba(255, 255, 255, 0));
+    border-top: 1px solid #f1f1f1;
+}
+
+.msg-btn {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--brand);
+    background: var(--brand);
+    color: #222;
+    cursor: pointer;
+    font-weight: 700;
+    transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+
+.msg-btn:hover {
+    filter: brightness(0.98);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 140, 0, .25);
+}
+
+.msg-btn.primary {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: #222;
+}
+
+.msg-btn[disabled] {
+    opacity: .55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    filter: none;
+}

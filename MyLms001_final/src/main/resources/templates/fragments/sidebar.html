@@ -1,0 +1,100 @@
+<!-- templates/fragments/sidebar.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sidebar</title>
+</head>
+<body>
+<!-- src/main/resources/templates/fragments/sidebar.html -->
+<div class="sidebar-content"
+     th:fragment="sidebar(activeCategory, _ignoredUserRole, showSidebar)"
+     th:if="${#bools.isTrue(showSidebar)}"
+     th:with="
+        rawRole = ${ session.loginUser != null ? session.loginUser.role
+                     : (session.userRole != null ? session.userRole : 'guest') },
+        role    = ${ #strings.toLowerCase(
+                        #strings.trim(
+                          #strings.replace(rawRole, 'ROLE_', '')
+                        )
+                    ) }">
+
+    <!-- ===== 교육과정 ===== -->
+    <div class="sidebar-section" th:if="${activeCategory} == 'course'">
+        <h2>교육과정</h2>
+        <br>
+        <ul>
+            <h4>교육강의</h4>
+            <li><a th:href="@{/course/lecture}">강의목록</a></li>
+        </ul>
+        <ul>
+            <h4>과정소개</h4>
+            <li><a th:href="@{/course/introduction/science}">이과 소개</a></li>
+            <li><a th:href="@{/course/introduction/liberal}">문과 소개</a></li>
+            <li><a th:href="@{/course/introduction/arts}">예체능 소개</a></li>
+        </ul>
+    </div>
+
+    <!-- ===== 정보센터 ===== -->
+    <div class="sidebar-section" th:if="${activeCategory} == 'info'">
+        <h2>정보센터</h2>
+        <br>
+        <ul>
+            <li><a th:href="@{/info/teacher}">강사소개</a></li>
+            <li><a th:href="@{/info/books}">도서추천</a></li>
+            <li><a th:href="@{/info/exam}">시험일정</a></li>
+            <li><a th:href="@{/info/resources}">자료실</a></li>
+        </ul>
+    </div>
+
+    <!-- ===== 게시판 ===== -->
+    <div class="sidebar-section" th:if="${activeCategory} == 'board'">
+        <h2>게시판</h2>
+        <br>
+        <ul>
+            <li><a th:href="@{/board/notice}">공지사항</a></li>
+            <li><a th:href="@{/board/faq}">FAQ</a></li>
+            <li><a th:href="@{/board/free}">자유게시판</a></li>
+            <li><a th:href="@{/board/qna}">문의게시판</a></li>
+            <li><a th:href="@{/board/courseReview}">강의 후기</a></li>
+            <li><a th:href="@{/board/teacherReview}">강사 후기</a></li>
+        </ul>
+    </div>
+
+    <!-- ===== 나의 강의실 ===== -->
+    <div class="sidebar-section" th:if="${activeCategory} == 'myclass'">
+        <h2>나의 강의실</h2>
+        <br>
+
+        <!-- 비회원 -->
+        <ul th:if="${role} == 'guest'">
+            <li class="guest-message">
+                <span class="icon">🔒</span>
+                <span class="text">로그인 후 이용 가능합니다.</span>
+            </li>
+        </ul>
+
+        <!-- 학생 -->
+        <ul th:if="${role} == 'student'">
+            <li><a th:href="@{/myclass/student/courses}">수강목록</a></li>
+            <li><a th:href="@{/myclass/student/exams}">시험목록</a></li>
+        </ul>
+
+        <!-- 강사(teacher/instructor) -->
+        <ul th:if="${role} == 'teacher' or ${role} == 'instructor'">
+            <li><a th:href="@{/myclass/teacher/classes}">강의실목록</a></li>
+            <li><a th:href="@{/myclass/teacher/register}">강의실등록</a></li>
+        </ul>
+
+        <!-- 공통(로그인 시) -->
+        <ul th:if="${role} != 'guest'">
+            <li><a th:href="@{/myclass/payment}">결재내역</a></li>
+            <li><a th:href="@{/myclass/myBoard}">나의게시판</a></li>
+            <li><a th:href="@{/myclass/myMessage}">이메일/쪽지</a></li>
+            <li><a th:href="@{/myclass/myInfo}">회원정보수정</a></li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

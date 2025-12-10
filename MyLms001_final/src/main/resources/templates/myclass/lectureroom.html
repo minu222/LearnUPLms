@@ -1,0 +1,538 @@
+<!-- src/main/resources/templates/myclass/lectureroom.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>수강목록</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap');
+
+        :root{
+            --accent:#ff9900;   /* 사이트 오렌지 유지 */
+            --accent-2:#e68a00;
+            --bg:#0e0e10;
+            --panel:#111214;
+            --panel-2:#17181b;
+            --line:#232428;
+            --text:#e7e7ea;
+            --muted:#a8a8b2;
+            --green:#22c55e;
+            --blue:#3b82f6;
+            --pink:#ec4899;
+        }
+
+        *{box-sizing:border-box}
+        html,body{height:100%}
+
+        .lr-body{
+            margin:0;
+            font-family:'Noto Sans KR',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+            background:
+                    radial-gradient(1200px 600px at 10% -10%, rgba(255,153,0,.10), transparent 60%),
+                    radial-gradient(900px 600px at 90% 0%, rgba(255,153,0,.06), transparent 60%),
+                    var(--bg);
+            color:var(--text);
+        }
+
+        /* 팝업일 때 화면 가장자리 여백 */
+        .lr-body.is-popup{ padding: 6px 10px 12px; }
+
+        /* 상단 헤더 */
+        .lr-header{
+            max-width: 1280px; margin: 16px auto 8px;
+            display:flex; align-items:center; justify-content:space-between;
+            padding: 8px 4px;
+            transition: padding .2s ease;
+        }
+        /* ✅ 팝업일 때 닫기 버튼과 겹치지 않도록 우측 패딩 확보 */
+        .is-popup .lr-header{ padding-right: 96px; }
+
+        .lr-brand{display:flex; gap:14px; align-items:center;}
+        .lr-logo{display:flex; gap:8px; align-items:center;}
+        .lr-logo-img{width:32px;height:32px;border-radius:8px;object-fit:cover}
+        .lr-logo-text{font-weight:800;color:var(--accent); letter-spacing:.2px}
+        .lr-course-meta{display:grid; gap:2px}
+        .lr-title{font-size:22px; font-weight:800; margin:0}
+        .lr-sub{margin:0; color:var(--muted); font-size:13px}
+        .lr-actions{display:flex; gap:8px}
+        .lr-ghost{
+            background:transparent; color:var(--text); border:1px solid var(--line);
+            padding:8px 12px; border-radius:10px; cursor:pointer;
+        }
+        .lr-ghost:hover{background:#1b1c20}
+
+        /* 메인 그리드 */
+        .lr-shell{
+            max-width:1280px; margin: 0 auto 12px;
+            display:grid; grid-template-columns: 1fr 360px; gap:16px;
+            padding: 0 4px;
+        }
+        .sidebar-collapsed .lr-shell{ grid-template-columns: 1fr 0px; }
+        .sidebar-collapsed .lr-sidebar{ display:none; }
+
+        /* 플레이어 */
+        .lr-player-wrap{
+            background:var(--panel);
+            border:1px solid var(--line);
+            border-radius:14px;
+            padding:12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.25);
+        }
+        .lr-aspect{
+            position:relative;
+            background:#000;
+            border-radius:10px;
+            overflow:hidden;
+            aspect-ratio: 16 / 9;
+        }
+        .lr-video{ width:100%; height:100%; display:block; background:#000; }
+        .lr-overlay{
+            position:absolute; inset:0;
+            background: radial-gradient(80% 80% at 50% 50%, rgba(0,0,0,.0), rgba(0,0,0,.35));
+            pointer-events:none;
+        }
+
+        /* 컨트롤 바 */
+        .lr-controls{
+            margin-top:10px;
+            display:flex; gap:12px; align-items:center; justify-content:space-between;
+        }
+        .lr-progress{
+            flex:1 1 auto;
+            display:grid; grid-template-columns: 1fr auto; gap:10px; align-items:center;
+        }
+        .lr-progress input[type="range"]{
+            width:100%;
+            appearance:none; height:6px; border-radius:999px;
+            background:linear-gradient(90deg, var(--accent) var(--val,0%), #3a3c44 var(--val,0%));
+            outline:none; cursor:pointer;
+        }
+        .lr-progress input[type="range"]::-webkit-slider-thumb{
+            appearance:none; width:14px; height:14px; border-radius:50%; background:#fff; border:2px solid var(--accent);
+        }
+        .lr-time{font-size:12px; color:var(--muted)}
+
+        .lr-ctrl-right{display:flex; gap:8px; align-items:center}
+        .lr-btn{
+            background:var(--accent); border:0; color:#111;
+            padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:700;
+        }
+        .lr-btn:hover{background:var(--accent-2)}
+        .lr-speed{display:flex; gap:6px; align-items:center; color:#muted; font-size:13px}
+        .lr-speed select{
+            background:#1d1f24; color:#fff; border:1px solid var(--line);
+            padding:6px 8px; border-radius:8px;
+        }
+
+        /* 정보 카드 */
+        .lr-info{
+            margin-top:10px;
+            background:var(--panel-2); border:1px solid var(--line);
+            border-radius:12px; padding:10px 12px; color:#d7d7db;
+        }
+        .lr-muted{color:var(--muted);}
+
+        /* 사이드바 */
+        .lr-sidebar{
+            background:var(--panel);
+            border:1px solid var(--line);
+            border-radius:14px;
+            padding:12px;
+            display:flex; flex-direction:column; gap:10px;
+            box-shadow: 0 8px 24px rgba(0,0,0,.22);
+        }
+        .lr-tabs{display:flex; gap:6px;}
+        .lr-tabs button{
+            flex:1 1 0;
+            background:#1b1c20; color:#cfcfd6; border:1px solid var(--line);
+            padding:10px 12px; border-radius:10px; cursor:pointer; font-weight:700;
+        }
+        .lr-tabs button.active{ background:var(--accent); color:#111; border-color:transparent; }
+
+        .lr-tabpanel{min-height:380px}
+
+        /* ✅ 단일 VOD용 “개요” 패널 */
+        .lr-info-grid{
+            display:grid; gap:10px;
+        }
+        .lr-card{
+            background:#15161a; border:1px solid #22242a;
+            border-radius:10px; padding:12px;
+        }
+        .lr-card h4{ margin:0 0 8px; font-size:15px; color:#fff; }
+        .lr-def{ display:grid; gap:6px; font-size:14px; color:#dcdce1; }
+        .lr-def .row{ display:flex; gap:10px; justify-content:space-between; }
+        .lr-def .k{ color:#aeb0b8; }
+        .lr-badges{ display:flex; gap:8px; flex-wrap:wrap; }
+        .lr-badge{
+            display:inline-flex; align-items:center; gap:6px;
+            padding:6px 10px; border-radius:999px; font-weight:700; font-size:12px;
+            color:#111; background:var(--accent);
+        }
+        .lr-badge.blue{ background:var(--blue); color:#fff; }
+        .lr-badge.pink{ background:var(--pink); color:#fff; }
+
+        .lr-resource{ display:grid; gap:8px; }
+        .lr-resource a{
+            display:flex; justify-content:space-between; align-items:center;
+            background:#13151a; border:1px solid #23262d; padding:10px 12px; border-radius:10px;
+            color:#e5e7eb; text-decoration:none;
+        }
+        .lr-resource a:hover{ border-color:#2b2e36; }
+
+        .lr-quick{ display:flex; gap:8px; flex-wrap:wrap; }
+        .lr-quick .lr-ghost{ padding:10px 12px; }
+
+        /* 메모 */
+        .lr-note{
+            width:100%; height:320px; resize:vertical;
+            background:#131419; color:#eaeaf0; border:1px solid #24262c; border-radius:10px;
+            padding:10px 12px; line-height:1.6;
+        }
+        .lr-note-actions{display:flex; gap:8px; margin-top:8px}
+
+        /* 채팅 */
+        .lr-chat{
+            height:320px; overflow:auto;
+            background:#121317; border:1px solid #24262c; border-radius:10px;
+            padding:10px 12px; display:flex; flex-direction:column; gap:8px;
+        }
+        .lr-chat-msg{
+            max-width:80%;
+            align-self:flex-end;
+            background:var(--accent); color:#111; padding:8px 12px; border-radius:14px 14px 2px 14px;
+            font-weight:600;
+        }
+        .lr-chat-msg.is-system{
+            align-self:flex-start; background:#2a2d34; color:#dcdce1; border-radius:12px; font-weight:400;
+        }
+        .lr-chat-input{display:flex; gap:8px; margin-top:8px}
+        .lr-chat-input input{
+            flex:1 1 auto; background:#131419; color:#fff; border:1px solid #24262c; border-radius:10px; padding:10px 12px;
+        }
+
+        /* 푸터 */
+        .lr-footer{
+            max-width:1280px; margin: 8px auto 18px; color:#9fa0aa; font-size:12px; padding:0 4px;
+        }
+
+        /* 시네마(극장) 모드: 비디오 넓게 */
+        .theater .lr-shell{ grid-template-columns: 1.2fr 360px; }
+
+        /* 팝업 닫기 */
+        .lr-close{
+            position:fixed; right:14px; top:10px;
+            border:1px solid #3a3c44; background:#1b1c20; color:#e7e7ea;
+            padding:6px 10px; border-radius:8px; cursor:pointer; z-index:10;
+        }
+        .lr-close:hover{background:#23252b}
+
+        /* 반응형 */
+        @media (max-width: 1024px){
+            .lr-shell{ grid-template-columns:1fr; }
+            .lr-sidebar{ order:2 }
+        }
+        @media (max-width: 560px){
+            .lr-title{font-size:18px}
+            .lr-actions{display:none}
+            .is-popup .lr-header{ padding-right: 72px; }
+        }
+    </style>
+</head>
+<body class="lr-body" th:classappend="${isPopup} ? 'is-popup'">
+<div th:fragment="content">
+
+    <!-- 팝업 닫기 -->
+    <button class="lr-close" th:if="${isPopup}" type="button" onclick="window.close()">창 닫기</button>
+
+    <!-- 헤더 -->
+    <header class="lr-header">
+        <div class="lr-brand">
+            <div class="lr-logo">
+                <img th:src="@{/images/dw.png}" alt="로고" class="lr-logo-img">
+                <span class="lr-logo-text">MyLMS</span>
+            </div>
+            <div class="lr-course-meta">
+                <h1 class="lr-title" th:text="${title != null ? title : '강의실'}">강의실</h1>
+            </div>
+        </div>
+        <div class="lr-actions">
+            <button class="lr-ghost" type="button" onclick="toggleTheater()">시네마</button>
+            <button class="lr-ghost" type="button" onclick="toggleSidebar()">사이드 접기</button>
+        </div>
+    </header>
+
+    <!-- 메인 레이아웃 -->
+    <main class="lr-shell">
+        <!-- 영상 영역 -->
+        <section class="lr-player-wrap" id="playerArea">
+            <div class="lr-aspect">
+                <video id="player" class="lr-video" controls preload="metadata" playsinline>
+                    <source th:if="${videoUrl}" th:src="@{${videoUrl}}" th:type="${videoType}" />
+                    브라우저가 HTML5 비디오를 지원하지 않습니다.
+                </video>
+                <div class="lr-overlay" id="overlay" hidden></div>
+            </div>
+
+            <!-- 하단 컨트롤/진행바 -->
+            <div class="lr-controls">
+                <div class="lr-progress">
+                    <input id="progress" type="range" min="0" max="100" value="0" step="0.1" aria-label="진행률">
+                    <div class="lr-time">
+                        <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
+                    </div>
+                </div>
+                <div class="lr-ctrl-right">
+                    <label class="lr-speed">
+                        배속
+                        <select id="speed">
+                            <option value="0.75">0.75x</option>
+                            <option value="1" selected>1.0x</option>
+                            <option value="1.25">1.25x</option>
+                            <option value="1.5">1.5x</option>
+                            <option value="1.75">1.75x</option>
+                            <option value="2">2.0x</option>
+                        </select>
+                    </label>
+                    <button type="button" class="lr-btn" onclick="step(-10)">⏪ 10s</button>
+                    <button type="button" class="lr-btn" onclick="step(10)">10s ⏩</button>
+                    <button type="button" class="lr-btn" onclick="toggleFullscreen()">전체화면</button>
+                </div>
+            </div>
+
+            <!-- 코스 메타/알림 -->
+            <div class="lr-info">
+                <div><strong>강의 제목:</strong> <span th:text="${coursetitle}">제목</span></div>
+                <div class="lr-muted" th:if="${videoUrl == null}">
+                    재생 가능한 동영상 자료가 없습니다.
+                </div>
+            </div>
+        </section>
+
+        <!-- 사이드바: 단일 VOD에 맞춘 탭(개요/메모/채팅) -->
+        <aside class="lr-sidebar" id="sidebar">
+            <nav class="lr-tabs" role="tablist">
+                <button class="active" data-tab="info" role="tab">개요</button>
+                <button data-tab="notes" role="tab">메모</button>
+                <button data-tab="chat" role="tab">채팅</button>
+            </nav>
+
+            <!-- ✅ 개요 탭: 단일 강의용 실용 카드 -->
+            <div class="lr-tabpanel" id="tab-info" role="tabpanel">
+                <div class="lr-info-grid">
+                    <!-- 요약/메타 -->
+                    <div class="lr-card">
+                        <h4>강의 정보</h4>
+                        <div class="lr-def">
+                            <div class="row"><span class="k">강의명</span><span th:text="${coursetitle}">제목</span></div>
+                            <div class="row"><span class="k">강사</span><span th:text="${instructorName}">강사명</span></div>
+                            <div class="row"><span class="k">재생시간</span><span id="metaDuration">-</span></div>
+                            <div class="row"><span class="k">업로드</span><span th:text="${uploadedAt}">-</span></div>
+                        </div>
+                        <div class="lr-badges" style="margin-top:8px">
+                            <span class="lr-badge">VOD</span>
+                            <span class="lr-badge blue" th:if="${level != null}" th:text="${level}">Beginner</span>
+                            <span class="lr-badge pink" th:if="${category != null}" th:text="${category}">Java</span>
+                        </div>
+                    </div>
+
+                    <!-- 진행/완료 -->
+                    <div class="lr-card">
+                        <h4>진행 상태</h4>
+                        <div class="lr-def">
+                            <div class="row"><span class="k">현재 진행</span><span id="percentNow">0%</span></div>
+                            <div class="row"><span class="k">최근 시청 위치</span><span id="lastPos">0:00</span></div>
+                        </div>
+                        <div class="lr-quick" style="margin-top:8px">
+                            <button class="lr-ghost" type="button" onclick="markComplete()">수강완료 표시</button>
+                            <button class="lr-ghost" type="button" onclick="rewatchFromStart()">처음부터 다시보기</button>
+                        </div>
+                    </div>
+
+                    <!-- 자료/링크 -->
+                    <div class="lr-card">
+                        <h4>자료 & 링크</h4>
+                        <div class="lr-resource">
+                            <a th:if="${handoutUrl}" th:href="@{${handoutUrl}}" download>
+                                <span>핸드아웃(PDF) 다운로드</span><span>⬇</span>
+                            </a>
+                            <a th:if="${refUrl}" th:href="@{${refUrl}}" target="_blank" rel="noopener">
+                                <span>참고 링크 열기</span><span>↗</span>
+                            </a>
+                            <div th:if="${handoutUrl == null and refUrl == null}" class="lr-muted">등록된 자료가 없습니다.</div>
+                        </div>
+                    </div>
+
+                    <!-- 빠른 작업 -->
+                    <div class="lr-card">
+                        <h4>빠른 작업</h4>
+                        <div class="lr-quick">
+                            <button class="lr-ghost" type="button" onclick="saveNote()">메모 저장</button>
+                            <button class="lr-ghost" type="button" onclick="sendQuestion()">질문 남기기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lr-tabpanel" id="tab-notes" role="tabpanel" hidden>
+                <textarea id="note" class="lr-note" placeholder="수강 중 메모를 남겨보세요. (브라우저에 임시 저장)"></textarea>
+                <div class="lr-note-actions">
+                    <button class="lr-btn" type="button" onclick="saveNote()">메모 저장</button>
+                    <button class="lr-ghost" type="button" onclick="clearNote()">지우기</button>
+                </div>
+            </div>
+
+            <div class="lr-tabpanel" id="tab-chat" role="tabpanel" hidden>
+                <div class="lr-chat" id="chatBox">
+                    <div class="lr-chat-msg is-system">안녕하세요! 질문은 채팅으로 남겨주세요.</div>
+                </div>
+                <div class="lr-chat-input">
+                    <input id="chatInput" type="text" placeholder="메시지 입력">
+                    <button class="lr-btn" type="button" onclick="sendChat()">전송</button>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- 푸터 힌트 -->
+    <footer class="lr-footer">
+        <div>단축키: <kbd>Space</kbd> 재생/일시정지 · <kbd>←</kbd>/<kbd>→</kbd> 5초 이동 · <kbd>F</kbd> 전체화면</div>
+    </footer>
+</div>
+
+<script th:inline="javascript">
+    const v = document.getElementById('player');
+    const progress = document.getElementById('progress');
+    const cur = document.getElementById('currentTime');
+    const dur = document.getElementById('duration');
+    const speed = document.getElementById('speed');
+
+    /* 시간 포맷 */
+    const fmt = s => {
+        if(!isFinite(s)) return '0:00';
+        const m = Math.floor(s/60); const ss = Math.floor(s%60).toString().padStart(2,'0');
+        return m + ':' + ss;
+    };
+
+    /* 메타 업데이트 */
+    v.addEventListener('loadedmetadata', () => {
+        dur.textContent = fmt(v.duration);
+        const md = document.getElementById('metaDuration'); if (md) md.textContent = fmt(v.duration);
+    });
+    v.addEventListener('timeupdate', () => {
+        cur.textContent = fmt(v.currentTime);
+        progress.value = v.duration ? (v.currentTime / v.duration) * 100 : 0;
+        // 진행률/최근 위치 개요 패널 반영
+        const pct = document.getElementById('percentNow');
+        const lp  = document.getElementById('lastPos');
+        if (pct && v.duration) pct.textContent = Math.round((v.currentTime / v.duration) * 100) + '%';
+        if (lp) lp.textContent = fmt(v.currentTime);
+    });
+
+    /* 슬라이더로 탐색 */
+    progress.addEventListener('input', () => {
+        if(v.duration){
+            v.currentTime = (progress.value / 100) * v.duration;
+        }
+    });
+
+    /* 배속 */
+    speed.addEventListener('change', () => { v.playbackRate = parseFloat(speed.value); });
+
+    /* 단축키 */
+    document.addEventListener('keydown', (e) => {
+        if(e.target.matches('input, textarea')) return;
+        if(e.code === 'Space'){ e.preventDefault(); v.paused ? v.play() : v.pause(); }
+        if(e.key === 'ArrowLeft') v.currentTime = Math.max(0, v.currentTime - 5);
+        if(e.key === 'ArrowRight') v.currentTime = Math.min(v.duration||0, v.currentTime + 5);
+        if(e.key.toLowerCase() === 'f') toggleFullscreen();
+    });
+
+    /* 컨트롤 버튼 */
+    function step(sec){ v.currentTime = Math.min(Math.max(0, v.currentTime + sec), v.duration||0); }
+    function toggleFullscreen(){
+        const el = document.querySelector('.lr-player-wrap');
+        if(document.fullscreenElement){ document.exitFullscreen(); }
+        else { el.requestFullscreen?.(); }
+    }
+
+    /* 시네마 모드/사이드바 토글 */
+    function toggleTheater(){ document.body.classList.toggle('theater'); }
+    function toggleSidebar(){ document.body.classList.toggle('sidebar-collapsed'); }
+
+    /* 탭 */
+    document.querySelectorAll('.lr-tabs button').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+            document.querySelectorAll('.lr-tabs button').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            const tab = btn.dataset.tab;
+            document.querySelectorAll('.lr-tabpanel').forEach(p=>p.hidden = true);
+            document.getElementById('tab-' + tab).hidden = false;
+        });
+    });
+
+    /* 메모 로컬 보관 */
+    const note = document.getElementById('note');
+    const noteKey = 'lr_note_' + (/*[[${courseId}]]*/ 0);
+    function saveNote(){ localStorage.setItem(noteKey, note?.value || ''); alert('메모를 저장했습니다.'); }
+    function clearNote(){ if(!note) return; note.value = ''; localStorage.removeItem(noteKey); }
+    if(note){ note.value = localStorage.getItem(noteKey) || ''; }
+
+    /* 간단 채팅 (로컬 데모) */
+    function sendChat(){
+        const i = document.getElementById('chatInput'); if(!i || !i.value.trim()) return;
+        const box = document.getElementById('chatBox');
+        const div = document.createElement('div');
+        div.className = 'lr-chat-msg';
+        div.textContent = i.value.trim();
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+        i.value = '';
+    }
+
+    /* 개요 탭 빠른 작업 */
+    function markComplete(){
+        // TODO: 서버 연동 시 /api/progress/complete 같은 엔드포인트 호출
+        alert('수강 완료로 표시했습니다.');
+    }
+    function rewatchFromStart(){ v.currentTime = 0; v.play?.(); }
+    function sendQuestion(){
+        // TODO: 문의/질문 페이지로 이동하거나 모달 열기
+        alert('질문 작성 화면으로 이동합니다.');
+        // location.href = '/board/qna/new?courseId=...';
+    }
+
+    // 🔹 강의 진행률 로컬 저장
+    const courseId = /*[[${courseId}]]*/ 0;
+
+    // 5초마다 현재 진행률 저장
+    setInterval(() => {
+        if(v.duration){
+            const percent = Math.round((v.currentTime / v.duration) * 100);
+            localStorage.setItem(`progress_${courseId}`, percent);
+        }
+    }, 5000);
+
+    // 페이지 닫을 때도 저장
+    window.addEventListener('beforeunload', () => {
+        if(v.duration){
+            const percent = Math.round((v.currentTime / v.duration) * 100);
+            localStorage.setItem(`progress_${courseId}`, percent);
+        }
+    });
+
+
+    /* 노출 함수 */
+    window.sendChat = sendChat;
+    window.step = step;
+    window.toggleFullscreen = toggleFullscreen;
+    window.toggleTheater = toggleTheater;
+    window.toggleSidebar = toggleSidebar;
+    window.saveNote = saveNote;
+    window.clearNote = clearNote;
+    window.markComplete = markComplete;
+    window.rewatchFromStart = rewatchFromStart;
+    window.sendQuestion = sendQuestion;
+</script>
+</body>
+</html>

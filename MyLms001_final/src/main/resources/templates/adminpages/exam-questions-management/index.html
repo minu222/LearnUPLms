@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>DW Academy</title>
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/adminpages/css/style.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/menu.css}">
+</head>
+
+<body>
+<div th:replace="adminpages/menu :: menu"></div>
+<main class="main">
+    <div class="content-box">
+        <h2>시험 문제 관리</h2>
+
+        <!-- 검색/문항 추가 -->
+        <div class="search-box exam-search">
+            <form
+                    th:action="@{/admin/mock-exams}"
+                    method="get"
+                    style="display: flex; gap: 10px"
+            >
+                <input
+                        type="text"
+                        name="instructorName"
+                        placeholder="강사ID"
+                        th:value="${param.instructorName}"
+                />
+                <button class="btn-search" type="submit">검색</button>
+            </form>
+            <a th:href="@{/admin/mock-exams/new}" class="btn-submit">문항 추가</a>
+
+            <div style="display: flex; gap: 10px">
+            <form id="examUploadForm" th:action="@{/api/upload}" method="post" enctype="multipart/form-data">
+                <a href="/api/download" class="btn-submit">파일 다운로드</a>
+                <label for="fileUpload" class="btn-submit" style="display: inline-flex; cursor: pointer;">
+                    파일 선택
+                </label>
+                <input type="file" name="file" id="fileUpload" required style="display: none;" />
+                <button type="submit" class="btn-submit">엑셀 추가</button>
+            </form>
+            </div>
+
+            <!-- 업로드 메시지 표시 -->
+            <div th:if="${message}" class="alert success" th:text="${message}"></div>
+            <div th:if="${error}" class="alert error" th:text="${error}"></div>
+        </div>
+
+        <!-- 시험 문제 목록 -->
+        <table class="data-table exam-table">
+            <colgroup>
+                <col class="col-no" />
+                <col class="col-title" />
+                <col class="col-instructorName" />
+            </colgroup>
+            <thead>
+            <tr>
+                <th>NO</th>
+                <th>제목</th>
+                <th>강사ID</th>
+                <th>관리</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="exam, i : ${exams}">
+                <td th:text="${i.index + 1}">1</td>
+                <td th:text="${exam.courseTitle}">1</td>
+                <td th:text="${exam.instructorName}"></td>
+                <td>
+                    <a th:href="@{/admin/mock-exams/{id}/edit(id=${exam.examId})}"
+                    >수정</a
+                    >
+                    |
+                    <form
+                            th:action="@{/admin/mock-exams/{id}/delete(id=${exam.examId})}"
+                            method="post"
+                            style="display: inline"
+                    >
+                        <button
+                                id="delete-exam"
+                                type="submit"
+                                onclick="return confirm('삭제하시겠습니까?')"
+                        >
+                            삭제
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(exams)}">
+                <td colspan="5">등록된 시험 문제가 없습니다.</td>
+            </tr>
+            </tbody>
+
+            <!-- 서버 렌더링 예시
+                  <tr th:each="q, i : ${questions}">
+                    <td class="col-no" th:text="${i.count}">1</td>
+                    <td class="col-question" th:text="${q.title}" th:title="${q.title}">문항 제목</td>
+                    <td>
+                      <span class="chip"
+                            th:classappend="${q.type=='객관식'} ? ' blue' : ' gray'"
+                            th:text="${q.type}">객관식</span>
+                    </td>
+                    <td>
+                      <span class="chip"
+                            th:classappend="${q.level=='상'} ? ' red' : (${q.level=='중'} ? ' orange' : ' green')"
+                            th:text="${q.level}">중</span>
+                    </td>
+                    <td class="actions">
+                      <a class="edit" th:href="@{/exams/{id}/edit(id=${q.id})}">수정</a>
+                      <a class="del" th:href="@{/exams/{id}/delete(id=${q.id})}">삭제</a>
+                    </td>
+                  </tr>
+                  -->
+        </table>
+    </div>
+
+    <script>
+        document.getElementById('examUploadForm').addEventListener('submit', async function(e){
+            e.preventDefault();
+
+            const form = e.target;
+            const fileInput = form.querySelector('input[name="file"]');
+            if(!fileInput.files.length){
+                alert('업로드할 파일을 선택해주세요.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const res = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if(!res.ok){
+                    const errText = await res.text();
+                    alert('업로드 실패:\n' + errText);
+                    return;
+                }
+
+                const data = await res.json(); // 서버에서 { count: n } 형태로 반환한다고 가정
+                alert('업로드 성공! 문제 수: ' + data.count);
+
+                // 필요 시 페이지 새로고침 또는 테이블 갱신
+                location.reload();
+
+            } catch(err){
+                console.error(err);
+                alert('업로드 중 오류 발생:\n' + err.message);
+            }
+        });
+    </script>
+
+</main>
+</body>

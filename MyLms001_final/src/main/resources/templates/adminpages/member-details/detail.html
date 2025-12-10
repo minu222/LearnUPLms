@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>DW Academy - 회원 상세</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/adminpages/css/style.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/menu.css}">
+</head>
+
+<body>
+<div th:replace="adminpages/menu :: menu"></div>
+<main class="main">
+    <aside class="detail-col">
+        <div class="detail-card">
+            <div class="detail-head">
+                <h3 class="detail-title">회원 상세</h3>
+                <span class="empty"
+                      th:text="${member != null ? ('ID: ' + member.user_id) : '선택된 회원 없음'}">
+          선택된 회원 없음
+        </span>
+            </div>
+
+            <form th:if="${member != null}">
+                <div class="detail-body">
+                    <div class="form-grid">
+                        <div class="form-row">
+                            <label>이름</label>
+                            <input class="input" name="name" th:value="${member.name}" readonly/>
+                        </div>
+
+                        <div class="form-row">
+                            <label>닉네임</label>
+                            <input class="input" name="nickname" th:value="${member.nickname}" readonly/>
+                        </div>
+
+                        <div class="form-row">
+                            <label>구분(권한)</label>
+                            <input class="input" name="role" th:value="${member.role}" readonly/>
+                        </div>
+
+                        <div class="form-row">
+                            <label>회원 상태</label>
+                            <input class="input" name="status" th:value="${member.status}" readonly/>
+                        </div>
+
+                        <div class="form-row">
+                            <label>이메일</label>
+                            <input class="input" name="email" th:value="${member.email}" readonly/>
+                        </div>
+
+                        <div class="form-row">
+                            <label>휴대전화</label>
+                            <input class="input" name="phone" th:value="${member.phone}" readonly/>
+                        </div>
+
+                        <div class="form-row two">
+                            <label>주소</label>
+                            <input class="input" name="address" th:value="${member.address}" readonly/>
+                        </div>
+
+                        <div class="form-row">
+                            <label>생년월일</label>
+                            <input class="input" name="birth_day"
+                                   th:value="${member.birth_day != null ? #temporals.format(member.birth_day,'yyyy-MM-dd') : ''}" readonly/>
+                        </div>
+
+                        <div class="form-row">
+                            <label>성별</label>
+                            <input class="input" name="gender" th:value="${member.gender}" readonly/>
+                        </div>
+
+                        <div class="form-row">
+                            <label>이메일 인증</label>
+                            <input class="input" name="email_verified" th:value="${member.email_verified ? '인증됨' : '미인증'}" readonly/>
+                        </div>
+
+                        <div class="form-row">
+                            <label>가입일</label>
+                            <input class="input readonly"
+                                   th:value="${#temporals.format(member.created_at,'yyyy-MM-dd HH:mm')}" readonly/>
+                        </div>
+
+                        <div class="form-row">
+                            <label>수정일</label>
+                            <input class="input readonly"
+                                   th:value="${#temporals.format(member.updated_at,'yyyy-MM-dd HH:mm')}" readonly/>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-footer">
+                    <a th:href="@{/admin/member-details}" class="btn btn-close">목록으로</a>
+                </div>
+            </form>
+
+            <div class="detail-body" th:if="${member == null}">
+                <p class="empty">
+                    선택된 회원이 없습니다.
+                </p>
+            </div>
+        </div>
+    </aside>
+</main>
+</body>
+</html>

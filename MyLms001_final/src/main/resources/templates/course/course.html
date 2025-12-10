@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/course.css}">
+</head>
+<body>
+<div th:fragment="content">
+    <main class="main-content">
+        <h2>교육과정</h2>
+        <!-- 과정 소개 -->
+        <section>
+            <h3>과정 소개</h3>
+            <div class="card-grid">
+
+                <a class="card" th:href="@{/course/introduction/science}">
+                    <img src="https://picsum.photos/300/200?random=31" alt="이과">
+                    <h3>이과</h3>
+                    <p>
+                        수학·과학·공학 분야의 핵심 과정을 제공하며,
+                        <strong>실습 기반 문제 풀이</strong>와 <strong>강사의 개별 피드백</strong>을 통해
+                        학생들이 스스로 탐구하고 성장할 수 있도록 지원합니다.
+                    </p>
+                </a>
+
+                <a class="card" th:href="@{/course/introduction/liberal}">
+                    <img src="https://picsum.photos/300/200?random=32" alt="문과">
+                    <h3>문과</h3>
+                    <p>
+                        인문·사회·언어 영역을 중심으로 한 과정으로,
+                        <strong>에세이 및 토론 과제</strong>를 통해 비판적 사고를 기르고
+                        강사 피드백을 기반으로 학습 성장을 촉진합니다.
+                    </p>
+                </a>
+
+                <a class="card" th:href="@{/course/introduction/arts}">
+                    <img src="https://picsum.photos/300/200?random=33" alt="예체능">
+                    <h3>예체능</h3>
+                    <p>
+                        미술·음악·체육 등 창의적 활동 중심의 과정으로,
+                        <strong>포트폴리오 제작</strong>과 <strong>실기 평가</strong>를 통해 실무 능력을 향상시키고,
+                        강사의 세밀한 피드백으로 개인의 잠재력을 발굴합니다.
+                    </p>
+                </a>
+
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

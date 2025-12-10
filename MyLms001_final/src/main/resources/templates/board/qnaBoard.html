@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>문의게시판 | MyLMS</title>
+
+    <!-- 공통/보드 CSS -->
+    <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
+    <link rel="stylesheet" href="/css/board/board.css">
+</head>
+<body>
+<div th:fragment="content">
+    <main class="main-content notice-board">
+        <div class="board-head">
+            <h2 class="board-title">
+                문의 게시판 <span class="badge-pill">Q&amp;A</span>
+                <small class="sub">질문 등록 · 답변 확인</small>
+            </h2>
+        </div>
+
+        <!-- 오른쪽 정렬 검색바 (자유게시판과 동일 패턴) -->
+        <div style="display:flex; justify-content:flex-end; margin-top:8px;">
+            <form class="board-utils search" method="get" th:action="@{|/board/${typeSlug}|}">
+                <input class="search-input" type="text" name="q" placeholder="검색어 입력" th:value="${param.q}">
+
+                <button class="search-button" type="submit">검색</button>
+            </form>
+        </div>
+
+        <!-- 목록 테이블 (자유게시판 테이블 스타일 재사용: .table-notice) -->
+        <table class="table-notice">
+            <thead>
+            <tr>
+                <th style="width:8%;">NO</th>
+                <th style="width:46%;">제목</th>
+                <th style="width:16%;">작성자</th>
+                <th style="width:14%;">등록일</th>
+                <th style="width:16%;">답변상태</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <!-- 오류 -->
+            <tr th:if="${posts == null}">
+                <td colspan="5" class="empty-state">
+                    <div class="icon">⚠️</div>
+                    목록을 불러오는 중 오류가 발생했습니다.
+                </td>
+            </tr>
+
+            <!-- 비어있음 -->
+            <tr th:if="${posts != null and #lists.isEmpty(posts)}">
+                <td colspan="5" class="empty-state">
+                    <div class="icon">🗒️</div>
+                    게시글이 없습니다.
+                </td>
+            </tr>
+
+            <!-- 정상 목록 -->
+            <th:block th:if="${posts != null and !#lists.isEmpty(posts)}">
+                <tr th:each="post, stat : ${posts}">
+                    <td th:text="${stat.count}">1</td>
+
+                    <td class="title-cell">
+                        <div class="title-line">
+                            <a th:href="@{|/board/${typeSlug}/${post.id}|}">
+                                <span class="title-text" th:text="${post.title}">제목</span>
+                            </a>
+                            <span class="arrow">›</span>
+                        </div>
+                        <span class="title-preview"
+                              th:if="${#maps.containsKey(post, 'preview') and post['preview'] != null}"
+                              th:text="${post['preview']}">내용 미리보기</span>
+                    </td>
+
+                    <!-- 마스킹 우선 -->
+                    <td th:text="${post['authorMasked'] ?: post['authorName'] ?: '익명'}">홍*동</td>
+                    <td th:text="${#temporals.format(post.createdAt,'yyyy-MM-dd')}">2025-09-26</td>
+                    <td>
+            <span class="status"
+                  th:classappend="${post['answerStatus']}=='WAIT' ? ' wait' :
+                                  (${post['answerStatus']}=='COMPLETE' ? ' complete' : '')"
+                  th:text="${post['answerStatus']}=='WAIT' ? '답변대기' :
+                           (${post['answerStatus']}=='COMPLETE' ? '답변완료' : '-')">-</span>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+
+        <!-- 문의하기 버튼 -->
+        <a class="write-button" th:href="@{|/board/${typeSlug}/write|}">문의하기</a>
+
+        <!-- (선택) 서버 페이징 대신 클라 페이징이면 여기 비워둠 -->
+        <div class="pagination" id="pagination"></div>
+    </main>
+</div>
+</body>
+</html>

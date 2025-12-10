@@ -1,0 +1,308 @@
+/* ===== 공통 스타일 ===== */
+/* D: top accent ribbon */
+
+/* ===== 일반 페이지 컨테이너 ===== */
+.page-container {
+    width: 1100px;
+    min-height: 600px;
+    margin: 50px auto;
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+/* ===== 홈 전용 컨테이너 ===== */
+.home-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* ===== 배너 ===== */
+.banner {
+    background: url("https://images.unsplash.com/photo-1513258496099-48168024aec0?q=80&w=1920&auto=format&fit=crop") center/cover no-repeat;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 48px;
+    font-weight: 800;
+    text-align: center;
+    text-shadow: 3px 3px 10px rgba(0,0,0,0.6);
+}
+
+/* ===== 섹션 공통 ===== */
+section h2 {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 35px;
+    color: #222;
+}
+
+/* ===== 카드 레이아웃 ===== */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.card {
+    background: #fff;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.card h3 {
+    font-size: 19px;
+    margin: 0 0 10px;
+    color: #111;
+}
+
+.card p {
+    font-size: 15px;
+    color: #555;
+}
+
+/* ===== 인기차트 ===== */
+.chart-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.chart-box {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    border-top: 6px solid #ffb400;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.chart-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+.chart-box:nth-child(1) { border-top-color: #007bff; }
+.chart-box:nth-child(2) { border-top-color: #ff5722; }
+.chart-box:nth-child(3) { border-top-color: #28a745; }
+
+.chart-box h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    border-left: 6px solid currentColor;
+    padding-left: 10px;
+    color: #333;
+}
+
+.chart-box ol {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.chart-box ol li {
+    font-size: 16px;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: #f9f9f9;
+    transition: background 0.2s;
+    border: 1px solid #ff9800;
+    box-shadow: 0 0 5px rgba(255, 152, 0, 0.47);
+}
+
+.chart-box ol li:hover {
+    background: #f1f1f1;
+}
+/*!* 추가사항 홈*/
+/* ===========================
+   홈 유연/미려 오버라이드
+   =========================== */
+:root{
+    --brand:#ff8c00;
+    --ink:#222;
+    --muted:#6b7280;
+    --bg:#f8f9fa;
+    --card:#fff;
+    --ring:rgba(0,0,0,.06);
+    --radius:14px;
+    --shadow:0 6px 20px rgba(0,0,0,.08);
+}
+
+.home--fluid{
+    max-width: min(1280px, 92vw);
+    margin-inline: auto;
+    padding-inline: clamp(12px, 2vw, 20px);
+}
+
+/* Hero */
+.hero{
+    position: relative;
+    border-radius: var(--radius);
+    overflow: clip;
+    background:
+            linear-gradient( to bottom right, rgba(0,0,0,.35), rgba(0,0,0,.2) ),
+            url("https://images.unsplash.com/photo-1513258496099-48168024aec0?q=80&w=1920&auto=format&fit=crop") center/cover no-repeat;
+    min-height: clamp(220px, 32vw, 360px);
+    display: grid;
+    place-items: center;
+    margin-block: 18px 10px;
+    box-shadow: var(--shadow);
+}
+.hero__inner{ text-align:center; color:#fff; padding: clamp(16px, 3vw, 28px); }
+.hero__title{ font-size: clamp(22px, 3.6vw, 40px); margin:0 0 8px; font-weight: 800; }
+.hero__subtitle{ font-size: clamp(14px, 1.6vw, 18px); opacity:.95; margin:0 0 16px; }
+.hero__actions{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+.btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    padding: 10px 16px; border-radius: 999px; background: var(--brand);
+    color:#fff; font-weight:700; text-decoration:none; box-shadow: var(--shadow);
+}
+.btn--ghost{ background:#ffffff; color:var(--ink); border:1px solid #eee; }
+
+/* Section */
+.section{ margin-block: clamp(18px, 3vw, 28px); }
+.section__head{ display:flex; justify-content:space-between; align-items:end; gap:10px; }
+.section__title{
+    margin:0; color:var(--ink); font-weight:800;
+    font-size: clamp(18px, 2.2vw, 26px);
+}
+.link{ color:var(--brand); text-decoration:none; font-weight:700; }
+
+/* Auto grid: 카드 개수/화면폭에 맞춰 자동 줄바꿈 */
+.auto-grid{
+    --min: 260px; /* 최소 카드 폭만 바꾸면 열 수가 자동 조정됨 */
+    display:grid; gap: clamp(12px, 2vw, 18px);
+    grid-template-columns: repeat(auto-fit, minmax(var(--min), 1fr));
+}
+.auto-grid--3{ --min: 280px; }
+
+/* KPI */
+.kpi-grid{
+    --min: 180px;
+    display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(var(--min),1fr));
+}
+.kpi{
+    background:var(--card); border-radius: 12px; padding:14px 16px;
+    box-shadow: var(--shadow); display:flex; align-items:center; justify-content:space-between;
+}
+.kpi__label{ color:var(--muted); font-size:13px; }
+.kpi__value{ font-size: clamp(18px, 2.2vw, 22px); color:var(--ink); }
+
+/* 카드 공통 */
+.card{
+    background:var(--card); border-radius: var(--radius); padding: clamp(14px, 2vw, 18px);
+    box-shadow: var(--shadow);
+}
+.card--list .card__title{ margin:0 0 10px; font-size: clamp(16px, 2vw, 18px); }
+
+/* 랭크 리스트 */
+.rank-list{ list-style:none; padding:0; margin:0; display:grid; gap:8px; }
+.rank-list li{
+    display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px;
+    background:#fff7e6; border:1px solid #ffd8a8; box-shadow: 0 0 0 3px rgba(255,140,0,.06) inset;
+    font-size: clamp(14px, 1.8vw, 15px);
+}
+.rank-list em{
+    width:26px; height:26px; display:inline-grid; place-items:center; border-radius:8px;
+    background: var(--brand); color:#fff; font-style:normal; font-weight:800;
+}
+
+/* 코스 카드 */
+.course{
+    background:var(--card); border-radius: var(--radius); overflow:hidden; box-shadow: var(--shadow);
+    display:flex; flex-direction:column;
+}
+.course img{ aspect-ratio: 16/10; width:100%; object-fit:cover; display:block; }
+.course__body{ padding:14px 16px; display:grid; gap:6px; }
+.course__title{ margin:0; font-size: clamp(16px, 2vw, 18px); color:var(--ink); }
+.course__desc{ margin:0; color:#555; font-size: 14px; }
+
+/* 접근성/모션 */
+@media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+}
+
+/* 아주 작은 화면 최적화 */
+@media (max-width: 420px){
+    .hero{ min-height: 200px; }
+    .auto-grid{ --min: 220px; }
+}
+
+
+
+/*홈 백그라운드 추가사항 */
+
+/* ===== FX: Aurora Prisma ===== */
+body.fx-aurora{
+    --c1:#ff7a18; --c2:#af002d; --c3:#319197; --c4:#7f5af0;
+    background: radial-gradient(1200px 500px at 10% -10%, rgba(255,122,24,.25), transparent 60%),
+    radial-gradient(900px 400px at 100% 0%, rgba(127,90,240,.25), transparent 55%),
+    radial-gradient(1200px 600px at 50% 120%, rgba(49,145,151,.25), transparent 60%),
+    #0a0a0a;
+    color: #eee;
+    background-attachment: fixed;
+    overflow-x: hidden;
+}
+
+/* 유동 오로라 레이어 */
+body.fx-aurora::before{
+    content:"";
+    position:fixed; inset:-10% -10%;
+    background:
+            conic-gradient(from 0turn, var(--c1), var(--c2), var(--c3), var(--c4), var(--c1));
+    filter: blur(60px) saturate(140%);
+    opacity:.55;
+    animation: auroraSpin 28s linear infinite;
+    pointer-events:none; z-index:-2;
+}
+
+/* 반짝 스파클 */
+body.fx-aurora::after{
+    content:"";
+    position:fixed; inset:0; z-index:-1; pointer-events:none;
+    animation: twinkle 6s ease-in-out infinite alternate;
+}
+
+body.fx-aurora::after{
+}
+
+body.fx-aurora::after{
+    background:
+            radial-gradient(circle at 15% 25%, rgba(255,255,255,.12) 0 2px, transparent 3px) 0 0/120px 120px,
+            radial-gradient(circle at 65% 60%, rgba(255,255,255,.10) 0 2px, transparent 3px) 0 0/140px 140px,
+            radial-gradient(circle at 85% 30%, rgba(255,255,255,.10) 0 2px, transparent 3px) 0 0/180px 180px;
+}
+
+@keyframes auroraSpin { to { transform: rotate(360deg); filter: hue-rotate(360deg) blur(60px) saturate(140%);} }
+@keyframes twinkle { from { opacity:.35; } to { opacity:.75; } }
+
+/* 카드/섹션이 배경 위에서 더 빛나게 (선택) */
+.fx-aurora .section, .fx-aurora .card, .fx-aurora .course, .fx-aurora .summary-panel{
+    background: rgba(255,255,255,.10);
+    backdrop-filter: blur(12px) saturate(130%);
+    -webkit-backdrop-filter: blur(12px) saturate(130%);
+    border: 1px solid rgba(255,255,255,.22);
+    box-shadow: 0 10px 30px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.08) inset;
+    color: #f4f6ff;
+}
+.fx-aurora h1,.fx-aurora h2,.fx-aurora h3{ color:#fff; text-shadow:0 2px 16px rgba(0,0,0,.35); }
+.fx-aurora .btn{ box-shadow:0 8px 24px rgba(127,90,240,.35); }

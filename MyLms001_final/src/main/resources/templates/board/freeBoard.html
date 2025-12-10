@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>자유게시판 | MyLMS</title>
+
+    <!-- 기존 링크(th 유지) -->
+    <link rel="stylesheet" href="/css/main.css" th:href="@{/css/board/freeBoard.css}">
+    <!-- 보드 공통 스타일 -->
+    <link rel="stylesheet" href="/css/board/board.css">
+</head>
+<body>
+<div th:fragment="content">
+    <main class="main-content notice-board">
+        <div class="board-head">
+            <h2 class="board-title">
+                자유 게시판 <span class="badge-pill">FREE</span>
+                <small class="sub">회원 / 강사 소통 공간</small>
+            </h2>
+        </div>
+            <!-- ■ 노랑 박스: 제목 아래, 오른쪽 끝 정렬된 검색바 -->
+            <div style="display:flex; justify-content:flex-end; margin-top:8px;">
+                <form class="board-utils search" id="freeBoardSearchForm" method="get" th:action="@{|/board/${typeSlug}|}">
+                    <input class="search-input" type="text" name="q" id="searchInput"
+                           placeholder="검색어 입력" th:value="${param.q}">
+                    <button class="search-button" type="submit" id="searchBtn">검색</button>
+                </form>
+            </div>
+        <!-- ===== /헤더 영역 ===== -->
+
+        <!-- 목록 -->
+        <table class="table-notice" id="freeBoardTable">
+            <thead>
+            <tr>
+                <th style="width:8%;">NO</th>
+                <th style="width:46%;">제목</th>
+                <th style="width:16%;">작성자</th>
+                <th style="width:12%;">상태</th>
+                <th style="width:18%;">등록일</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <!-- 오류(주입 실패) -->
+            <tr th:if="${posts == null}">
+                <td colspan="5" class="empty-state">
+                    <div class="icon">⚠️</div>
+                    목록을 불러오는 중 오류가 발생했습니다.
+                </td>
+            </tr>
+
+            <!-- 빈 목록 -->
+            <tr th:if="${posts != null and #lists.isEmpty(posts)}">
+                <td colspan="5" class="empty-state">
+                    <div class="icon">🗒️</div>
+                    게시글이 없습니다.
+                </td>
+            </tr>
+
+            <!-- 정상 목록 -->
+            <th:block th:if="${posts != null and !#lists.isEmpty(posts)}">
+                <tr th:each="post, stat : ${posts}">
+                    <td class="col-no" th:text="${stat.count}">1</td>
+
+                    <td class="title title-cell">
+                        <div class="title-line">
+                            <a th:href="@{|/board/${typeSlug}/${post.id}|}" th:text="${post.title}">제목</a>
+                            <span class="arrow">›</span>
+                        </div>
+                        <!-- Map일 때도 안전 -->
+                        <span class="title-preview"
+                              th:if="${#maps.containsKey(post, 'preview') and post['preview'] != null}"
+                              th:text="${post['preview']}">내용 미리보기</span>
+                    </td>
+
+                    <td class="col-author" th:text="${post.authorName}">작성자</td>
+                    <td class="col-role">
+            <span class="status" th:switch="${#strings.toLowerCase(post.role)}">
+              <span th:case="'admin'" class="admin">관리자</span>
+              <span th:case="'instructor'" class="teacher">강사</span>
+              <span th:case="'student'" class="student">학생</span>
+              <span th:case="*">회원</span>
+            </span>
+                    </td>
+                    <td class="col-date" th:text="${#temporals.format(post.createdAt,'yyyy-MM-dd')}">2025-09-26</td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+
+        <!-- 글쓰기 -->
+        <a class="write-button" th:href="@{|/board/${typeSlug}/write|}">글쓰기</a>
+
+        <!-- 페이지네이션(클라에서 생성/대체) -->
+        <div class="pagination" id="pagination"></div>
+    </main>
+</div>
+
+<!-- (선택) 아래에 기존에 쓰던 검색/페이지네이션 스크립트가 있으면 그대로 두세요 -->
+</body>
+</html>

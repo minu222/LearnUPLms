@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DW Admin — Menu (Standalone)</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      rel="stylesheet"
+    />
+
+  <body>
+  <div th:fragment="menu">
+  <header class="topbar">
+      <div>
+          <a class="link" th:href="@{http://localhost:8080/}">DW Academy</a>
+      <button class="menu-toggle" type="button" id="btnToggleSidebar">
+          <i class="fa-solid fa-bars"></i> 메뉴
+      </button>
+  </header>
+  <aside class="sidebar" role="navigation" aria-label="주 메뉴">
+      <ul class="menu">
+          <li>
+              <a class="link" th:href="@{/admin/home}">
+                  <i class="fa-solid fa-house"></i> 홈
+              </a>
+          </li>
+
+          <!-- 회원 정보 -->
+          <li>
+              <label class="submenu-toggle" for="toggle-members">
+                  <i class="fas fa-users"></i> 회원 정보
+              </label>
+              <input type="checkbox" id="toggle-members" class="submenu-check" />
+              <ul class="submenu">
+                  <li>
+                      <label class="submenu-toggle" for="toggle-members-mgmt">
+                          <i class="fas fa-user-cog"></i> 회원 관리
+                      </label>
+                      <input type="checkbox" id="toggle-members-mgmt" class="submenu-check"/>
+                      <ul class="submenu">
+                          <li>
+                              <a th:href="@{/admin/instructors}">
+                                  <i class="fas fa-chalkboard-teacher"></i> 강사 정보
+                              </a>
+                          </li>
+                          <li>
+                              <a th:href="@{/admin/students}">
+                                  <i class="fas fa-user-graduate"></i> 학생 정보
+                              </a>
+                          </li>
+                          <li>
+                              <a th:href="@{/admin/info-trash}">
+                                  <i class="fas fa-trash-alt"></i> 정보 휴지통
+                              </a>
+                          </li>
+                          <li>
+                              <a th:href="@{/admin/member-details}">
+                                  <i class="fas fa-id-card"></i> 회원 상세 정보
+                              </a>
+                          </li>
+                      </ul>
+                  </li>
+              </ul>
+          </li>
+
+          <!-- 발송 관리 -->
+          <li>
+              <label class="submenu-toggle" for="toggle-mailing">
+                  <i class="fas fa-paper-plane"></i> 발송 관리
+              </label>
+              <input type="checkbox" id="toggle-mailing" class="submenu-check" />
+              <ul class="submenu">
+                  <li>
+                      <a th:href="@{/email/message-send}">
+                          <i class="fas fa-envelope"></i> 쪽지 보내기
+                      </a>
+                  </li>
+                  <li>
+                      <a th:href="@{/email/message-log}">
+                          <i class="fas fa-envelope-open-text"></i> 쪽지 내역
+                      </a>
+                  </li>
+              </ul>
+          </li>
+
+          <!-- 교육과정 -->
+          <li>
+              <label class="submenu-toggle" for="toggle-courses">
+                  <i class="fas fa-book-open"></i> 교육과정
+              </label>
+              <input type="checkbox" id="toggle-courses" class="submenu-check" />
+              <ul class="submenu">
+                  <li>
+                      <a th:href="@{/admin/classrooms-registration}">
+                          <i class="fas fa-plus-square"></i> 강의실 등록
+                      </a>
+                  </li>
+                  <!--                <li>-->
+                  <!--                    <a th:href="@{/admin/classroom-edit}">-->
+                  <!--                        <i class="fas fa-edit"></i> 강의실 수정-->
+                  <!--                    </a>-->
+                  <!--                </li>-->
+                  <li>
+                      <a th:href="@{/admin/classrooms-list}">
+                          <i class="fas fa-edit"></i> 강의실 목록
+                      </a>
+                  </li>
+                  <!--                <li>-->
+                  <!--                    <a th:href="@{/admin/lecture-delete}">-->
+                  <!--                        <i class="fas fa-trash"></i> 강의실 삭제-->
+                  <!--                    </a>-->
+                  <!--                </li>-->
+                  <li>
+                      <a th:href="@{/admin/classroom-student-info}">
+                          <i class="fas fa-users"></i> 강의실 학생 정보
+                      </a>
+                  </li>
+                  <li>
+                      <a th:href="@{/admin/course-materials-management}">
+                          <i class="fas fa-folder-open"></i> 수업 자료 관리
+                      </a>
+                  </li>
+                  <li>
+                      <a th:href="@{/admin/mock-exams}">
+                          <i class="fas fa-file-alt"></i> 시험 문제 관리
+                      </a>
+                  </li>
+<!--                  <li>-->
+<!--                      <a th:href="@{/admin/attendance-management}">-->
+<!--                          <i class="fas fa-calendar-check"></i> 출석 관리-->
+<!--                      </a>-->
+<!--                  </li>-->
+                  <li>
+                      <a th:href="@{/admin/posts-manage}"
+                      ><i class="fas fa-edit"></i> 게시글 관리</a
+                      >
+                  </li>
+              </ul>
+          </li>
+
+          <li>
+              <label class="submenu-toggle" for="toggle-payments">
+                  <i class="fas fa-credit-card"></i> 결제 관리
+              </label>
+              <input type="checkbox" id="toggle-payments" class="submenu-check" />
+              <ul class="submenu">
+                  <li>
+                      <a th:href="@{/order/order-list}">
+                          <i class="fas fa-list"></i> 주문 목록
+                      </a>
+                  </li>
+                  <li>
+                      <a th:href="@{/order/payment-management}">
+                          <i class="fas fa-money-check-alt"></i> 결제 관리
+                      </a>
+                  </li>
+                  <li>
+                      <a th:href="@{/order/coupon-management}">
+                          <i class="fas fa-ticket-alt"></i> 쿠폰 관리
+                      </a>
+                  </li>
+              </ul>
+          </li>
+
+          <!-- 매출 관리 -->
+          <li>
+              <label class="submenu-toggle" for="toggle-revenue">
+                  <i class="fas fa-chart-line"></i> 매출 관리
+              </label>
+              <input type="checkbox" id="toggle-revenue" class="submenu-check" />
+              <ul class="submenu">
+                  <li>
+                      <a th:href="@{/sales/annual-revenue-stats}">
+                          <i class="fas fa-calendar"></i> 연별 매출 통계
+                      </a>
+                  </li>
+                  <li>
+                      <a th:href="@{/sales/monthly-revenue-stats}">
+                          <i class="fas fa-calendar-alt"></i> 월별 매출 통계
+                      </a>
+                  </li>
+                  <li>
+                      <a th:href="@{/sales/course-revenue-stats}">
+                          <i class="fas fa-chalkboard"></i> 과정 매출 통계
+                      </a>
+                  </li>
+                  <li>
+                      <a th:href="@{/sales/tax-management}">
+                          <i class="fas fa-file-invoice-dollar"></i> 세금 관리
+                      </a>
+                  </li>
+              </ul>
+          </li>
+      </ul>
+  </aside>
+
+<!--  <&#45;&#45;메일쓰기&ndash;&gt;-->
+<!--  <div-->
+<!--          class="popup-overlay"-->
+<!--          id="mailPopup"-->
+<!--          role="dialog"-->
+<!--          aria-modal="true"-->
+<!--          aria-label="메일 쓰기"-->
+<!--          hidden-->
+<!--  >-->
+<!--      <div class="popup">-->
+<!--          <div class="popup-header">-->
+<!--              메일 쓰기-->
+<!--              <button type="button" class="popup-close" aria-label="닫기">-->
+<!--                  &times;-->
+<!--              </button>-->
+<!--          </div>-->
+<!--          <div class="popup-body">-->
+<!--              <div class="form-group">-->
+<!--                  <label class="form-label">받는사람</label>-->
+<!--                  <div class="receiver-box">-->
+<!--                      <div id="receiverList" class="receiver-list"></div>-->
+<!--                      <input-->
+<!--                              type="text"-->
+<!--                              id="receiverInput"-->
+<!--                              placeholder="이메일 입력 후 Enter"-->
+<!--                      />-->
+<!--                      <button-->
+<!--                              type="button"-->
+<!--                              class="address-book-btn"-->
+<!--                              id="openAddressBook"-->
+<!--                      >-->
+<!--                          <i class="fa-solid fa-book"></i> 주소록-->
+<!--                      </button>-->
+<!--                  </div>-->
+<!--              </div>-->
+
+<!--              <div class="form-group">-->
+<!--                  <label class="form-label">제목</label>-->
+<!--                  <div class="title-box">-->
+<!--                      <input type="text" id="mailTitle" placeholder="제목 입력" />-->
+<!--                      <select id="templateSelect">-->
+<!--                          <option value="">템플릿 선택</option>-->
+<!--                          <option>공지사항 안내</option>-->
+<!--                          <option>업데이트 안내</option>-->
+<!--                          <option>이벤트 초대</option>-->
+<!--                      </select>-->
+<!--                  </div>-->
+<!--              </div>-->
+
+<!--              <div class="form-group">-->
+<!--                  <label class="form-label">파일첨부</label>-->
+<!--                  <div id="fileDrop" class="file-drop-area">-->
+<!--                      파일을 끌어오거나 클릭하여 업로드하세요.-->
+<!--                  </div>-->
+<!--              </div>-->
+
+<!--              <div class="form-group">-->
+<!--                  <label class="form-label">내용</label>-->
+<!--                  <div class="editor-toolbar">-->
+<!--                      <select id="fontSizeSel">-->
+<!--                          <option value="3">14px</option>-->
+<!--                          <option value="4">18px</option>-->
+<!--                          <option value="5">24px</option>-->
+<!--                      </select>-->
+<!--                      <button type="button" data-cmd="bold"><b>B</b></button>-->
+<!--                      <button type="button" data-cmd="italic"><i>I</i></button>-->
+<!--                      <button type="button" data-cmd="underline"><u>U</u></button>-->
+<!--                      <button type="button" data-cmd="insertUnorderedList">-->
+<!--                          <i class="fa fa-list-ul"></i>-->
+<!--                      </button>-->
+<!--                      <button type="button" data-cmd="insertOrderedList">-->
+<!--                          <i class="fa fa-list-ol"></i>-->
+<!--                      </button>-->
+<!--                      <button type="button" id="linkBtn">-->
+<!--                          <i class="fa fa-link"></i>-->
+<!--                      </button>-->
+<!--                      <button type="button" id="imgBtn">-->
+<!--                          <i class="fa fa-image"></i>-->
+<!--                      </button>-->
+<!--                  </div>-->
+<!--                  <div class="editor" id="mailEditor" contenteditable="true">-->
+<!--                      여기에 내용을 입력하세요...-->
+<!--                  </div>-->
+<!--              </div>-->
+
+<!--              <button class="btn-submit" id="sendBtn">메일 보내기</button>-->
+<!--          </div>-->
+<!--      </div>-->
+<!--  </div>-->
+  </div>
+
+  <script>
+      // 모바일 사이드바 토글
+      document
+          .getElementById("btnToggleSidebar")
+          ?.addEventListener("click", () => {
+              document.body.classList.toggle("sidebar-open");
+          });
+
+      // ===== Popup open/close + a11y + scroll lock =====
+      (function () {
+          const overlay = document.getElementById("mailPopup");
+          const body = document.body;
+          let lastFocus = null;
+
+          function lockScroll(lock) {
+              body.style.overflow = lock ? "hidden" : "";
+          }
+          function openPopup(trigger) {
+              lastFocus = trigger || document.activeElement;
+              overlay.classList.add("is-open");
+              overlay.removeAttribute("hidden");
+              lockScroll(true);
+              const first = overlay.querySelector(
+                  'button,[href],input,select,textarea,[contenteditable="true"],[tabindex]:not([tabindex="-1"])'
+              );
+              (first || overlay).focus();
+          }
+          function closePopup() {
+              overlay.classList.remove("is-open");
+              overlay.setAttribute("hidden", "");
+              lockScroll(false);
+              if (lastFocus && typeof lastFocus.focus === "function")
+                  lastFocus.focus();
+          }
+          window.closePopup = closePopup;
+
+          document.addEventListener("click", (e) => {
+              const opener = e.target.closest("[data-open-mail]");
+              if (opener) {
+                  e.preventDefault();
+                  openPopup(opener);
+              }
+              if (e.target.closest(".popup-close")) {
+                  e.preventDefault();
+                  closePopup();
+              }
+          });
+
+          overlay.addEventListener("mousedown", (e) => {
+              if (e.target === overlay) closePopup();
+          });
+
+          overlay.addEventListener("keydown", (e) => {
+              if (e.key === "Escape") {
+                  e.preventDefault();
+                  closePopup();
+                  return;
+              }
+              if (e.key === "Tab") {
+                  const focusables = Array.from(
+                      overlay.querySelectorAll(
+                          'button,[href],input,select,textarea,[contenteditable="true"],[tabindex]:not([tabindex="-1"])'
+                      )
+                  ).filter(
+                      (el) => !el.hasAttribute("disabled") && el.offsetParent !== null
+                  );
+                  if (!focusables.length) return;
+                  const first = focusables[0],
+                      last = focusables[focusables.length - 1];
+                  if (e.shiftKey && document.activeElement === first) {
+                      e.preventDefault();
+                      last.focus();
+                  } else if (!e.shiftKey && document.activeElement === last) {
+                      e.preventDefault();
+                      first.focus();
+                  }
+              }
+          });
+      })();
+
+      // ===== Receiver tags =====
+      (function () {
+          const list = document.getElementById("receiverList");
+          const input = document.getElementById("receiverInput");
+          if (!list || !input) return;
+          const emails = new Set();
+          const isEmail = (s) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+
+          function addTag(raw) {
+              if (!raw) return;
+              const parts = String(raw)
+                  .split(/[,\s;]+/)
+                  .map((v) => v.trim())
+                  .filter(Boolean);
+              for (const part of parts) {
+                  const email = part;
+                  if (!isEmail(email) || emails.has(email)) continue;
+                  emails.add(email);
+                  const tag = document.createElement("span");
+                  tag.className = "receiver-tag";
+                  tag.dataset.email = email;
+                  const text = document.createElement("span");
+                  text.textContent = email;
+                  const btn = document.createElement("button");
+                  btn.type = "button";
+                  btn.setAttribute("aria-label", "제거");
+                  btn.innerHTML = "&times;";
+                  btn.addEventListener("click", () => {
+                      emails.delete(email);
+                      tag.remove();
+                  });
+                  tag.append(text, btn);
+                  list.appendChild(tag);
+              }
+          }
+          input.addEventListener("keydown", (e) => {
+              if (e.key === "Enter") {
+                  e.preventDefault();
+                  const v = input.value.trim();
+                  if (v) addTag(v);
+                  input.value = "";
+              }
+          });
+          input.addEventListener("paste", (e) => {
+              const v = (e.clipboardData || window.clipboardData).getData("text");
+              if (v) {
+                  e.preventDefault();
+                  addTag(v);
+              }
+          });
+          window.__getReceiverEmails = () => Array.from(emails);
+      })();
+
+      // ===== File drop =====
+      (function () {
+          const drop = document.getElementById("fileDrop");
+          if (!drop) return;
+          const prevent = (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+          };
+          ["dragenter", "dragover", "dragleave", "drop"].forEach((ev) =>
+              drop.addEventListener(ev, prevent)
+          );
+          ["dragenter", "dragover"].forEach((ev) =>
+              drop.addEventListener(ev, (e) => {
+                  drop.classList.add("is-dragover");
+                  if (e.dataTransfer) e.dataTransfer.dropEffect = "copy";
+              })
+          );
+          ["dragleave", "drop"].forEach((ev) =>
+              drop.addEventListener(ev, () => drop.classList.remove("is-dragover"))
+          );
+          drop.addEventListener("click", () => {
+              const f = document.createElement("input");
+              f.type = "file";
+              f.multiple = true;
+              f.addEventListener("change", () => console.log("FILES:", f.files));
+              f.click();
+          });
+          drop.addEventListener("drop", (e) => {
+              const files = e.dataTransfer?.files;
+              if (files?.length) console.log("DROP FILES:", files);
+          });
+      })();
+
+      // ===== Rich text toolbar =====
+      (function () {
+          const editor = document.getElementById("mailEditor");
+          const sizeSel = document.getElementById("fontSizeSel");
+          if (!editor) return;
+          document
+              .querySelectorAll(".editor-toolbar button")
+              .forEach((b) => (b.type = "button"));
+          document
+              .querySelectorAll(".editor-toolbar [data-cmd]")
+              .forEach((btn) => {
+                  btn.addEventListener("click", () => {
+                      editor.focus();
+                      document.execCommand(btn.dataset.cmd, false, "");
+                  });
+              });
+          sizeSel?.addEventListener("change", function () {
+              editor.focus();
+              document.execCommand("fontSize", false, this.value);
+          });
+          document.getElementById("linkBtn")?.addEventListener("click", () => {
+              const url = prompt("링크 URL");
+              if (url) {
+                  editor.focus();
+                  document.execCommand("createLink", false, url);
+              }
+          });
+          document.getElementById("imgBtn")?.addEventListener("click", () => {
+              const url = prompt("이미지 URL");
+              if (url) {
+                  editor.focus();
+                  document.execCommand("insertImage", false, url);
+              }
+          });
+          document.getElementById("sendBtn")?.addEventListener("click", () => {
+              const receivers = (window.__getReceiverEmails?.() || []).join(", ");
+              const title = (
+                  document.getElementById("mailTitle")?.value || ""
+              ).trim();
+              const html = editor.innerHTML;
+              console.log("SEND MAIL", { receivers, title, html });
+              alert("메일 전송 로직에 연결하세요!\n(콘솔에 데이터 출력 중)");
+          });
+      })();
+  </script>
+  </body>
+</html>

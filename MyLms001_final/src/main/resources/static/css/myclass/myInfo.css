@@ -1,0 +1,365 @@
+/* =========================
+   공통 레이아웃 및 메인 콘텐츠
+========================= */
+.main-content {
+    width: 100%;
+    max-width: 1200px;
+    min-height: 760px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, #f7f9fc 0%, #f5f7fb 100%);
+    border: 1px solid #e6ebf1;
+    border-radius: 14px;
+    padding: 24px 28px 20px;
+    box-shadow: 0 8px 22px rgba(17, 24, 39, 0.06);
+    overflow: auto; /* 변경: hidden -> auto */
+}
+
+
+.main-content h2 {
+    font-size: 22px;
+    margin: 0 0 18px;
+    border-bottom: 2px solid #ffb400;
+    padding-bottom: 8px;
+    font-weight: 700;
+    color: #222;
+}
+
+.main-content img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 16px;
+}
+
+.main-content p {
+    font-size: 14px;
+    color: #464e57;
+    line-height: 1.6;
+}
+
+/* =========================
+   헤더 스타일
+========================= */
+.header {
+    background: linear-gradient(135deg, #ff8c00 0%, #ffb400 100%);
+    color: #fff;
+    padding: 26px 16px;
+    text-align: center;
+    border-radius: 12px;
+    margin-bottom: 18px;
+}
+
+.header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.28);
+    padding-bottom: 8px;
+    display: inline-block;
+}
+
+.header p {
+    opacity: 0.9;
+    font-size: 13px;
+}
+
+/* =========================
+   콘텐츠 카드 (영역 구분 강조)
+========================= */
+.content {
+    background: #ffffff;
+    border: 1px solid #edf2f7;
+    border-radius: 12px;
+    padding: 22px 18px;
+    box-shadow: 0 4px 12px rgba(2, 6, 23, 0.04);
+}
+
+/* 섹션 카드 유틸 (필요 블록에 추가) */
+.section-card {
+    background: #ffffff;
+    border: 1px solid #e9eef5;
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.05);
+    margin-bottom: 16px;
+}
+
+/* 섹션 타이틀 바 */
+.section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1f2937;
+    padding: 10px 12px;
+    margin: -6px -6px 14px;
+    background: linear-gradient(180deg, #fafbff 0%, #f2f5fb 100%);
+    border: 1px solid #e5eaf3;
+    border-radius: 10px;
+}
+
+/* 수평 구분선 유틸 */
+.divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e6ebf2, transparent);
+    margin: 14px 0;
+}
+
+/* =========================
+   프로필 섹션
+========================= */
+.profile-section {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    align-items: center;
+    gap: 18px;
+    padding: 18px;
+    background: #ffffff;
+    border: 1px solid #e7edf6;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(2, 6, 23, 0.04);
+    margin-bottom: 22px;
+}
+
+.profile-pic-wrapper { position: relative; }
+
+.profile-pic {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 3px solid #eff3f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: #fff;
+    transition: all 0.25s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.profile-pic:hover {
+    border-color: #ff8c00;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(255, 140, 0, 0.25);
+}
+
+.profile-pic .plus-icon {
+    font-size: 22px;
+    color: #adb5bd;
+    font-weight: 300;
+}
+
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.profile-info h3 {
+    font-size: 17px;
+    color: #222;
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+
+.profile-info p {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+/* =========================
+   폼 그리드 (2열 정렬 + 입력 폭 축소)
+========================= */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    gap: 16px 22px;
+    align-items: start;
+    position: relative;
+    padding-right: 6px;
+}
+
+/* 큰 화면에서 열 사이 가이드 라인 */
+@media (min-width: 1025px) {
+    .form-grid::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        width: 1px;
+        left: 50%;
+        background: linear-gradient(
+                180deg,
+                transparent 0%,
+                #eaeef5 12%,
+                #eaeef5 88%,
+                transparent 100%
+        );
+        pointer-events: none;
+    }
+}
+
+/* 라벨+입력 세트 */
+.input-group {
+    display: grid;
+    grid-template-rows: auto 1fr;
+}
+
+.input-group.full { grid-column: 1 / -1; } /* 행 전체 사용 */
+
+/* 라벨 */
+.input-group label {
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 8px;
+    font-size: 13px;
+    letter-spacing: -0.2px;
+}
+
+/* 입력창: 기본 폭 제한으로 과도한 길이 방지 */
+.input-field {
+    padding: 10px 12px;
+    border: 2px solid #dfe7f1;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    background: #f7f9fc;
+    color: #374151;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: #ff8c00;
+    box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.12);
+    background: #fff;
+}
+
+/* 길이 변형 유틸 */
+.input-field.sm { max-width: 300px; }
+.input-field.lg { max-width: 520px; }
+
+/* =========================
+   체크박스 스타일
+========================= */
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 10px 18px;
+    margin: 16px 0 8px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-item input { display: none; }
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #cbd5e1;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    background: #fff;
+}
+
+.checkbox-item input:checked + .checkmark {
+    background: #ff8c00;
+    border-color: #ff8c00;
+}
+
+.checkbox-item input:checked + .checkmark::after {
+    content: '✓';
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.checkbox-item label {
+    font-size: 13px;
+    color: #374151;
+    cursor: pointer;
+    line-height: 1.2;
+}
+
+/* =========================
+   버튼 바 (오른쪽 끝 정렬)
+========================= */
+.button-group {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;    /* 우측 끝으로 */
+    gap: 10px;
+    margin-top: 22px;
+    padding: 14px 0 0;            /* 위쪽만 여백 */
+    border-top: 1px solid #e6ebf1;
+}
+
+.button-group .btn + .btn { margin-left: 6px; }
+
+.btn {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+    min-width: 110px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #ff8c00 0%, #ffb400 100%);
+    color: #fff;
+    box-shadow: 0 8px 16px rgba(255, 140, 0, 0.28);
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 18px rgba(255, 140, 0, 0.32);
+}
+
+.btn-secondary {
+    background: #667085;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(16, 24, 40, 0.12);
+}
+
+.btn-secondary:hover {
+    background: #565c67;
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* =========================
+   상태 텍스트 (오타 수정)
+========================= */
+.status.completed { color: #0a0a0a; }
+
+/* =========================
+   반응형
+========================= */
+@media (max-width: 1024px) {
+    .form-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+    .content { padding: 18px 10px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .button-group { flex-direction: column; align-items: stretch; }
+    .btn { width: 100%; }
+}

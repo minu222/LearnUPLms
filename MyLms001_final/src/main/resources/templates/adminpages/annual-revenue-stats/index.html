@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>DW Academy</title>
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/adminpages/css/style.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/menu.css}">
+</head>
+
+<body>
+<div th:replace="adminpages/menu :: menu"></div>
+      <main class="main">
+        <div class="content-box">
+          <h2>연별 매출 통계</h2>
+          <p class="helper">
+            조회 구간의 연도별 매출 추이를 확인합니다. (예시 데이터)
+          </p>
+
+          <div class="search-box sales-yearly-search">
+            <input
+              id="startYear"
+              type="number"
+              placeholder="시작연도(예: 2021)"
+            />
+            <input
+              id="endYear"
+              type="number"
+              placeholder="종료연도(예: 2025)"
+            />
+            <button id="btnQuery" class="btn-primary">조회</button>
+          </div>
+
+          <div class="chart-container">
+            <canvas
+              id="yearlyChart"
+              aria-label="연도별 매출 차트"
+              role="img"
+            ></canvas>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

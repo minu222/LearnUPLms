@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<header>
+    <div class="nav-container">
+        <!-- 로고 -->
+        <div class="logo">
+            <a th:href="@{/}">MyLMS</a>
+        </div>
+
+        <!-- 중앙 네비게이션 -->
+        <nav class="nav-center"
+             th:with="
+        rawRole=${ session.userRole != null ? session.userRole
+                 : (session.loginUser != null ? session.loginUser.role : 'guest') },
+        role=${ #strings.toLowerCase(
+                  #strings.trim(
+                    #strings.replace(rawRole, 'ROLE_', '')
+                  )
+               ) }">
+            <ul>
+                <!-- 교육과정 -->
+                <li class="menu-item">
+                    <a class="header-category" th:href="@{/course}"
+                       th:classappend="${activeCategory == 'course'} ? 'active'">교육과정</a>
+                    <ul class="sub-menu">
+                        <!-- 교육강의 -->
+                        <li class="menu-item">
+                            <a href="#">교육강의</a>
+                            <ul class="sub-menu">
+                                <li><a th:href="@{/course/lecture}">강의목록</a></li>
+                            </ul>
+                        </li>
+                        <!-- 강의소개 -->
+                        <li class="menu-item">
+                            <a href="#">과정소개</a>
+                            <ul class="sub-menu">
+                                <li><a th:href="@{/course/introduction/science}">이과</a></li>
+                                <li><a th:href="@{/course/introduction/liberal}">문과</a></li>
+                                <li><a th:href="@{/course/introduction/arts}">예체능</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- 정보센터 -->
+                <li class="menu-item">
+                    <a class="header-category" th:href="@{/info}"
+                       th:classappend="${activeCategory == 'info'} ? 'active'">정보센터</a>
+                    <ul class="sub-menu">
+                        <li><a th:href="@{/info/teacher}">강사소개</a></li>
+                        <li><a th:href="@{/info/books}">도서추천</a></li>
+                        <li><a th:href="@{/info/exam}">시험일정</a></li>
+                        <li><a th:href="@{/info/resources}">자료실</a></li>
+                    </ul>
+                </li>
+
+                <!-- 게시판 -->
+                <li class="menu-item">
+                    <a class="header-category" th:href="@{/board}"
+                       th:classappend="${activeCategory == 'board'} ? 'active'">게시판</a>
+                    <ul class="sub-menu">
+                        <li><a th:href="@{/board/notice}">공지사항</a></li>
+                        <li><a th:href="@{/board/faq}">FAQ</a></li>
+                        <li><a th:href="@{/board/free}">자유게시판</a></li>
+                        <li><a th:href="@{/board/qna}">문의게시판</a></li>
+                        <li><a th:href="@{/board/courseReview}">강의 후기</a></li>
+                        <li><a th:href="@{/board/teacherReview}">강사 후기</a></li>
+                    </ul>
+                </li>
+
+                <!-- 나의강의실 -->
+                <li class="menu-item">
+                    <a class="header-category"
+                       th:href="${role == 'guest'} ? '/login' : '/myclass/entry'"
+                       th:classappend="${activeCategory == 'myclass'} ? 'active'">
+                        나의강의실
+                    </a>
+                    <ul class="sub-menu">
+                        <!-- 비회원 안내 -->
+                        <li th:if="${role == 'student'}">
+                            <a th:href="@{/myclass/student/courses}">수강목록</a>
+                        </li>
+                        <li th:if="${role == 'student'}">
+                            <a th:href="@{/myclass/student/exams}">시험목록</a>
+                        </li>
+
+                        <!-- 강사용 메뉴 -->
+                        <li th:if="${role == 'instructor' || role == 'teacher'}">
+                            <a th:href="@{/myclass/teacher/classes}">강의실목록</a>
+                        </li>
+                        <li th:if="${role == 'instructor' || role == 'teacher'}">
+                            <a th:href="@{/myclass/teacher/register}">강의실등록</a>
+                        </li>
+
+                        <!-- 비회원 안내 -->
+                        <li th:if="${role == 'guest'}">
+                            <div class="guest-message">
+                                <span class="icon">🔒</span>
+                                <span class="text">로그인 후 가능한<br> 서비스 입니다.</span>
+                            </div>
+                        </li>
+
+                        <!-- 공통(로그인 시) -->
+                        <li th:if="${role != 'guest'}"><a th:href="@{/myclass/payment}">결재내역</a></li>
+                        <li th:if="${role != 'guest'}"><a th:href="@{/myclass/myBoard}">나의게시판</a></li>
+                        <li th:if="${role != 'guest'}"><a th:href="@{/myclass/myMessage}">이메일/쪽지</a></li>
+                        <li th:if="${role != 'guest'}"><a th:href="@{/myclass/myInfo}">회원정보수정</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </nav>
+
+        <!-- 우측: 로그인/회원가입 또는 환영/로그아웃 -->
+        <div class="auth-links">
+            <!-- 비회원 -->
+            <span th:if="${session.loginUser == null}">
+    <a th:href="@{/login}">로그인</a> |
+    <a th:href="@{/user/add}">회원가입</a>
+  </span>
+
+            <!-- 로그인 상태 -->
+            <span th:if="${session.loginUser != null}">
+    <span class="user">
+      <strong th:text="${session.loginUser.name}">user</strong>님 환영합니다. /
+    </span>
+    <a th:href="@{/user/logout}" class="link-btn">로그아웃</a>
+  </span>
+
+<!--            &lt;!&ndash; 알림 (선택) &ndash;&gt;-->
+<!--            <div class="notification" th:if="${session.loginUser != null}">-->
+<!--                🔔 <span class="badge" th:text="${unreadCount} ?: 0">0</span>-->
+<!--                <ul class="dropdown">-->
+<!--                    <li><a th:href="@{/messages}">새 쪽지 확인</a></li>-->
+<!--                    <li><a th:href="@{/emails}">새 이메일</a></li>-->
+<!--                    <li><a th:href="@{/notifications}">모두 보기</a></li>-->
+<!--                </ul>-->
+<!--            </div>-->
+        </div>
+    </div>
+</header>
+</body>
+</html>

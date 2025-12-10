@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 | MyLMS</title>
+    <!-- CHANGED: 정적 리소스는 th:href 권장 -->
+    <link rel="stylesheet" th:href="@{/css/login.css}" href="/css/login.css">
+</head>
+<body>
+<header class="nav-container">
+    <div class="logo"><a th:href="@{/}">MyLMS</a></div>
+</header>
+
+<div class="login-container">
+    <div class="login-box">
+        <h2>로그인</h2>
+
+        <!-- CHANGED: 로그인 실패 flash 메시지 표시 -->
+        <p class="error" th:if="${errorMessage}" th:text="${errorMessage}" style="color:#c00;margin-bottom:10px;"></p>
+
+        <!-- CHANGED: action/method/name 매핑 (POST /user/login, username/password) -->
+        <form th:action="@{/user/login}" method="post">
+            <!-- CHANGED: (선택) Spring Security 사용 시 CSRF 토큰 -->
+            <input type="hidden" th:if="${_csrf != null}"
+                   th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+            <div class="input-group">
+                <label for="nickname">ID</label>
+                <!-- CHANGED: id→username, name="username" -->
+                <input type="text" id="nickname" name="nickname" placeholder="아이디 입력" autocomplete="nickname" required>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <!-- CHANGED: name="password" -->
+                <input type="password" id="password" name="password" placeholder="비밀번호 입력" autocomplete="current-password" required>
+            </div>
+
+            <button type="submit" class="login-btn">LOGIN</button>
+        </form>
+
+        <div class="options">
+            <a href="#" aria-disabled="true">아이디 찾기</a> /
+            <a href="#" aria-disabled="true">비밀번호 찾기</a> /
+            <!-- CHANGED: 회원가입 경로 컨트롤러에 맞춤 -->
+            <a th:href="@{/user/add}" href="/user/add">회원가입</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

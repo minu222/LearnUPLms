@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>DW Academy</title>
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/adminpages/css/style.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/menu.css}">
+</head>
+
+<body>
+<div th:replace="adminpages/menu :: menu"></div>
+    <main class="main">
+        <div class="content-box">
+            <!-- 이메일 발송 내역 -->
+            <div class="header">
+                <h2>이메일 발송 내역</h2>
+            </div>
+
+            <!-- 검색 + 버튼 영역 -->
+            <form
+                    class="search-area"
+                    method="get"
+                    th:action="@{/messages/search}"
+            >
+                <!-- 왼쪽: 검색 조건 -->
+                <div class="search-left">
+                    <label>소속:</label>
+                    <select name="group">
+                        <option value="">전체</option>
+                        <option value="teacher">강사</option>
+                    </select>
+
+                    <label>검색:</label>
+                    <select name="type">
+                        <option value="">전체</option>
+                        <option value="userid">회원아이디</option>
+                        <option value="title">제목</option>
+                        <option value="sender">발송자</option>
+                    </select>
+
+                    <input name="keyword" placeholder="검색어 입력" type="text" />
+                    <button type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i> 검색
+                    </button>
+                </div>
+
+            </form>
+
+            <!-- 발송 내역 테이블 -->
+            <table>
+                <thead>
+                <tr>
+                    <th><input id="checkAll" type="checkbox" /></th>
+                    <th>번호</th>
+                    <th>소속</th>
+                    <th>회원아이디</th>
+                    <th>제목</th>
+                    <th>발송자</th>
+                    <th>발송일</th>
+                    <th>발송건수</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="log, stat : ${logs}">
+                    <td><input class="row-check" type="checkbox"/></td>
+                    <td th:text="${stat.count}"></td> <!-- 순번 -->
+                    <td>강사</td> <!-- 필요 시 log.role로 동적 표시 -->
+                    <td th:text="${log.recipients}"></td>
+                    <td th:text="${log.subject}"></td>
+                    <td>관리자</td> <!-- 필요 시 log.sender 사용 -->
+                    <td th:text="${#temporals.format(log.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                    <td th:text="${#strings.arraySplit(log.recipients, ',').length}"></td> <!-- 발송 건수 -->
+                </tr>
+                </tbody>
+
+
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="content">
+    <main class="main-content">
+        <div class="board-header">
+        <h2>결제 및 주문 내역 통합</h2>
+            <div class="filter-buttons">
+                <button class="active" data-filter="all">전체</button>
+                <button data-filter="pending">주문대기</button>
+                <button data-filter="completed">주문완료</button>
+            </div>
+            </div>
+
+            <!-- 검색 입력 -->
+        <input type="text" id="searchInput" placeholder="주문명을 입력하여 검색...">
+        <!-- 상태 필터 버튼 -->
+
+        <table id="orderTable">
+            <thead>
+            <tr>
+                <th>NO</th>
+                <th>주문명</th>
+                <th>판매가</th>
+                <th>수량</th>
+                <th>결제금액</th>
+                <th>결제수단</th>
+                <th>주문일</th>
+                <th>상태</th>
+                <th>구매</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- 데이터는 JS에서 렌더링 -->
+            </tbody>
+        </table>
+
+        <!-- 페이지네이션 버튼 -->
+        <div class="pagination" id="pagination"></div>
+    </main>
+
+    <div th:replace="~{fragments/paymentModal :: paymentModal}"></div>
+<script th:src="@{/js/paymentHistoryList.js}"></script>
+</div>
+</body>
+</html>

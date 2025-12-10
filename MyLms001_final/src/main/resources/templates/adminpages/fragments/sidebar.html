@@ -1,0 +1,182 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="ko" xmlns:th="http://www.thymeleaf.org">-->
+<!--<body>-->
+<!--&lt;!&ndash; 고정 사이드바 &ndash;&gt;-->
+<!--<aside class="sidebar" role="navigation" aria-label="주 메뉴" th:fragment="sidebar">-->
+<!--    <ul class="menu">-->
+<!--        <li>-->
+<!--            <a class="link" th:href="@{/admin/home}">-->
+<!--                <i class="fa-solid fa-house"></i> 홈-->
+<!--            </a>-->
+<!--        </li>-->
+
+<!--        &lt;!&ndash; 회원 정보 &ndash;&gt;-->
+<!--        <li>-->
+<!--            <label class="submenu-toggle" for="toggle-members">-->
+<!--                <i class="fas fa-users"></i> 회원 정보-->
+<!--            </label>-->
+<!--            <input type="checkbox" id="toggle-members" class="submenu-check" />-->
+<!--            <ul class="submenu">-->
+<!--                <li>-->
+<!--                    <label class="submenu-toggle" for="toggle-members-mgmt">-->
+<!--                        <i class="fas fa-user-cog"></i> 회원 관리-->
+<!--                    </label>-->
+<!--                    <input type="checkbox" id="toggle-members-mgmt" class="submenu-check"/>-->
+<!--                    <ul class="submenu">-->
+<!--                        <li>-->
+<!--                            <a th:href="@{/admin/instructors}">-->
+<!--                                <i class="fas fa-chalkboard-teacher"></i> 강사 정보-->
+<!--                            </a>-->
+<!--                        </li>-->
+<!--                        <li>-->
+<!--                            <a th:href="@{/admin/students}">-->
+<!--                                <i class="fas fa-user-graduate"></i> 학생 정보-->
+<!--                            </a>-->
+<!--                        </li>-->
+<!--                        <li>-->
+<!--                            <a th:href="@{/admin/info-trash}">-->
+<!--                                <i class="fas fa-trash-alt"></i> 정보 휴지통-->
+<!--                            </a>-->
+<!--                        </li>-->
+<!--                        <li>-->
+<!--                            <a th:href="@{/admin/member-details}">-->
+<!--                                <i class="fas fa-id-card"></i> 회원 상세 정보-->
+<!--                            </a>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </li>-->
+
+<!--        &lt;!&ndash; 발송 관리 &ndash;&gt;-->
+<!--        <li>-->
+<!--            <label class="submenu-toggle" for="toggle-mailing">-->
+<!--                <i class="fas fa-paper-plane"></i> 발송 관리-->
+<!--            </label>-->
+<!--            <input type="checkbox" id="toggle-mailing" class="submenu-check" />-->
+<!--            <ul class="submenu">-->
+<!--                <li>-->
+<!--                    <a th:href="@{/email/compose-instructor-email}">-->
+<!--                        <i class="fas fa-envelope"></i> 강사 메일 쓰기-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <a th:href="@{/email/email-send-history}">-->
+<!--                        <i class="fas fa-envelope-open-text"></i> 이메일 발송 내역-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </li>-->
+
+<!--        &lt;!&ndash; 교육과정 &ndash;&gt;-->
+<!--        <li>-->
+<!--            <label class="submenu-toggle" for="toggle-courses">-->
+<!--                <i class="fas fa-book-open"></i> 교육과정-->
+<!--            </label>-->
+<!--            <input type="checkbox" id="toggle-courses" class="submenu-check" />-->
+<!--            <ul class="submenu">-->
+<!--                <li>-->
+<!--                    <a th:href="@{/admin/classrooms-registration}">-->
+<!--                        <i class="fas fa-plus-square"></i> 강의실 등록-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                &lt;!&ndash;                <li>&ndash;&gt;-->
+<!--                &lt;!&ndash;                    <a th:href="@{/admin/classroom-edit}">&ndash;&gt;-->
+<!--                &lt;!&ndash;                        <i class="fas fa-edit"></i> 강의실 수정&ndash;&gt;-->
+<!--                &lt;!&ndash;                    </a>&ndash;&gt;-->
+<!--                &lt;!&ndash;                </li>&ndash;&gt;-->
+<!--                <li>-->
+<!--                    <a th:href="@{/admin/classrooms-list}">-->
+<!--                        <i class="fas fa-edit"></i> 강의실 목록-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                &lt;!&ndash;                <li>&ndash;&gt;-->
+<!--                &lt;!&ndash;                    <a th:href="@{/admin/lecture-delete}">&ndash;&gt;-->
+<!--                &lt;!&ndash;                        <i class="fas fa-trash"></i> 강의실 삭제&ndash;&gt;-->
+<!--                &lt;!&ndash;                    </a>&ndash;&gt;-->
+<!--                &lt;!&ndash;                </li>&ndash;&gt;-->
+<!--                <li>-->
+<!--                    <a th:href="@{/admin/classroom-student-info}">-->
+<!--                        <i class="fas fa-users"></i> 강의실 학생 정보-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <a th:href="@{/admin/course-materials-management}">-->
+<!--                        <i class="fas fa-folder-open"></i> 수업 자료 관리-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <a th:href="@{/admin/mock-exams}">-->
+<!--                        <i class="fas fa-file-alt"></i> 시험 문제 관리-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <a th:href="@{/admin/attendance-management}">-->
+<!--                        <i class="fas fa-calendar-check"></i> 출석 관리-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <a th:href="@{/admin/posts-manage}"-->
+<!--                    ><i class="fas fa-edit"></i> 게시글 관리</a-->
+<!--                    >-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </li>-->
+
+<!--        <li>-->
+<!--            <label class="submenu-toggle" for="toggle-payments">-->
+<!--                <i class="fas fa-credit-card"></i> 결제 관리-->
+<!--            </label>-->
+<!--            <input type="checkbox" id="toggle-payments" class="submenu-check" />-->
+<!--            <ul class="submenu">-->
+<!--                <li>-->
+<!--                    <a th:href="@{/order/order-list}">-->
+<!--                        <i class="fas fa-list"></i> 주문 목록-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <a th:href="@{/order/payment-management}">-->
+<!--                        <i class="fas fa-money-check-alt"></i> 결제 관리-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <a th:href="@{/order/coupon-management}">-->
+<!--                        <i class="fas fa-ticket-alt"></i> 쿠폰 관리-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </li>-->
+
+<!--        &lt;!&ndash; 매출 관리 &ndash;&gt;-->
+<!--        <li>-->
+<!--            <label class="submenu-toggle" for="toggle-revenue">-->
+<!--                <i class="fas fa-chart-line"></i> 매출 관리-->
+<!--            </label>-->
+<!--            <input type="checkbox" id="toggle-revenue" class="submenu-check" />-->
+<!--            <ul class="submenu">-->
+<!--                <li>-->
+<!--                    <a th:href="@{/sales/annual-revenue-stats}">-->
+<!--                        <i class="fas fa-calendar"></i> 연별 매출 통계-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <a th:href="@{/sales/monthly-revenue-stats}">-->
+<!--                        <i class="fas fa-calendar-alt"></i> 월별 매출 통계-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <a th:href="@{/sales/course-revenue-stats}">-->
+<!--                        <i class="fas fa-chalkboard"></i> 과정 매출 통계-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <a th:href="@{/sales/tax-management}">-->
+<!--                        <i class="fas fa-file-invoice-dollar"></i> 세금 관리-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </li>-->
+<!--    </ul>-->
+<!--</aside>-->
+<!--</body>-->
+<!--</html>-->

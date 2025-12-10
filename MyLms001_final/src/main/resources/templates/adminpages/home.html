@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>DW Academy - 관리자 메인</title>
+    <!-- Libs -->
+    <link rel="stylesheet" href="/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/adminpages/css/style.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/menu.css}">
+  </head>
+
+  <body>
+  <div th:replace="adminpages/menu :: menu"></div>
+      <main class="main">
+        <div class="content-box">
+          <h2>관리자 메인</h2>
+
+          <div class="dashboard-wrap">
+            <!-- 📊 통계 카드 (6고정) -->
+            <section class="stats" aria-label="통계 카드">
+              <div class="card" th:text="'총 학생 : ' + ${studentCount} + '명'">
+              </div>
+              <div class="card" th:text="'총 강사 : ' + ${teacherCount} + '명'">
+              </div>
+              <div class="card" th:text="'과정 수 : ' + ${courseCount} + '개'">
+              </div>
+              <div class="card" th:text="'평균 수료율 : ' + ${avgCompletion} + '%'">
+              </div>
+              <div class="card" th:text="'취소율 : ' + ${cancelRate} + '%'">
+              </div>
+              <div class="card" th:text="'이번 달 매출 : ₩ ' + ${monthRevenue}">
+              </div>
+            </section>
+
+            <!-- 📢 알림 -->
+            <section class="alerts" aria-label="최근 알림">
+              <h3>최근 알림</h3>
+              <ul>
+                <li th:each="notice : ${notices}" th:text="${notice}">
+                </li>
+              </ul>
+            </section>
+
+            <!-- 🔍 검색 + 테이블 (줄바꿈 없음) -->
+            <section aria-label="검색 및 목록">
+              <div class="search-box">
+                <input placeholder="과정명 검색" type="text" />
+                <input placeholder="예: 2025/01" type="text" />
+                <select>
+                  <option>전체</option>
+                  <option>정상</option>
+                  <option>수강취소</option>
+                  <option>수료</option>
+                </select>
+                <button>검색</button>
+              </div>
+
+              <div class="table-wrap">
+                <table class="data-table" aria-label="수강 리스트">
+                  <thead>
+                    <tr>
+                      <th style="width: 72px">NO</th>
+                      <th style="width: 140px">년도/차수</th>
+                      <th>과정명</th>
+                      <th style="width: 200px">소속</th>
+                      <th style="width: 140px">수강생</th>
+                      <th style="width: 120px">진도율</th>
+                      <th style="width: 120px">상태</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1</td>
+                      <td>2025/01</td>
+                      <td>스마트테스트</td>
+                      <td>(주)위런소프트</td>
+                      <td>홍길동</td>
+                      <td>90%</td>
+                      <td><span class="badge normal">정상</span></td>
+                    </tr>
+                    <tr>
+                      <td>2</td>
+                      <td>2024/33</td>
+                      <td>인터넷활용</td>
+                      <td>(주)위런소프트</td>
+                      <td>이영희</td>
+                      <td>75%</td>
+                      <td><span class="badge cancel">수강취소</span></td>
+                    </tr>
+                    <tr>
+                      <td>3</td>
+                      <td>2024/20</td>
+                      <td>엑셀활용</td>
+                      <td>(주)위런소프트</td>
+                      <td>김민수</td>
+                      <td>100%</td>
+                      <td><span class="badge done">수료</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <!-- 💰 매출 리포트 (고정 높이) -->
+            <section class="sales-report" aria-label="매출 리포트">
+              <h3>💰 이번 달 매출 리포트</h3>
+              <div class="chart-container">
+                <canvas id="salesChart"></canvas>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

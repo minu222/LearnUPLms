@@ -1,0 +1,1097 @@
+/* =========================
+   MyLMS Info CSS (deduped/optimized)
+   - Keep IDs/classes as-is
+   - Merge duplicates: :root, .search-bar, .pagination, modal*
+   - Scope preserved for pages: Notice/QnA/Board, Book, Calendar, Instructor
+========================= */
+
+/* ===== Base (single source of truth) ===== */
+:root {
+    --accent: #ff8c00;
+    --accent-hover: #ff7a00;
+    --border: #e5e7eb;
+    --text: #222;
+    --soft: #f9f9f9;
+    --muted: #6b7280;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--soft);
+    font-family: Arial, sans-serif;
+}
+
+a {
+    color: inherit
+}
+
+/* ===== Containers ===== */
+.board-container, .container {
+    width: 100%;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto
+}
+
+/* ===== Search / Filters (unified) ===== */
+.search, .filters {
+    display: flex;
+    gap: 10px;
+    align-items: center
+}
+
+.search input, .filters select,
+.search-bar input, .search-bar select {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+    background: #fff;
+    transition: .2s;
+}
+
+.search input:focus, .search-bar input:focus {
+    border-color: var(--accent)
+}
+
+.search button, .search-bar button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.search button:hover, .search-bar button:hover {
+    background: var(--accent-hover)
+}
+
+/* right-aligned compact search bar (강사소개 등에서 사용) */
+.search-bar {
+    --search-ch: 30;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+}
+
+.search-bar #searchInput {
+    width: calc(var(--search-ch) * 1ch);
+    flex: 0 0 calc(var(--search-ch) * 1ch);
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+.search-bar #filter {
+    flex: 0 0 160px
+}
+
+.search-bar #searchBtn {
+    flex: 0 0 auto;
+    white-space: nowrap
+}
+
+/* ===== Tables / Buttons / Pagination (unified) ===== */
+table th, table td {
+    padding: 12px 10px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    font-size: 14px
+}
+
+table th {
+    background: #f1f1f1;
+    color: #4a4a4a;
+    font-weight: 700
+}
+
+.write-button {
+    float: right;
+    margin-top: 15px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.write-button:hover {
+    background: var(--accent-hover)
+}
+
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 10px
+}
+
+.pagination a, .pagination button {
+    display: inline-block;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #fff;
+    cursor: pointer;
+    transition: .2s;
+    text-decoration: none;
+    color: inherit;
+}
+
+.pagination a:hover, .pagination button:hover {
+    background: #eee
+}
+
+.pagination .active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent)
+}
+
+.pagination button:disabled {
+    opacity: .5;
+    cursor: not-allowed
+}
+
+/* ===== Status Badges (QnA/자유 공용) ===== */
+.status {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    text-align: center
+}
+
+.status.wait {
+    background: #bbb
+}
+
+.status.complete {
+    background: #ff007f
+}
+
+.status.teacher {
+    color: #1e90ff;
+    font-weight: 700;
+    background: transparent
+}
+
+.status.student {
+    color: #28a745;
+    font-weight: 700;
+    background: transparent
+}
+
+.status.admin {
+    color: #ff9800;
+    font-weight: 700;
+    background: transparent
+}
+
+/* ===== Common Button Group ===== */
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap
+}
+
+.cancel-btn, .submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 96px;
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer
+}
+
+.cancel-btn {
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: #374151;
+    text-decoration: none
+}
+
+.cancel-btn:hover {
+    background: #f9fafb;
+    border-color: #cbd5e1
+}
+
+.cancel-btn:active {
+    transform: translateY(1px)
+}
+
+.submit-btn {
+    border: none;
+    background: var(--accent);
+    color: #fff
+}
+
+.submit-btn:hover {
+    background: var(--accent-hover)
+}
+
+.submit-btn:active {
+    transform: translateY(1px)
+}
+
+@media (max-width: 640px) {
+    .button-group {
+        justify-content: space-between
+    }
+
+    .cancel-btn, .submit-btn {
+        flex: 1 1 48%;
+        min-width: 0
+    }
+}
+
+/* ===== Notice Detail ===== */
+.notice-detail .board-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #222;
+    margin: 6px 0 12px
+}
+
+.notice-detail .post-info {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 12px
+}
+
+.notice-detail .post-content {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: #fff;
+    padding: 16px 18px;
+    line-height: 1.7;
+    min-height: 220px
+}
+
+/* ===== Write Form ===== */
+#writeForm {
+    max-width: 860px;
+    margin: 0 auto
+}
+
+#writeForm label {
+    display: block;
+    margin: 8px 0 6px;
+    font-weight: 600;
+    color: #333
+}
+
+#writeForm input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color .2s
+}
+
+#writeForm input[type="text"]:focus {
+    border-color: var(--accent)
+}
+
+#editor {
+    min-height: 320px;
+    max-height: 60vh;
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-top: 8px;
+    background: #fff;
+    line-height: 1.6
+}
+
+.private-option {
+    margin: 10px 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px
+}
+
+.private-option .checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #374151
+}
+
+.private-option input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent)
+}
+
+/* =========================
+   Modal (base) + Instructor modal layout
+========================= */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, .45);
+    backdrop-filter: blur(2px);
+    z-index: 1000
+}
+
+.modal-overlay.open {
+    display: flex;
+    animation: fadeIn .15s ease-out
+}
+
+.modal-content, .modal-container {
+    background: #fff;
+    width: min(92vw, 820px);
+    padding: 24px 28px;
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--accent);
+    border-radius: 14px;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, .18);
+    position: relative;
+    animation: popIn .2s ease-out;
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    color: #888;
+    font-size: 22px;
+    line-height: 36px;
+    cursor: pointer;
+    transition: .2s
+}
+
+.modal-close:hover {
+    background: var(--accent);
+    color: #fff
+}
+
+.modal-header {
+    padding-bottom: 10px;
+    border-bottom: 3px solid #ffb400
+}
+
+.modal-header h2 {
+    margin: 0 0 4px;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -.2px;
+}
+
+.modal-body {
+    display: grid;
+    grid-template-columns:220px 1fr;
+    gap: 20px;
+    margin-top: 16px
+}
+
+.modal-photo img {
+    width: 200px !important;
+    height: 200px !important;
+    object-fit: contain;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .06);
+    background: #f8f8f8;
+}
+
+.modal-info {
+    flex: 1 1 auto;
+    max-width: 520px
+}
+
+.modal-info p {
+    margin: 6px 0;
+    display: grid;
+    grid-template-columns:90px 1fr;
+    gap: 8px;
+    line-height: 1.6
+}
+
+.modal-info p strong {
+    width: auto;
+    color: #444
+}
+
+.modal-intro, .modal-courses {
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 3px solid #ff7a00
+}
+
+.modal-intro h3, .modal-courses h3 {
+    margin: 6px 0 8px;
+    font-size: 18px;
+    font-weight: 700;
+    padding-left: 10px;
+    border-left: 4px solid var(--accent)
+}
+
+@media (max-width: 900px) {
+    .modal-content {
+        width: min(96vw, 680px)
+    }
+}
+
+@media (max-width: 720px) {
+    .modal-body {
+        grid-template-columns:1fr
+    }
+
+    .modal-photo img {
+        width: 100% !important;
+        height: auto !important
+    }
+}
+
+/* Instructor modal: horizontal course scroll (소형 카드) */
+.modal-courses .course-grid {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 6px 2px 8px;
+    scroll-snap-type: x proximity
+}
+
+.modal-courses .course-grid::-webkit-scrollbar {
+    height: 8px
+}
+
+.modal-courses .course-grid::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 999px
+}
+
+.modal-courses .course-grid::-webkit-scrollbar-track {
+    background: transparent
+}
+
+.modal-courses .course-card {
+    flex: 0 0 150px;
+    border: 1px solid #f38618;
+    border-radius: 10px;
+    background: #fff;
+    overflow: hidden;
+    scroll-snap-align: start
+}
+
+.modal-courses .course-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    display: block
+}
+
+.modal-courses .course-card .title {
+    font-size: 12px;
+    line-height: 1.3;
+    padding: 6px 8px;
+    min-height: 34px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden
+}
+
+/* “최대 5개만 노출” 그리드 버전 유지 */
+.modal-courses ul {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+    display: grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap: 16px
+}
+
+.modal-courses ul > li:nth-child(n+6) {
+    display: none
+}
+
+.modal-courses ul > li {
+    min-height: 120px;
+    border: 2px solid #e68a00;
+    border-radius: 12px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 12px;
+    font-weight: 600;
+    color: #4b5563
+}
+
+@media (max-width: 900px) {
+    .modal-courses ul {
+        grid-template-columns:repeat(3, 1fr)
+    }
+}
+
+@media (max-width: 600px) {
+    .modal-courses ul {
+        grid-template-columns:repeat(2, 1fr)
+    }
+}
+
+/* ===== Book Recommendation (cards & scoped modal) ===== */
+.card {
+    border: 1px solid var(--accent)
+}
+
+.card-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px
+}
+
+.card-info .photo {
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+    border-radius: 12px;
+    flex: 0 0 140px
+}
+
+.card-info .info {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 140px
+}
+
+.card-info .info .text p {
+    margin: 4px 0
+}
+
+.card-info .detailBtn {
+    margin-top: auto;
+    padding: 8px 14px;
+    border: 1px solid #f38618;
+    border-radius: 8px;
+    background: #e68a00;
+    cursor: pointer
+}
+
+/* 가로 카드 레이아웃(도서) */
+.card.bookcard-row {
+    display: flex;
+    gap: 16px;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    background: #fff;
+    padding: 16px;
+    align-items: flex-start
+}
+
+.bookcard-left{
+    width:160px;
+    flex:0 0 160px;
+    height:210px;
+    position:relative;
+    overflow:hidden;              /* 넘치는 부분 숨김 */
+    border-radius:8px;
+    background:#f8f8f8;
+    display:flex;align-items:center;justify-content:center;
+}
+
+
+.bookcard-thumb{
+    width:100% !important;
+    height:100% !important;
+    display:block;
+    object-fit:cover;             /* 핵심: 박스 가득 채움(크롭 가능) */
+}
+.bookcard-placeholder {
+    width: 100%;
+    height: 100%;
+    border: 1px dashed #d0d5dd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #98a2b3;
+    font-size: 13px
+}
+
+.bookcard-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column
+}
+
+.bookcard-title {
+    margin: 2px 0 10px;
+    font-size: 18px;
+    line-height: 1.35
+}
+
+.meta {
+    color: #667085;
+    font-size: 13px;
+    margin: 0 0 10px
+}
+
+.desc {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.6
+}
+
+/* Book modal (scoped, overrides only) */
+.tm-book {
+    --accent: #ff8c00;
+    --accent-2: #ff7a00;
+    --border: #e9edf3;
+    --surface: #fff;
+    --text: #222
+}
+
+.tm-book.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(0, 0, 0, .55);
+    backdrop-filter: blur(2px)
+}
+
+.tm-book.modal-overlay.open, .tm-book.modal-overlay[style*="display: flex"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn .15s ease-out
+}
+
+.tm-book .modal-card, .tm-book .modal-content, .tm-book .modal-container {
+    background: var(--surface) !important;
+    color: var(--text);
+    width: min(92vw, 820px);
+    max-height: 86vh;
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--accent);
+    border-radius: 14px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, .22);
+    padding: 20px 22px;
+    position: relative;
+    animation: popIn .2s ease-out;
+}
+
+.tm-book .modal-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: 0;
+    background: #f2f2f2;
+    color: #666;
+    font-size: 20px;
+    line-height: 36px;
+    cursor: pointer
+}
+
+.tm-book .modal-close:hover {
+    background: var(--accent);
+    color: #fff
+}
+
+.tm-book .form-grid {
+    display: grid;
+    gap: 12px
+}
+
+.tm-book .form-grid label {
+    display: grid;
+    gap: 6px;
+    font-size: 14px
+}
+
+.tm-book .form-grid input[type="text"], .tm-book .form-grid textarea, .tm-book .form-grid input[type="file"] {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 14px;
+    background: #fff
+}
+
+.tm-book .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 12px
+}
+
+.tm-book .btn-primary {
+    border: 0;
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700
+}
+
+.tm-book .btn-ghost {
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #222;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer
+}
+
+.tm-book .btn-danger {
+    border: 0;
+    background: #e74c3c;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700
+}
+
+.tm-book .vcard-list {
+    display: grid;
+    gap: 12px
+}
+
+.tm-book .vcard {
+    display: grid;
+    grid-template-columns:120px 1fr auto;
+    gap: 14px;
+    padding: 12px;
+    border: 1px solid #eee;
+    border-radius: 14px;
+    background: #fafafa
+}
+
+.tm-book .vcard img {
+    width: 120px;
+    height: 90px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: #f0f0f0
+}
+
+.tm-book .vcard .meta {
+    display: grid;
+    gap: 6px;
+    align-content: center
+}
+
+.tm-book .vcard .title {
+    font-weight: 700
+}
+
+.tm-book .vcard .muted {
+    color: #666;
+    font-size: 13px
+}
+
+.tm-book .vcard .actions {
+    align-self: center
+}
+
+.tm-book .vcard .select {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    align-self: center;
+    font-size: 14px
+}
+
+.tm-book .vcard .select input {
+    transform: scale(1.15)
+}
+
+@media (max-width: 720px) {
+    .tm-book .modal-card, .tm-book .modal-content, .tm-book .modal-container {
+        width: min(96vw, 680px)
+    }
+
+    .tm-book .vcard {
+        grid-template-columns:1fr
+    }
+}
+
+/* =========================
+   Info Center: 자료실 (keep selectors, unify styles)
+========================= */
+h2 {
+    margin-bottom: 20px;
+    color: #333
+}
+
+table .title {
+    text-align: left
+}
+
+.download-btn {
+    padding: 6px 12px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer
+}
+
+.download-btn:hover {
+    background: #e09c00
+}
+
+.top-bar {
+    display: flex;
+    margin-left: auto;
+    margin-bottom: 15px
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end
+}
+
+.search-box input {
+    padding: 6px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 4px
+}
+
+.search-box button {
+    padding: 6px 12px;
+    margin-left: 5px;
+    background: #e09c00;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer
+}
+
+/* =========================
+   Info Center: 시험일정 (Calendar)
+========================= */
+.calendar-wrapper {
+    width: 1050px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
+    position: relative;
+    margin: 30px auto;
+}
+
+h2.calendar-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333
+}
+
+.calendar {
+    display: grid;
+    grid-template-columns:repeat(7, 1fr);
+    gap: 12px
+}
+
+.day {
+    background: #fdfdfd;
+    border-radius: 10px;
+    min-height: 80px;
+    padding: 8px;
+    position: relative;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .05);
+    font-size: 12px
+}
+
+.day h4 {
+    margin: 0 0 4px;
+    font-size: 14px;
+    color: #555
+}
+
+.exam {
+    background: #ffeb99;
+    padding: 3px 6px;
+    margin-bottom: 4px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #333
+}
+
+/* top-right action buttons */
+.top-buttons {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 8px
+}
+
+.top-buttons button {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600
+}
+
+.top-buttons button:hover {
+    background: #ffa500
+}
+
+/* Calendar modals (create/update/delete) */
+.modal-exam-item {
+    border-left: 4px solid #ff9800;
+    background: #fff3e0;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center
+}
+
+.modal-exam-item:last-child {
+    margin-bottom: 0
+}
+
+input[type="text"], input[type="number"], input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px
+}
+
+button.submit-btn {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600
+}
+
+button.submit-btn:hover {
+    background: #ffa500
+}
+
+.delete-checkbox {
+    margin-right: 6px
+}
+
+/* +N badge & hover popover */
+.more-badge {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 2px 6px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: #fff;
+    font-size: 12px;
+    line-height: 1.2;
+    user-select: none;
+    color: #333
+}
+
+.popover {
+    position: fixed;
+    z-index: 9999;
+    min-width: 220px;
+    max-width: 320px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
+    padding: 8px;
+    display: none
+}
+
+.popover.visible {
+    display: block
+}
+
+.popover h5 {
+    margin: 0 0 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #444
+}
+
+.popover .item {
+    font-size: 12px;
+    padding: 6px;
+    border-radius: 6px;
+    background: #f6f7fb;
+    margin: 4px 0
+}
+
+/* =========================
+   Animations
+========================= */
+@keyframes fadeIn {
+    from {
+        opacity: 0
+    }
+    to {
+        opacity: 1
+    }
+}
+
+@keyframes popIn {
+    from {
+        transform: translateY(8px) scale(.98);
+        opacity: 0
+    }
+    to {
+        transform: none;
+        opacity: 1
+    }
+}

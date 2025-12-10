@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>DW Academy - 새 글 작성</title>
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/adminpages/css/style.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/menu.css}">
+</head>
+<body>
+<div th:replace="adminpages/menu :: menu"></div>
+<main class="main">
+    <div class="content-box">
+        <div class="header">
+            <h2 class="card-title">메시지함</h2>
+            <div class="search-actions">
+                <a href="#" class="btn-line btn-primary"
+                ><i class="fa-solid fa-pen"></i> 새 메세지</a
+                >
+            </div>
+        </div>
+
+        <div class="two-col">
+            <!-- Left: 메시지 리스트 -->
+            <div class="card" style="flex: 2">
+                <div class="card-header">
+                    <div class="detail-title">수신 / 발신 내역</div>
+                    <div class="actions">
+                        <button class="btn-sm btn-line btn-primary" type="button">
+                            <i class="fa-solid fa-check-double"></i> 전체읽음
+                        </button>
+                        <button class="btn-sm btn-line btn-danger" type="button">
+                            <i class="fa-solid fa-trash"></i> 삭제
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-wrap table-gap-top">
+                        <div class="table-scroller">
+                            <table
+                                    class="data-table member-table"
+                                    aria-label="메시지 목록"
+                            >
+                                <colgroup>
+                                    <col class="chk" />
+                                    <col class="no" />
+                                    <col class="name" />
+                                    <col class="email" />
+                                    <col />
+                                    <col class="col-actions" />
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th class="center"><input type="checkbox" /></th>
+                                    <th class="col-no">#</th>
+                                    <th>보낸이</th>
+                                    <th>받는사람</th>
+                                    <th>내용</th>
+                                    <th class="col-actions center">읽음</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- 반복: messages 리스트 -->
+                                <tr
+                                        th:each="msg,iterStat : ${messages}"
+                                        th:classappend="${msg.read} ? '' : 'unread'"
+                                >
+                                    <td class="center">
+                                        <input
+                                                class="row-check"
+                                                type="checkbox"
+                                                th:value="${msg.id}"
+                                        />
+                                    </td>
+                                    <td class="num" th:text="${iterStat.index + 1}">1</td>
+                                    <td th:text="${msg.senderName}">홍길동</td>
+                                    <td th:text="${msg.receiverName}">김영희</td>
+                                    <td>
+                                        <a
+                                                href="#"
+                                                class="title-link"
+                                                th:attr="data-id=${msg.id}"
+                                                th:text="${#strings.abbreviate(msg.content, 0, 80)}"
+                                        >메시지 내용 미리보기...</a
+                                        >
+                                    </td>
+                                    <td class="center">
+                          <span th:if="${msg.read}" class="badge done"
+                          ><i class="fa-solid fa-check"></i> 읽음</span
+                          >
+                                        <span th:unless="${msg.read}" class="badge"
+                                        ><i class="fa-regular fa-envelope"></i> 안읽음</span
+                                        >
+                                    </td>
+                                </tr>
+
+                                <!-- 빈 상태 -->
+                                <tr th:if="${#lists.isEmpty(messages)}">
+                                    <td colspan="6" class="center muted">
+                                        표시할 메시지가 없습니다.
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-footer">
+                    <div class="helper-note">
+                        메시지를 클릭하면 우측 상세보기에서 전체 내용을 확인할 수
+                        있습니다.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

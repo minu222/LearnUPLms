@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>강의 목록</title>
+</head>
+<body>
+<div th:fragment="content">
+    <div class="main-content">
+        <h2>강의 목록</h2>
+
+        <div class="tabs">
+            <button class="active" onclick="changeTab('vod')">VOD 강의</button>
+            <button onclick="changeTab('personal')">실시간 개인강의</button>
+            <button onclick="changeTab('multi')">실시간 다수강의</button>
+
+        </div>
+
+        <div class="controls">
+            <input id="searchInput" placeholder="강의명 또는 강사명 검색" type="text">
+            <select id="sortFilter">
+                <option value="">정렬 선택</option>
+                <option value="latest">최신순</option>
+                <option value="oldest">오래된순</option>
+            </select>
+            <button onclick="showList()">리스트형 보기</button>
+            <button onclick="showCard()">카드형 보기</button>
+        </div>
+
+        <section class="list-section" id="listSection"></section>
+        <section class="card-section" id="cardSection" style="display:none;"></section>
+        <div th:replace="~{fragments/paymentModal :: paymentModal}"></div>
+    </div>
+
+    <!-- ✅ 모달 프래그먼트는 fragment 내부에서 include -->
+
+    <!-- ✅ 스크립트도 fragment 내부에서 로드 (순서: paymentModal → courseLecture) -->
+    <script th:src="@{/js/paymentModal.js}"></script>
+    <script th:src="@{/js/coure/courseLecture.js}"></script>
+</div>
+</body>
+</html>

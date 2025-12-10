@@ -1,0 +1,43 @@
+<!-- studentCourses.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>수강 목록</title>
+    <link rel="stylesheet" th:href="@{/css/myclass/studentCourses.css}" href="/css/myclass/studentCourses.css" />
+</head>
+<body>
+<div th:fragment="content">
+    <div class="course-container">
+        <!-- 헤더 -->
+        <div class="course-list-head">
+            <div class="left">
+                <div class="title">
+                    <h2>수강 목록</h2>
+                    <span class="badge-pill">MY CLASS</span>
+                </div>
+                <small class="sub">내가 듣는 강의들을 한눈에 관리해요</small>
+            </div>
+
+            <div class="right">
+                <div class="search">
+                    <input type="text" id="searchInput" placeholder="강의명 또는 강사명 검색" />
+                    <button id="searchBtn" type="button">검색</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 그리드 & 페이지네이션 -->
+        <div id="courseGrid" class="course-grid"></div>
+        <div id="pagination" class="pagination"></div>
+    </div>
+
+    <!-- (선택) 서버에서 JSON을 넣고 싶을 때: id=courseData 에 JSON 삽입 -->
+    <!--
+    <script id="courseData" type="application/json" th:utext="${courseJson}">[]</script>
+    -->
+
+    <script th:src="@{/js/myclass/studentCourses.js}" src="/js/myclass/studentCourses.js"></script>
+</div>
+</body>
+</html>

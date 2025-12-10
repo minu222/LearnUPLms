@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title th:text="${(typeSlug != null ? typeSlug : 'board')} + ' 글쓰기 | MyLMS'">게시글 작성 | MyLMS</title>
+    <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
+</head>
+<body>
+<div th:fragment="content">
+
+    <div class="board-title"
+         th:text="${typeSlug == 'free' ? '자유게시판' :
+               (typeSlug == 'qna' ? '문의게시판' : '게시글 작성')}">
+        게시글 작성
+    </div>
+
+    <!-- 글쓰기 폼 -->
+    <!-- _type 변수: typeSlug가 없으면 기본값 'qna'로 설정 -->
+    <form id="writeForm" method="post"
+          th:with="_type=${typeSlug}?:'qna'"
+          th:action="@{|/board/${_type}/write|}">
+
+        <!-- (선택) Spring Security CSRF -->
+        <input th:if="${_csrf != null}" th:name="${_csrf.parameterName}"
+               th:value="${_csrf.token}" type="hidden"/>
+
+        <label for="title">제목 *</label>
+        <input id="title" maxlength="20" name="title"
+               placeholder="제목 (20자 이내로 입력하세요)" required type="text">
+
+        <!-- 에디터 툴바 -->
+        <div class="toolbar" style="margin-top:12px;">
+            <select id="fontName">
+                <option selected value="Noto Sans KR">본고딕</option>
+                <option value="Nanum Gothic">나눔고딕</option>
+                <option value="Gulim">굴림</option>
+                <option value="Batang">바탕</option>
+                <option value="Malgun Gothic">맑은 고딕</option>
+            </select>
+            <select id="fontSize">
+                <option value="12px">12px</option>
+                <option selected value="14px">14px</option>
+                <option value="16px">16px</option>
+                <option value="18px">18px</option>
+                <option value="20px">20px</option>
+            </select>
+            <button type="button" onclick="execCmd('bold')"><b>B</b></button>
+            <button type="button" onclick="execCmd('italic')"><i>I</i></button>
+            <button type="button" onclick="execCmd('underline')"><u>U</u></button>
+            <button type="button" onclick="execCmd('insertUnorderedList')">• 리스트</button>
+            <button type="button" onclick="execCmd('insertOrderedList')">1. 리스트</button>
+            <button type="button" onclick="execCmd('justifyLeft')">왼쪽</button>
+            <button type="button" onclick="execCmd('justifyCenter')">가운데</button>
+            <button type="button" onclick="execCmd('justifyRight')">오른쪽</button>
+        </div>
+
+        <!-- WYSIWYG 에디터 -->
+        <div id="editor" class="editor" contenteditable="true" style="min-height:220px;border:1px solid #ddd;padding:12px;"></div>
+
+        <!-- 서버 제출용 숨김 필드 -->
+        <textarea id="contentField" name="content" hidden></textarea>
+
+        <div class="button-group" style="margin-top:14px;">
+            <!-- 취소: 현재 게시판 목록으로 -->
+            <a class="cancel-btn" th:with="_type=${typeSlug}?:'qna'" th:href="@{|/board/${_type}|}">취소</a>
+            <button class="submit-btn" type="submit">등록</button>
+        </div>
+    </form>
+
+</div>
+
+<script>
+    // 간단한 에디터 명령
+    function execCmd(cmd, val) {
+        document.execCommand(cmd, false, val || null);
+        document.getElementById('editor').focus();
+    }
+
+    // 글꼴/크기 변경
+    document.addEventListener('DOMContentLoaded', function () {
+        const editor = document.getElementById('editor');
+        const fontName = document.getElementById('fontName');
+        const fontSize = document.getElementById('fontSize');
+        const form = document.getElementById('writeForm');
+        const contentField = document.getElementById('contentField');
+
+        fontName.addEventListener('change', function () {
+            execCmd('fontName', this.value);
+        });
+        fontSize.addEventListener('change', function () {
+            execCmd('fontSize', this.value);
+        });
+
+        form.addEventListener('submit', function (e) {
+            // 에디터 내용 동기화
+            contentField.value = editor.innerHTML.trim();
+
+            // 내용 비어있으면 방지
+            const plain = editor.innerText.replace(/\s+/g, '');
+            if (plain.length === 0) {
+                e.preventDefault();
+                alert('내용을 입력해 주세요.');
+                editor.focus();
+                return false;
+            }
+        });
+    });
+</script>
+</body>
+</html>

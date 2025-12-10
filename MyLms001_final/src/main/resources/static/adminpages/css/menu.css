@@ -1,0 +1,429 @@
+/* ===========================
+         THEME TOKENS (네온 다크)
+         =========================== */
+:root {
+    --sbw: 260px; /* sidebar width */
+    --topbar-h: 64px; /* 상단바 높이(없으면 0으로 바꿔도 OK) */
+    --bg-0: #0a1224;
+    --panel: #101a36cc;
+    --border: rgba(84, 129, 255, 0.28);
+    --grid: rgba(33, 56, 112, 0.28);
+    --text: #e7f1ff;
+    --muted: #9cb4dc;
+    --primary: #3d7aff; /* 네온 블루 */
+    --accent: #18b6ff; /* 사이언 */
+    --ring: rgba(61, 122, 255, 0.22);
+}
+
+/* ===========================
+         Base / Scroll 안전장치
+         =========================== */
+* {
+    box-sizing: border-box;
+}
+html,
+body {
+    height: auto;
+    min-height: 100%;
+}
+html,
+body {
+    overflow-y: auto;
+}
+body {
+    margin: 0;
+    letter-spacing: 0.2px;
+}
+
+.topbar {
+    width: 100%;
+    top: 0;
+    position: fixed;
+    height: var(--topbar-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    background: linear-gradient(
+            180deg,
+            rgba(18, 28, 60, 0.92),
+            rgba(10, 17, 32, 0.92)
+    );
+    border-bottom: 1px solid var(--border);
+    z-index: 50;
+    color: #eaf2ff;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+}
+.topbar .menu-toggle {
+    display: none; /* 모바일에서만 표시 (아래 미디어쿼리) */
+    border: 1px solid rgba(61, 122, 255, 0.4);
+    background: radial-gradient(
+            120px 50px at 80% -40%,
+            rgba(61, 122, 255, 0.7),
+            transparent 70%
+    ),
+    linear-gradient(180deg, #1b2f72, #142963);
+    color: #fff;
+    font-weight: 800;
+    cursor: pointer;
+    border-radius: 10px;
+    height: 40px;
+    padding: 0 12px;
+}
+
+/* 사이드바: 고정 부착 */
+.sidebar {
+    position: fixed;
+    inset: var(--topbar-h) auto 0 0; /* 상단바 바로 아래부터 */
+    width: var(--sbw);
+    background: linear-gradient(
+            180deg,
+            rgba(14, 23, 48, 0.92),
+            rgba(10, 17, 32, 0.92)
+    );
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    z-index: 40;
+    color: var(--text);
+    padding: 12px 0 16px;
+    /* 스크롤바 */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(61, 122, 255, 0.18) transparent;
+}
+.sidebar::-webkit-scrollbar {
+    width: 10px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(61, 122, 255, 0.18);
+    border-radius: 8px;
+}
+
+/* 메인 영역: 사이드바 너비만큼 밀어주기 */
+.main {
+    margin-left: var(--sbw);
+    min-height: calc(100vh - var(--topbar-h));
+}
+
+/* ===========================
+         MENU Look
+         =========================== */
+.menu,
+.menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.menu > li {
+    margin: 8px 0;
+}
+
+/* 1뎁스 */
+.menu > li > .submenu-toggle,
+.menu > li > .link {
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: calc(100% - 20px);
+    margin: 0 10px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+    color: #eaf4ff;
+    background: radial-gradient(
+            140px 60px at 85% -40%,
+            rgba(61, 122, 255, 0.55),
+            transparent 70%
+    ),
+    linear-gradient(180deg, #1b2f72, #142963);
+    border: 1px solid rgba(61, 122, 255, 0.35);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 28px rgba(61, 122, 255, 0.1);
+
+    transition: transform 0.12s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+.menu > li > .submenu-toggle:hover,
+.menu > li > .link:hover {
+    transform: translateX(2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 34px rgba(61, 122, 255, 0.22);
+    filter: brightness(1.02);
+}
+.menu i {
+    color: #cfe2ff;
+}
+
+/* 2뎁스 토글 */
+.submenu > li > .submenu-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: calc(100% - 28px);
+    margin: 6px 14px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 400;
+    color: #e6eeff;
+    background: linear-gradient(
+            180deg,
+            rgba(22, 34, 74, 0.55),
+            rgba(15, 26, 56, 0.5)
+    );
+    border: 1px solid var(--border);
+}
+
+/* 2~3뎁스 링크 */
+.submenu li a,
+.submenu li ul li a {
+    font-weight: 500;
+    display: block;
+    text-decoration: none;
+    margin: 4px 14px 4px 30px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--muted);
+}
+.submenu li a:hover {
+    background: rgba(24, 182, 255, 0.08);
+    color: #eaf4ff;
+    transform: translateX(2px);
+}
+
+/* 부드러운 열고닫기 */
+.submenu {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: max-height 0.38s ease, opacity 0.25s ease, transform 0.25s ease;
+}
+.submenu-check {
+    display: none;
+}
+.submenu-check:checked + .submenu {
+    max-height: 1200px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ===========================
+         POPUP (메일 쓰기)
+         =========================== */
+.popup-overlay {
+    display: none;
+}
+.popup-overlay.is-open {
+    display: flex;
+}
+#mailPopup.popup-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    background: rgba(6, 10, 22, 0.55);
+    padding: 16px;
+}
+#mailPopup .popup {
+    width: clamp(320px, 92vw, 900px);
+    max-height: min(90vh, 860px);
+    background: linear-gradient(
+            180deg,
+            rgba(16, 26, 54, 0.96),
+            rgba(10, 17, 32, 0.96)
+    );
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), 0 0 36px rgba(61, 122, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    color: var(--text);
+}
+#mailPopup .popup-header {
+    background: radial-gradient(
+            160px 60px at 85% -40%,
+            rgba(61, 122, 255, 0.6),
+            transparent 70%
+    ),
+    linear-gradient(180deg, #1b2f72, #142963);
+    color: #fff;
+    font-weight: 800;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(61, 122, 255, 0.35);
+}
+#mailPopup .popup-header button {
+    color: #fff;
+    font-size: 22px;
+    line-height: 1;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+#mailPopup .popup-header button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px var(--ring);
+    border-radius: 6px;
+}
+#mailPopup .popup-body {
+    padding: clamp(14px, 3vw, 20px);
+    overflow: auto;
+    flex: 1;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+.form-label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #e6eeff;
+}
+:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px var(--ring);
+    border-radius: 8px;
+}
+
+/* 받는사람/입력 */
+#receiverList.receiver-list {
+    min-height: 44px;
+    padding: 8px;
+    border: 1px solid rgba(84, 129, 255, 0.34);
+    border-radius: 10px;
+    background: rgba(16, 26, 54, 0.6);
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+.receiver-tag {
+    background: #1b2f72;
+    color: #eaf4ff;
+    padding: 6px 10px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    border: 1px solid rgba(61, 122, 255, 0.35);
+}
+#receiverInput,
+.title-box input,
+.title-box select {
+    height: 42px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: linear-gradient(
+            180deg,
+            rgba(22, 34, 74, 0.85),
+            rgba(15, 26, 56, 0.85)
+    );
+    border: 1px solid rgba(84, 129, 255, 0.34);
+    color: #e7f1ff;
+}
+.address-book-btn {
+    height: 44px;
+    padding: 0 14px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: radial-gradient(
+            120px 50px at 80% -40%,
+            rgba(61, 122, 255, 0.7),
+            transparent 70%
+    ),
+    linear-gradient(180deg, #1b2f72, #142963);
+    color: #fff;
+    font-weight: 700;
+    border: 1px solid rgba(61, 122, 255, 0.35);
+}
+
+.receiver-box {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 1fr minmax(160px, 240px) auto;
+    align-items: start;
+}
+.title-box {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 1fr minmax(160px, 260px);
+}
+
+/* 파일 드롭 */
+#fileDrop.file-drop-area {
+    border: 2px dashed rgba(148, 163, 184, 0.45);
+    border-radius: 12px;
+    background: rgba(16, 26, 54, 0.55);
+    text-align: center;
+    padding: 22px;
+    color: #cdd8f5;
+    cursor: pointer;
+}
+#fileDrop.is-dragover {
+    background: #0f234a;
+    border-color: #6fa8ff;
+    color: #eaf2ff;
+}
+
+/* 에디터 */
+.editor-toolbar {
+    border: 1px solid rgba(84, 129, 255, 0.34);
+    border-bottom: none;
+    padding: 8px;
+    background: rgba(13, 22, 48, 0.8);
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.editor-toolbar button,
+.editor-toolbar select {
+    height: 34px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(84, 129, 255, 0.34);
+    background: rgba(16, 26, 54, 0.8);
+    color: #eaf4ff;
+    cursor: pointer;
+    font-size: 14px;
+}
+.editor {
+    min-height: 300px;
+    border: 1px solid rgba(84, 129, 255, 0.34);
+    border-radius: 0 0 10px 10px;
+    padding: 12px;
+    background: rgba(10, 17, 32, 0.9);
+    color: #e6eeff;
+    outline: none;
+}
+
+.btn-submit {
+    margin-top: 16px;
+    height: 44px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    background: radial-gradient(
+            160px 60px at 85% -40%,
+            rgba(61, 122, 255, 0.6),
+            transparent 70%
+    ),
+    linear-gradient(180deg, #1b2f72, #142963);
+    color: #fff;
+    border: 1px solid rgba(61, 122, 255, 0.4);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+}
+.btn-submit:hover {
+    filter: brightness(1.03);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35), 0 0 24px rgba(61, 122, 255, 0.22);
+}

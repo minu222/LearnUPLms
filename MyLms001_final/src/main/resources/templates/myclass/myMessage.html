@@ -1,0 +1,53 @@
+<!-- templates/myMessage.html -->
+<div th:fragment="content" id="myMessagePage">
+    <main class="main-content">
+            <div class="board-header">
+                <div class="board-title">내 쪽지 / 이메일</div>
+                <div class="mesesage-buttons">
+                    <button id="openEmailModal" type="button">이메일 보내기</button>
+                    <button id="openNoteModal"  type="button">쪽지 보내기</button>
+                    <button id="msgBtnDeleteSelected" type="button">선택 삭제</button>
+                </div>
+            </div>
+
+            <!-- 탭 + 검색 -->
+            <div class="gmail-topbar" style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+                <div class="search-container" style="display:flex;gap:8px;">
+                    <input id="searchInput" type="text" placeholder="검색어를 입력하세요">
+                    <button id="searchBtn" type="button">검색</button>
+                </div>
+                <div class="tab-container" style="display:flex;gap:6px;">
+                    <button id="tabInbox" class="tab-btn active" data-box="inbox" type="button">받은 메일함</button>
+                    <button id="tabSent"  class="tab-btn"         data-box="sent"  type="button">보낸 메일함</button>
+                </div>
+            </div>
+
+            <div class="message-table-wrap">
+                <table id="messageTable" class="message-table">
+                    <thead>
+                    <tr>
+                        <th style="width:40px;"><input id="checkAll" type="checkbox"></th>
+                        <th style="width:42%;">제목</th>
+                        <th style="width:15%;">보낸사람</th>
+                        <th style="width:15%;">받는사람</th>
+                        <th style="width:15%;">보낸 일시</th>
+                        <th style="width:13%;">동작</th>
+                    </tr>
+                    </thead>
+                    <tbody id="messageTbody">
+                    <tr class="meta-row">
+                        <td colspan="6" style="padding:16px;color:#666;">불러오는 중...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+    </main>
+    <style>
+
+    </style>
+
+    <!-- 스크립트 -->
+    <script defer th:src="@{/js/EmailModal.js}"></script>
+    <script defer th:src="@{/js/NoteModal.js}"></script>
+    <script defer th:src="@{/js/myMessage.js}"></script>
+</div>

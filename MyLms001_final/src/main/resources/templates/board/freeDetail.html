@@ -1,0 +1,63 @@
+<!-- src/main/resources/templates/board/freeDetail.html -->
+<div th:fragment="content">
+
+    <!-- 메인 바디(카드) -->
+    <section class="board-container free-detail">
+
+        <!-- 제목/메타: 왼쪽 정렬 -->
+        <header class="fd-head fd-left">
+            <h2 class="fd-title" th:text="${post.title}">제목</h2>
+            <div class="fd-meta">
+        <span class="meta-item">
+          <i class="i i-user"></i>
+          <b>작성자</b> <span th:text="${post.authorName}">작성자</span>
+        </span>
+                <span class="dot"></span>
+                <span class="meta-item">
+          <i class="i i-calendar"></i>
+          <b>등록일</b>
+          <span th:text="${#temporals.format(post.createdAt,'yyyy-MM-dd HH:mm')}">2025-09-30 15:02</span>
+        </span>
+            </div>
+        </header>
+
+        <!-- 본문 카드 -->
+        <article class="fd-card fd-content" th:utext="${post.content}">
+            본문
+        </article>
+
+
+        <!-- 구분선 -->
+        <hr class="fd-divider"/>
+
+        <!-- 댓글 영역 -->
+        <section class="fd-comments">
+
+
+
+            <!-- 댓글 목록 카드 -->
+            <div id="comment-list" class="fd-card fd-comment-list">
+                <!-- comments.js가 주입하는 각 항목을 카드처럼 보이게 함 -->
+            </div>
+        </section>
+        <!-- 댓글 입력 카드 -->
+        <div class="fd-card fd-comment-form">
+            <h3 class="fd-card-title">댓글</h3>
+            <div class="fd-comment-row">
+                <input id="comment-input" type="text" placeholder="댓글을 입력하세요">
+                <button id="comment-submit" type="button" class="fd-comment-submit">등록</button>
+            </div>
+        </div>
+        <!-- 목록 버튼 (우측) -->
+        <div class="fd-actions">
+            <a th:href="@{/board/free}" class="btn-list"><span class="arrow">←</span> 목록으로</a>
+        </div>
+
+    </section>
+
+    <!-- post.id 값 주입 -->
+    <script th:inline="javascript">
+        window.__POST_ID__ = [[${post.id}]];
+    </script>
+    <script defer src="/js/board/comments.js"></script>
+</div>

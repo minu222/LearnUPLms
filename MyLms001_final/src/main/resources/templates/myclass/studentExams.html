@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>시험목록 | MyLMS</title>
+    <link rel="stylesheet" href="css/studentExams.css"/>
+</head>
+<body>
+<div th:fragment="content">
+    <div class="board-container">
+
+        <!-- 헤더 -->
+        <div class="board-header">
+            <div class="title-wrap">
+                <h2 class="board-title">
+                    시험목록
+                    <span class="badge-pill">EXAMS</span>
+                </h2>
+                <small class="sub">내가 응시한 시험과 성적을 한눈에</small>
+            </div>
+
+            <!-- 검색/정렬 -->
+            <form class="filters search" method="get">
+                <input type="text" name="q" placeholder="시험명 검색" th:value="${param.q}"/>
+                <select name="sort">
+                    <option value="title" th:selected="${param.sort=='title'}">시험명</option>
+                    <option value="score" th:selected="${param.sort=='score'}">점수</option>
+                    <option value="date" th:selected="${param.sort=='date'}">응시일</option>
+                </select>
+                <button type="submit">검색</button>
+            </form>
+        </div>
+
+        <!-- 표 -->
+        <table>
+            <thead>
+            <tr>
+                <th style="width:8%;">NO</th>
+                <th style="width:36%;">제목</th>
+                <th style="width:18%;">응시일</th>
+                <th style="width:12%;">점수</th>
+                <th style="width:26%;">결과</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <!-- 데이터 없을 때 -->
+            <tr th:if="${#lists.isEmpty(exams)}">
+                <td colspan="5" class="empty">
+                    아직 응시한 시험이 없습니다.
+                </td>
+            </tr>
+
+            <!-- 목록 -->
+            <tr th:each="exam, iterStat : ${exams}">
+                <td th:text="${iterStat.count}">1</td>
+                <td class="title-td">
+                    <span class="exam-title" th:text="${exam.courseTitle}">과목명</span>
+                </td>
+                <td th:text="${#temporals.format(exam.takenAt.toLocalDateTime(), 'yyyy-MM-dd')}">2025-10-02</td>
+
+                <!-- 점수 + 합격/불합격 칩 -->
+                <td>
+                    <div class="score-wrap">
+                        <strong th:text="${exam.totalScore}">0</strong>점
+                        <span class="chip"
+                              th:classappend="${exam.totalScore} >= 60 ? ' chip-pass' : ' chip-fail'"
+                              th:text="${exam.totalScore} >= 60 ? '합격' : '불합격'">합격</span>
+                    </div>
+                </td>
+
+                <!-- 결과 보기 / 다운로드 -->
+                <td class="actions">
+                    <!-- 결과 상세 페이지(권장) -->
+                    <a class="btn view"
+                       th:href="@{|/mock/examResult.html?title=${exam.courseTitle}&score=${exam.totalScore}&date=${#temporals.format(exam.takenAt?.toLocalDateTime(), 'yyyy-MM-dd HH:mm')}&passCut=60|}">
+                        결과 보기
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- 페이지네이션(예시) -->
+        <div class="pagination" th:if="${totalPages != null}">
+            <a th:each="p : ${#numbers.sequence(1, totalPages)}"
+               th:href="@{/student/exams(page=${p}, q=${param.q}, sort=${param.sort})}"
+               th:text="${p}"
+               th:classappend="${p == currentPage} ? 'active' : ''">1</a>
+        </div>
+
+
+    </div>
+</div>
+</body>
+</html>

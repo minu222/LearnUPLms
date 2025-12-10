@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>DW Academy</title>
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/adminpages/css/style.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/menu.css}">
+</head>
+
+<body>
+<div th:replace="adminpages/menu :: menu"></div>
+    <main class="main">
+        <div class="content-box">
+            <h2>강의실 학생 정보</h2>
+
+            <!-- 강의실 검색 -->
+            <div class="search-box classroom-students-search">
+                <form th:action="@{/admin/classrooms/search}" method="get" class="row g-2 mb-4">
+                    <div class="col-md-4">
+                        <input type="text" name="keyword" class="form-control" placeholder="강의실명 검색"
+                               th:value="${keyword}">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">검색</button>
+                    </div>
+                </form>
+            </div>
+
+            <!--강의실 목록-->
+            <div class="card mb-4">
+                <div class="card-header">강의실 목록</div>
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                        <tr>
+                            <th>강의실 ID</th>
+                            <th>강의실명</th>
+                            <th>강사명</th>
+                            <th>학생 수</th>
+                            <th>상태</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="room : ${classrooms}"
+                            th:onclick="|window.location.href='@{/admin/classrooms/students/{id}(id=${room.classroomId})}'|"
+                            style="cursor: pointer;">
+                            <td th:text="${room.classroomId}"></td>
+                            <td th:text="${room.title}"></td>
+                            <td th:text="${room.instructorNickname}"></td>
+                            <td th:text="${room.studentCount}"></td>
+                            <td th:text="${room.status}"></td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(classrooms)}">
+                            <td colspan="5" class="text-center">검색 결과가 없습니다.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 👨‍🎓 학생 목록 -->
+            <!-- 👨‍🎓 학생 목록 -->
+            <div class="card" th:if="${students != null}">
+                <div class="card-header">수강생 목록</div>
+                <div class="card-body">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>NO</th>
+                            <th>이름</th>
+                            <th>닉네임</th>
+                            <th>이메일</th>
+                            <th>연락처</th>
+                            <th>수강신청일</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="student, i : ${students}">
+                            <td th:text="${i.index + 1}"></td>
+                            <td th:text="${student.name}"></td>
+                            <td th:text="${student.nickname}"></td>
+                            <td th:text="${student.email}"></td>
+                            <td th:text="${student.phone}"></td>
+                            <td th:text="${#temporals.format(student.enrolledAt, 'yyyy-MM-dd')}"></td>
+                        </tr>
+                        <tr th:if="${students == null or #lists.isEmpty(students)}">
+                            <td colspan="6" class="text-center">수강생이 없습니다.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+</body>
+</html>

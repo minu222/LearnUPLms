@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>DW Academy</title>
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/adminpages/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/adminpages/css/menu.css}" />
+</head>
+
+<body>
+<div th:replace="adminpages/menu :: menu"></div>
+<main class="main">
+    <div class="content-box">
+        <h2>강의실 등록</h2>
+        <!-- 성공 메시지 -->
+        <div
+                th:if="${message}"
+                class="alert-success"
+                th:text="${message}"
+        ></div>
+        <div
+                th:if="${errorMessage}"
+                class="alert-error"
+                th:text="${errorMessage}"
+        ></div>
+
+        <!-- form: POST & bound to ${classroom} -->
+        <form
+                th:action="@{/admin/classrooms-registration}"
+                th:object="${classroom}"
+                method="post"
+                class="classroom-form"
+                enctype="multipart/form-data"
+        >
+            <div>
+                기본 정보
+                <div>
+                    <label>
+                        과정구분
+                        <select th:field="*{category}" class="form-input">
+                            <option value="" disabled selected>카테고리 선택</option>
+                            <option
+                                    th:each="cat : ${categories}"
+                                    th:value="${cat}"
+                                    th:text="${cat}"
+                            ></option>
+                        </select>
+                    </label>
+
+                    <label>
+                        과정명
+                        <input
+                                type="text"
+                                th:field="*{title}"
+                                placeholder="예: A-101"
+                                class="form-input"
+                        />
+                    </label>
+                    <label
+                    >강사 선택
+                        <select name="instructorId" required>
+                            <option value="">강사를 선택하세요</option>
+                            <option
+                                    th:each="inst : ${instructors}"
+                                    th:value="${inst.user_id}"
+                                    th:text="${inst.nickname}"
+                            ></option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+            <div>
+                수업정보
+                <div>
+                    <label>
+                        교육비
+                        <input type="text" th:field="*{price}" class="form-input" />
+                    </label>
+                    <label>
+                        교육기간
+                        <input
+                                type="date"
+                                th:field="*{expiryDate}"
+                                class="form-input"
+                        />
+                    </label>
+                    <label>
+                        1일 교육시간
+                        <input
+                                type="number"
+                                th:field="*{liveLimit}"
+                                class="form-input"
+                        />
+                    </label>
+                </div>
+            </div>
+            <div>
+                상세정보
+                <label class="full-row">
+                    과정설명
+                    <textarea
+                            rows="6"
+                            th:field="*{description}"
+                            placeholder="프로젝터, 화이트보드 등"
+                            class="form-textarea"
+                    ></textarea>
+                </label>
+
+                <div>
+                    <div>
+                        수업자료
+                        <label>
+                            자료 업로드
+                            <input type="file" th:field="*{materialFiles}" multiple />
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <div>
+                        시험자료
+
+                        <div style="display: flex; gap: 15px">
+                            <label>
+                                시험문제 입력
+                                <textarea
+                                        th:field="*{exams[0].question}"
+                                        placeholder="문제"
+                                ></textarea>
+                            </label>
+                            <label>
+                                선택1
+                                <input type="text" th:field="*{exams[0].option1}" />
+                            </label>
+                            <label>
+                                선택2
+                                <input type="text" th:field="*{exams[0].option2}" />
+                            </label>
+                            <label>
+                                선택3
+                                <input type="text" th:field="*{exams[0].option3}" />
+                            </label>
+                            <label>
+                                선택4
+                                <input type="text" th:field="*{exams[0].option4}" />
+                            </label>
+                            <label>
+                                정답
+                                <input type="text" th:field="*{exams[0].answer}" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!--                <label>-->
+                <!--                    수용 인원-->
+                <!--                    <input type="number" th:field="*{studentCount}" placeholder="예: 30" class="form-input" />-->
+                <!--                </label>-->
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">등록</button>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

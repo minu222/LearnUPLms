@@ -1,0 +1,118 @@
+<!-- src/main/resources/templates/fragments/paymentModal.html -->
+<div th:fragment="paymentModal">
+    <style>
+        /* 결제 오버레이 */
+        #paymentModal{
+            position: fixed;           /* 화면 고정 */
+            inset: 0;                  /* 전체 화면 */
+            display: none;             /* JS에서 flex로 */
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,.48); /* 딤 처리 */
+            z-index: 9999;
+        }
+        #paymentModal .modal-content{
+            position: relative;
+            width: min(760px, 92vw);
+            max-height: 90vh;
+            overflow: auto;
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.2);
+        }
+
+    </style>
+    <!-- 결제 모달 -->
+    <div class="modal" id="paymentModal" style="display:none;">
+        <div class="modal-content">
+<!--            <button class="close-btn" onclick="closeModal(this)">×</button>-->
+            <h3 id="modalCourseName">결제</h3>
+
+            <!-- 강의/상품 정보 (hidden 포함) -->
+            <input type="hidden" id="modalCourseId" />
+            <div class="product-card-detailed">
+                <div class="product-left">
+                    <img id="modalImg" src="https://picsum.photos/120/80?random=3" alt="상품 이미지" class="product-img">
+                </div>
+                <div class="product-center">
+                    <h4 class="course-name" id="modalCourseNameDetail">강의명</h4>
+                    <p class="course-desc" id="modalDesc">강의 설명</p>
+                    <p class="course-instructor" id="modalInstructor">강사: -</p>
+                </div>
+                <div class="product-right">
+                    <div class="price-row"><span>단가:</span> <strong id="modalPrice">0원</strong></div>
+                    <div class="price-row"><span>수량:</span> <strong id="modalQty">1</strong></div>
+                    <div class="price-row total"><span>총액:</span> <strong id="modalTotal">0원</strong></div>
+                </div>
+            </div>
+
+            <!-- 결제 수단 선택 -->
+            <div class="card">
+                <label for="paymentMethod">결제수단 선택:</label>
+                <select id="paymentMethod" onchange="showPaymentForm()">
+                    <option value="">-- 선택 --</option>
+                    <option value="card">카드 결제</option>
+                    <option value="bank">계좌이체</option>
+                    <option value="easy">간편결제</option>
+                </select>
+
+                <div class="payment-form" id="cardForm" style="display:none;">
+                    <label>카드번호</label><input id="cardNumber" type="text" inputmode="numeric" autocomplete="cc-number"
+                                              placeholder="0000-0000-0000-0000"
+                                              pattern="^\d{4}-\d{4}-\d{4}-\d{4}$" maxlength="19" required
+                                              title="예: 0000-0000-0000-0000">
+                    <label>유효기간</label><input id="cardExpiry" type="text" inputmode="numeric" autocomplete="cc-exp"
+                                              placeholder="MM/YY"
+                                              pattern="^(0[1-9]|1[0-2])\/\d{2}$" maxlength="5" required
+                                              title="예: 03/27">
+                    <label>CVC</label><input id="cardCvc" type="text" inputmode="numeric" autocomplete="cc-csc"
+                                             placeholder="123"
+                                             pattern="^\d{3}$" maxlength="3" required
+                                             title="예: 123">
+                </div>
+
+                <div class="payment-form" id="bankForm" style="display:none;">
+                    <label>은행 선택</label>
+                    <select id="bankName" required>
+                        <option value="">은행 선택</option>
+                        <option>국민은행</option>
+                        <option>신한은행</option>
+                        <option>우리은행</option>
+                    </select>
+                    <label>계좌번호</label><input id="bankAccount" type="text" inputmode="numeric"
+                                              placeholder="000-0000-0000"
+                                              pattern="^\d{3}-\d{4}-\d{4}$" maxlength="13" required
+                                              title="예: 000-0000-0000">
+                </div>
+
+                <div class="payment-form" id="easyForm" style="display:none;">
+                    <button type="button">카카오페이</button>
+                    <button type="button">네이버페이</button>
+                </div>
+            </div>
+
+            <!-- 약관 체크 -->
+            <div class="terms-section">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="agreeTerms1">
+                    <label for="agreeTerms1">
+                        <strong>서비스 이용 약관 동의</strong>
+                        <span class="term-desc">LMS 서비스 이용을 위한 필수 약관에 동의합니다.</span>
+                        <a href="#" class="view-term">보기</a>
+                    </label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="agreeTerms2">
+                    <label for="agreeTerms2">
+                        <strong>개인정보 수집/이용 동의</strong>
+                        <span class="term-desc">결제 및 학습을 위해 개인정보 제공에 동의합니다.</span>
+                        <a href="#" class="view-term">보기</a>
+                    </label>
+                </div>
+            </div>
+
+            <button type="button" onclick="confirmPayment()">결제하기</button>
+        </div>
+    </div>
+</div>

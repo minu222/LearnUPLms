@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>시험 결과</title>
+    <link rel="stylesheet" href="/css/studentExamResult.css"/>
+
+    <style>
+        /* 시험지 분위기 강화용 소량 보조 스타일 */
+        .exam-toolbar {display:flex;justify-content:space-between;align-items:center;margin:10px 0 6px}
+        .exam-instr {background:#fffdf5;border:1px solid #ffe2a6;border-radius:10px;padding:10px 12px;color:#5d4a00}
+        .exam-band {display:flex;gap:10px;align-items:center}
+        .exam-band .time {font-weight:800}
+        .watermark {position:fixed;inset:0;pointer-events:none;opacity:.06;
+            background: repeating-linear-gradient(45deg, #000 0 2px, transparent 2px 24px);}
+        .grid {display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-top:8px}
+        .bubble {border:1px solid #e5e7ee;border-radius:8px;padding:6px 0;text-align:center;font-size:.9rem;color:#555}
+        .bubble.active {background:#fffbec;border-color:#ffd27a}
+        .section-title {margin:18px 0 8px;font-weight:900;border-left:6px solid #ffb400;padding-left:8px}
+        .print-only{display:none}
+        @media print {.demo-note,.watermark,.exam-toolbar,.actions{display:none!important}.print-only{display:block}}
+        :root{
+            --accent:#ffb400; --muted:#8b95a1; --line:#eaecef; --text:#222;
+            --ok:#1a7f37; --okbg:#e6f6ea; --okbd:#bce5c6;
+            --bad:#b42318; --badbg:#fdeaea; --badbd:#f3c3c0;
+            --shadow:0 8px 18px rgba(0,0,0,.06);
+        }
+        *{box-sizing:border-box}
+        body{background:#f6f7fb;color:var(--text);margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Apple SD Gothic Neo,Noto Sans KR,sans-serif}
+        .paper{max-width:980px;margin:28px auto;background:#fff;border:1px solid #eee;border-radius:14px;box-shadow:var(--shadow);padding:24px 26px 28px;}
+        .paper-head{display:flex;justify-content:space-between;gap:18px;padding-bottom:12px;border-bottom:3px solid var(--accent);}
+        .title{display:flex;align-items:center;gap:10px;margin:0;font-size:1.6rem;font-weight:800}
+        .badge{display:inline-block;padding:2px 8px;border-radius:999px;background:#ffe3a8;border:1px solid #ffd27a;color:#a36200;font-size:.75rem;font-weight:700}
+        .meta{display:flex;gap:14px;color:var(--muted);margin-top:6px;font-size:.95rem}
+        .score{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+        .score-num{font-size:2rem;font-weight:900}
+        .unit{margin-left:2px}
+        .chip{display:inline-block;padding:3px 10px;border-radius:999px;border:1px solid transparent;font-weight:800}
+        .chip.pass{background:var(--okbg);color:var(--ok);border-color:var(--okbd)}
+        .chip.fail{background:var(--badbg);color:var(--bad);border-color:var(--badbd)}
+        .actions{display:flex;gap:8px;margin-top:8px;justify-content:flex-end}
+        .btn{padding:8px 14px;border-radius:10px;border:1px solid #222;background:#222;color:#fff;cursor:pointer;font-weight:700}
+        .btn:hover{opacity:.95;transform:translateY(-1px)}
+        .btn.ghost{background:#fff;color:#222;border:1px solid #ddd}
+        .legend{display:flex;gap:18px;align-items:center;color:var(--muted);margin:14px 0 6px}
+        .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;border:1px solid #ccc;vertical-align:-1px}
+        .dot.correct{background:#e7f3ff;border-color:#b7d7ff}
+        .dot.chosen{background:#fff4d6;border-color:#ffd27a}
+        .dot.wrong{background:#ffe7e7;border-color:#f3c3c0}
+
+        .q-list{margin-top:6px}
+        .q-item{border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px;margin-bottom:12px;position:relative}
+        .q-head{display:flex;gap:12px;margin-bottom:10px}
+        .q-no{min-width:46px;height:32px;border-radius:8px;background:#f7f7fa;border:1px solid #e6e8ef;display:flex;align-items:center;justify-content:center;font-weight:900}
+        .q-text{font-weight:700}
+
+        .choices{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+        .choice{border:1px solid #eceef3;border-radius:10px;padding:8px 10px;position:relative}
+        .choice.correct{outline:2px solid #b7d7ff;background:#f7fbff}
+        .choice label{display:flex;align-items:flex-start;gap:10px;cursor:default}
+        .choice input{margin-top:3px}
+        .label-index{display:inline-block;min-width:20px;font-weight:800}
+        .mark{position:absolute;top:8px;right:10px;font-size:.75rem;border-radius:999px;padding:2px 8px;border:1px solid transparent}
+        .mark.correct{background:#e7f3ff;border-color:#b7d7ff;color:#0b5ed7}
+        .mark.chosen{background:#fff4d6;border-color:#ffd27a;color:#8a5a00}
+
+        .explain{margin-top:8px}
+        .explain summary{cursor:pointer;color:#0b5ed7}
+        .ex-body{margin-top:6px;background:#fafbff;border:1px dashed #d7def5;border-radius:10px;padding:10px;color:#2b2f38}
+
+        .result-chip{position:absolute;bottom:10px;right:12px;padding:2px 10px;border-radius:999px;border:1px solid transparent;font-weight:800}
+        .result-chip.pass{background:var(--okbg);color:var(--ok);border-color:var(--okbd)}
+        .result-chip.fail{background:var(--badbg);color:var(--bad);border-color:var(--badbd)}
+
+        .paper-foot{display:flex;justify-content:space-between;color:var(--muted);margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
+
+        @media print {body{background:#fff}.paper{box-shadow:none;border:none;margin:0;padding:0}.actions{display:none}}
+        @media (max-width:820px){.paper{margin:12px;border-radius:12px;padding:16px}.paper-head{flex-direction:column;align-items:stretch}.choices{grid-template-columns:1fr}}
+        pre{background:#f7f8fc;border:1px solid #e6e8ef;border-radius:10px;padding:10px;overflow:auto}
+        code{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace}
+    </style>
+</head>
+<body>
+<div class="paper">
+    <div class="watermark"></div>
+
+    <!-- 상단 요약 헤더 -->
+    <header class="paper-head">
+        <div class="left">
+            <h1 class="title">
+                <span class="badge">RESULT</span>
+                <span id="examTitle">자바 기초 모의고사</span>
+            </h1>
+            <div class="meta">
+                <span>응시일: <strong id="takenAt">2025-10-02 11:00</strong></span>
+                <span>응시자: <strong id="studentName">학생</strong></span>
+                <span>문항수: <strong id="qCount">10</strong></span>
+            </div>
+            <div class="exam-toolbar">
+                <div class="exam-instr">
+                    <div class="exam-band">
+                        <span id="instrText">※ 객관식 4지선다 10문항 (문항당 10점, 총 100점)</span>
+                        <span class="time">| 권장시간 30분</span>
+                    </div>
+                </div>
+                <div class="actions">
+                    <a class="btn ghost" href="/myclass/student/exams">목록으로</a>
+                    <button class="btn" onclick="window.print()">인쇄</button>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="score">
+                <span class="score-num" id="totalScore">0</span><span class="unit">점</span>
+                <span class="chip" id="passChip">대기</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- 안내 바 -->
+    <div class="legend">
+        <span class="dot correct"></span> 정답
+        <span class="dot chosen"></span> 내가 고른 보기
+        <span class="dot wrong"></span> 오답
+    </div>
+
+    <!-- 빠른 답안 체크용 버블 (선택 반영) -->
+    <div class="grid" id="bubbleGrid"></div>
+
+    <h3 class="section-title">문항</h3>
+    <main class="q-list" id="qList"></main>
+
+    <!-- 하단 합계 -->
+    <footer class="paper-foot">
+        <div>정답수: <strong id="correctCount">0</strong> / 전체: <strong id="totalCount">10</strong></div>
+        <div>커트라인: <strong id="passCut">60</strong>점</div>
+    </footer>
+
+    <p class="print-only" style="margin-top:10px;color:#8b95a1">* 인쇄본: 시스템에서 발급된 결과 페이지</p>
+</div>
+
+<script>
+    (function(){
+        // ===== 파라미터 수집 =====
+        const params   = new URLSearchParams(location.search);
+        const title    = params.get('title') || '자바 기초 모의고사';
+        const date     = params.get('date')  || new Date().toISOString().slice(0,16).replace('T',' ');
+        const name     = params.get('name')  || '응시자';
+        const passCut  = Number(params.get('passCut') ?? '60');
+        const ansRaw   = (params.get('ans') || '').trim();
+
+        document.getElementById('examTitle').textContent = title;
+        document.getElementById('takenAt').textContent   = date;
+        document.getElementById('studentName').textContent = "학생";
+        document.getElementById('passCut').textContent   = passCut;
+
+        // ===== 문제 데이터 (자바 기초 10문항) =====
+        // correct: 0=A,1=B,2=C,3=D
+        const Q = [
+            {
+                t: '자바 클래스에 대한 설명으로 옳지 않은 것은?',
+                o: ['클래스는 객체를 생성하기 위한 설계도이다.',
+                    '하나의 .java 파일에 public 클래스는 여러 개 선언할 수 있다.',
+                    '클래스는 필드, 메서드, 생성자를 가질 수 있다.',
+                    '클래스 이름과 파일 이름은 public 클래스일 경우 동일해야 한다.'],
+                c: 1,
+                e: '자바에서는 하나의 .java 파일에 public 클래스는 오직 하나만 선언할 수 있습니다.'
+            },
+            {
+                t: '기본형(primitive) 타입이 아닌 것은?',
+                o: ['int','boolean','String','double'],
+                c: 2,
+                e: '<code>String</code>은 참조형(reference)입니다.'
+            },
+            {
+                t: '다음 변수 선언에서 컴파일 오류가 나는 것은?',
+                o: ['int $count = 0;','int 7up = 7;','int _x = 1;','int year2025 = 2025;'],
+                c: 1,
+                e: '식별자는 숫자로 시작할 수 없습니다.'
+            },
+            {
+                t: '오버로딩(Overloading)에 대한 설명으로 옳은 것은?',
+                o: ['상속 받은 메서드를 재정의하는 것이다.',
+                    '메서드 이름이 같고 매개변수 목록이 다른 것을 말한다.',
+                    '반환형만 다르면 오버로딩이 된다.',
+                    '접근 제어자만 다르면 오버로딩이 된다.'],
+                c: 1,
+                e: '오버로딩은 이름은 같고 시그니처(매개변수 타입/개수/순서)가 다른 메서드 정의입니다.'
+            },
+            {
+                t: '다음 코드의 출력 결과로 옳은 것은?',
+                code: `int x = 5;
+int y = x++;
+System.out.println(y + "," + x);`,
+                o: ['5,6','6,5','6,6','5,5'],
+                c: 0,
+                e: '후위증가이므로 y에 5가 대입되고, x는 6이 됩니다.'
+            },
+            {
+                t: '배열에 대한 설명으로 옳지 않은 것은?',
+                o: ['배열 길이는 한 번 생성되면 변경할 수 없다.',
+                    '배열 인덱스는 1부터 시작한다.',
+                    '같은 타입의 데이터를 연속된 메모리에 저장한다.',
+                    '배열은 참조형이다.'],
+                c: 1,
+                e: '자바 배열 인덱스는 0부터 시작합니다.'
+            },
+            {
+                t: '<code>final</code> 키워드 설명으로 옳지 않은 것은?',
+                o: ['final 변수는 한 번 초기화하면 값을 바꿀 수 없다.',
+                    'final 메서드는 오버라이드 할 수 없다.',
+                    'final 클래스는 상속할 수 없다.',
+                    'final 필드는 컴파일 시점에 반드시 리터럴로 초기화해야 한다.'],
+                c: 3,
+                e: 'final 필드는 생성자에서 초기화해도 됩니다(리터럴 강제 아님).'
+            },
+            {
+                t: '다음 중 자동(묵시적) 형변환이 가능한 것은?',
+                o: ['double → int','int → long','long → int','boolean → int'],
+                c: 1,
+                e: '작은 타입에서 큰 타입으로는 자동 형변환(int→long)이 됩니다.'
+            },
+            {
+                t: '예외 처리에 대한 설명으로 옳지 않은 것은?',
+                o: ['checked 예외는 컴파일 타임에 확인된다.',
+                    'RuntimeException은 명시적 처리(throws/catch)가 필수다.',
+                    'try-with-resources는 AutoCloseable을 자동으로 닫아준다.',
+                    'finally 블록은 예외 발생 여부와 관계없이 실행된다(대부분의 경우).'],
+                c: 1,
+                e: 'RuntimeException은 명시적 처리 의무가 없습니다.'
+            },
+            {
+                t: '다음 코드에서 출력 결과는?',
+                code: `String s1 = new String("java");
+String s2 = "java";
+System.out.println(s1 == s2);`,
+                o: ['true','false','컴파일 오류','런타임 예외'],
+                c: 1,
+                e: '<code>==</code>는 참조 비교. 리터럴 풀과 new로 만든 객체는 서로 다른 참조입니다.'
+            }
+        ];
+
+        // ===== 선택답안 파싱(A/B/C/D → 0~3) =====
+        function parseAnswers(raw, total) {
+            if (!raw) return null;
+            const map = {a:0,b:1,c:2,d:3};
+            const arr = raw.replace(/\s+/g,'').split('').map(ch => map[ch.toLowerCase()] ?? -1);
+            return arr.length === total ? arr : null;
+        }
+
+        // ===== 렌더링 =====
+        const qList = document.getElementById('qList');
+        const grid  = document.getElementById('bubbleGrid');
+
+        function esc(s){ return (s+'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;') }
+
+        const selected = parseAnswers(ansRaw, Q.length); // null이면 모범답안 모드
+        let correct = 0;
+
+        // 버블(답안 카드) 생성
+        for (let i=0;i<Q.length;i++){
+            const b = document.createElement('div');
+            b.className = 'bubble' + (selected ? ' active' : '');
+            b.textContent = (i+1);
+            grid.appendChild(b);
+        }
+
+        Q.forEach((q, idx) => {
+            const correctIdx = q.c;
+            const chosenIdx  = selected ? selected[idx] : null;
+            const isCorrect  = selected ? (chosenIdx === correctIdx) : true;
+            if (isCorrect) correct++;
+
+            const section = document.createElement('section');
+            section.className = 'q-item';
+
+            const codeHtml = q.code ? `<pre><code>${esc(q.code)}</code></pre>` : '';
+
+            section.innerHTML = `
+          <div class="q-head">
+            <div class="q-no">Q<span>${idx+1}</span></div>
+            <div class="q-text">${q.t}</div>
+          </div>
+          ${codeHtml}
+          <ul class="choices">
+            ${q.o.map((text, i)=>`
+              <li class="choice ${i===correctIdx?'correct':''}">
+                <label>
+                  <input type="radio" disabled ${selected ? (i===chosenIdx?'checked':'') : ''}/>
+                  <span class="label-index">${'ABCD'[i]}</span>
+                  <span class="label-text">${text}</span>
+                </label>
+                ${selected && i===chosenIdx?'<span class="mark chosen">선택</span>':''}
+                ${i===correctIdx?'<span class="mark correct">정답</span>':''}
+              </li>
+            `).join('')}
+          </ul>
+          <details class="explain">
+            <summary>해설 보기</summary>
+            <div class="ex-body">${q.e}</div>
+          </details>
+          <div class="result-chip ${selected ? (isCorrect?'pass':'fail') : 'pass'}">
+            <span>${selected ? (isCorrect?'정답':'오답') : '정답'}</span>
+          </div>
+        `;
+            qList.appendChild(section);
+        });
+
+        // 점수/요약
+        const total = Q.length;
+        const score = Math.round((correct/total)*100);
+        document.getElementById('qCount').textContent       = total;
+        document.getElementById('totalCount').textContent   = total;
+        document.getElementById('correctCount').textContent = selected ? correct : total; // 모범답안 모드면 전부 정답
+        document.getElementById('totalScore').textContent   = selected ? score : 100;
+
+        // 상단 안내문(문항당 점수 자동 계산)
+        const perPoint = Math.round(100/total);
+        document.getElementById('instrText').textContent =
+            `※ 객관식 4지선다 ${total}문항 (문항당 ${perPoint}점, 총 100점)`;
+
+        const chip = document.getElementById('passChip');
+        const finalScore = selected ? score : 100;
+        if (finalScore >= passCut) { chip.textContent='합격'; chip.classList.add('pass'); }
+        else { chip.textContent='불합격'; chip.classList.add('fail'); }
+    })();
+</script>
+</body>
+</html>

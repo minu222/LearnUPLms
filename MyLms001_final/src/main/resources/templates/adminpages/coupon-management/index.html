@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>DW Academy</title>
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/adminpages/css/style.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/menu.css}">
+</head>
+
+<body>
+<div th:replace="adminpages/menu :: menu"></div>
+      <main class="main">
+        <div class="content-box">
+          <h2>쿠폰 관리</h2>
+
+          <div class="search-box coupons-search">
+            <input type="text" placeholder="쿠폰코드/이름" />
+            <select>
+              <option>전체</option>
+              <option>사용가능</option>
+              <option>종료</option>
+            </select>
+            <button class="btn-primary">검색</button>
+            <button class="btn-primary">쿠폰 생성</button>
+          </div>
+
+          <table
+            class="data-table table-gap-top coupons-table"
+            aria-label="쿠폰 목록"
+          >
+            <colgroup>
+              <col class="code" />
+              <col class="name" />
+              <col class="rate" />
+              <col class="period" />
+              <col class="state" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>쿠폰코드</th>
+                <th>이름</th>
+                <th>할인율</th>
+                <th>기간</th>
+                <th>상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>WELCOME10</td>
+                <td>신규 10%</td>
+                <td>10%</td>
+                <td>2025-01-01 ~ 2025-12-31</td>
+                <td><span class="badge normal">사용가능</span></td>
+              </tr>
+              <!-- 예시 추가 -->
+              <tr>
+                <td>SPRING15</td>
+                <td>봄맞이 15%</td>
+                <td>15%</td>
+                <td>2025-03-01 ~ 2025-04-30</td>
+                <td><span class="badge ended">종료</span></td>
+              </tr>
+              <tr>
+                <td>WEEKEND5</td>
+                <td>주말 5%</td>
+                <td>5%</td>
+                <td>2025-09-01 ~ 2025-09-30</td>
+                <td><span class="badge soon">임박</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

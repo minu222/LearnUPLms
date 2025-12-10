@@ -1,0 +1,126 @@
+body {
+    margin: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f8f9fa;
+}
+
+header {
+    background: #fff;
+    padding: 25px;
+    text-align: center;
+    border-bottom: 2px solid #f1f1f1;
+}
+
+.logo {
+    font-weight: bold;
+    font-size: 28px;
+    color: #ff6600;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 100px);
+    background: url('https://source.unsplash.com/1600x900/?study,laptop') center/cover no-repeat;
+    position: relative;
+}
+
+.login-box {
+    background: rgba(255, 255, 255, 0.97);
+    padding: 60px;
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    width: 420px;
+    text-align: center;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+.login-box h2 {
+    margin-bottom: 30px;
+    font-size: 28px;
+    color: #333;
+    font-weight: bold;
+}
+
+.input-group {
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.input-group label {
+    font-size: 14px;
+    color: #555;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #ff6600;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 16px;
+    background: #ff6600;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.login-btn:hover {
+    background: #e65c00;
+}
+
+.options {
+    margin-top: 25px;
+    font-size: 14px;
+    color: #666;
+}
+
+.options a {
+    color: #ff6600;
+    text-decoration: none;
+    margin: 0 5px;
+    transition: color 0.2s;
+}
+
+.options a:hover {
+    color: #cc5200;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+:root { --brand: #ff6a00; }
+.nav-container .logo a,
+.nav-container .logo a:link,
+.nav-container .logo a:visited {
+    color: var(--brand);
+    text-decoration: none;   /* 밑줄 제거 */
+    font-weight: 800;
+    font-size: 28px;         /* 필요 시 조절 */
+    display: inline-block;
+}
+
+.nav-container .logo a:hover,
+.nav-container .logo a:active {
+    color: var(--brand);     /* 호버 시에도 색 유지 */
+    text-decoration: none;   /* 호버 밑줄 방지 */
+}

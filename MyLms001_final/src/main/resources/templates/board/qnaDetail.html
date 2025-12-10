@@ -1,0 +1,53 @@
+<!-- src/main/resources/templates/board/qnaDetail.html -->
+<div th:fragment="content">
+    <section class="board-container free-detail"><!-- free-detail 카드 스타일 재사용 -->
+
+        <!-- 제목/메타: 제목은 좌측, 메타(작성자/등록일)는 우측 정렬 (freeDetail 최신 규격) -->
+        <header class="fd-head">
+            <h2 class="fd-title" th:text="${post.title}">제목</h2>
+            <div class="fd-meta">
+        <span class="meta-item">
+          <i class="i i-user"></i>
+          <b>작성자</b> <span th:text="${post['authorMasked'] ?: post.authorName}">작성자</span>
+        </span>
+                <span class="meta-item">
+          <i class="i i-calendar"></i>
+          <b>등록일</b>
+          <span th:text="${#temporals.format(post.createdAt,'yyyy-MM-dd HH:mm')}">2025-09-30 15:02</span>
+        </span>
+            </div>
+        </header>
+
+        <!-- 본문 카드 -->
+        <article class="fd-card fd-content" th:utext="${post.content}">
+            본문
+        </article>
+
+        <!-- 구분선 -->
+        <hr class="fd-divider"/>
+
+        <!-- 댓글 영역: 자유게시판과 동일한 카드 2단 구성 -->
+        <section class="fd-comments">
+            <!-- 댓글 목록 카드 -->
+            <div id="comment-list" class="fd-card fd-comment-list"></div>
+        </section>
+
+        <!-- 댓글 입력 카드 -->
+        <div class="fd-card fd-comment-form" id="comment-form">
+            <h3 class="fd-card-title">댓글</h3>
+            <div class="fd-comment-row">
+                <input id="comment-input" type="text" placeholder="댓글을 입력하세요">
+                <button id="comment-submit" type="button" class="fd-comment-submit">등록</button>
+            </div>
+        </div>
+
+        <!-- 목록 버튼 -->
+        <div class="fd-actions">
+            <a th:href="@{/board/qna}" class="btn-list"><span class="arrow">←</span> 목록으로</a>
+        </div>
+    </section>
+
+    <!-- post.id 주입 + 공용 댓글 스크립트 -->
+    <script th:inline="javascript">window.__POST_ID__ = [[${post.id}]];</script>
+    <script defer src="/js/board/comments.js"></script>
+</div>

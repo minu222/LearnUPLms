@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${post != null ? post.title + ' | MyLMS' : '강사후기 내용 | MyLMS'}">강사후기 내용 | MyLMS</title>
+
+    <!-- 사이트 공통 -->
+    <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
+    <!-- 후기 상세 공통 스타일 (courseReviewDetail과 공유) -->
+    <link rel="stylesheet" href="/css/board/courseReviewDetail.css" th:href="@{/css/board/courseReviewDetail.css}">
+</head>
+<body>
+<div th:fragment="content">
+    <!-- 카드 본문: 공통 board-container + 상세 전용 클래스(동일 스타일 공유) -->
+    <div class="board-container review-detail attach-top sidebar-gap">
+
+        <!-- 제목 영역 (courseReviewDetail과 동일 구성) -->
+        <div class="detail-header">
+            <h2 class="detail-title" th:text="${post != null ? post.title : '글 제목 예시'}">글 제목 예시</h2>
+        </div>
+
+        <!-- 메타 정보 (아이콘/구분선 동일) -->
+        <div class="post-info">
+      <span class="author">✍
+        <span th:text="${post != null ? post.authorName : '홍길동'}">홍길동</span>
+      </span>
+            <span class="divider">|</span>
+            <span class="date">📅
+        <span th:text="${post != null ? #temporals.format(post.createdAt,'yyyy-MM-dd HH:mm') : '2025-09-16'}">2025-09-16</span>
+      </span>
+        </div>
+
+        <!-- 본문: HTML 허용 시 utext 사용 (스타일은 courseReviewDetail.css의 .review-detail .post-content 적용) -->
+        <div class="post-content" th:utext="${post != null ? post.content : null}">
+            <p>여기는 게시글 내용이 표시되는 영역입니다. HTML 태그를 활용하여 단락, 이미지, 링크 등 다양한 콘텐츠를 보여줄 수 있습니다.</p>
+            <p>실제로는 게시판 목록에서 글을 클릭하면 글 ID를 기반으로 백엔드에서 데이터를 받아와 이 영역에 표시하게 됩니다.</p>
+        </div>
+
+        <!-- 목록 버튼 (동일 스타일) -->
+        <div class="back-wrap">
+            <a class="back-btn" th:href="@{|/board/${typeSlug}|}">← 목록으로 돌아가기</a>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:thx="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내 게시글</title>
+    <!-- Spring Security CSRF (있을 때만 채워짐) -->
+    <meta name="_csrf" th:content="${_csrf?.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf?.headerName}"/>
+</head>
+<body>
+<div th:fragment="content">
+    <main class="board-container">
+        <!-- 헤더: 제목 + 필터 + 선택 삭제 -->
+        <div class="board-header">
+            <div class="board-title">내 게시글</div>
+            <div class="filters search">
+                <button class="filter-btn active" data-filter="all">전체</button>
+                <button class="filter-btn" data-filter="newest">최신순</button>
+                <button class="filter-btn" data-filter="oldest">오래된순</button>
+                <button class="filter-btn" data-filter="inquiry">문의게시판</button>
+                <button class="filter-btn" data-filter="free">자유게시판</button>
+                <button id="deleteSelectedBtn" class="download-button" style="background:#e74c3c;">선택 삭제</button>
+            </div>
+        </div>
+
+        <!-- 게시판 테이블 -->
+        <table class="board-table">
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="selectAll"></th>
+                <th>No</th>
+                <th>제목</th>
+                <th>작성일</th>
+                <th>유형</th>
+            </tr>
+            </thead>
+            <tbody id="board-list">
+            <!-- JS가 /api/my/posts 결과로 채웁니다 -->
+            </tbody>
+        </table>
+
+        <!-- 페이지네이션 (JS가 채움) -->
+        <div class="pagination" id="pagination"></div>
+    </main>
+
+    <!-- 수정 모달 -->
+    <div class="modal-overlay" id="boardModal" style="display:none;">
+        <div class="modal-container">
+            <h3 id="modalTitle">게시글 제목</h3>
+            <textarea id="modalContent" rows="6" style="width:100%; padding:10px; font-size:1rem;"></textarea>
+            <div style="margin-top:10px; text-align:right;">
+                <button id="saveModalBtn" class="download-button">저장</button>
+                <button id="closeModalBtn" class="download-button" style="background:#aaa;">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JS 연동 -->
+</body>
+</html>

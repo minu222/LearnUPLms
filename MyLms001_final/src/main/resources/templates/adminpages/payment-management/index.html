@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>DW Academy</title>
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/adminpages/css/style.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/menu.css}">
+</head>
+
+<body>
+<div th:replace="adminpages/menu :: menu"></div>
+      <main class="main">
+        <div class="content-box">
+          <h2>결제 관리</h2>
+
+            <div class="search-box payments-search">
+                <form th:action="@{/order/payment-management}" method="get">
+                    <input type="text" name="keyword" placeholder="주문번호 뒷자리" th:value="${keyword}"/>
+                    <select name="status" aria-label="결제 상태">
+                        <option value="all" th:selected="${status=='all' or status==null}">전체</option>
+                        <option value="paid" th:selected="${status=='paid'}">승인</option>
+                        <option value="pending" th:selected="${status=='pending'}">대기</option>
+                        <option value="refund_requested" th:selected="${status=='refund_requested'}">환불 요청</option>
+                        <option value="refunded" th:selected="${status=='refunded'}">취소</option>
+                    </select>
+                    <button class="btn-search" type="submit">검색</button>
+                </form>
+            </div>
+
+            <table class="data-table payments-table" aria-label="결제 내역">
+                <thead>
+                <tr>
+                    <th scope="col">결제번호</th>
+                    <th scope="col">주문번호</th>
+                    <th scope="col">고객명</th>
+                    <th scope="col">금액</th>
+                    <th scope="col">방법</th>
+                    <th scope="col">상태</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order : ${orders}">
+                    <td th:text="'P-' + ${order.orderId}"></td>
+                    <td th:text="'O-' + ${#dates.format(order.createdAt,'yyyyMMdd')} + '-' + ${order.orderId}"></td>
+                    <td th:text="${order.userName}"></td>
+                    <td th:text="${#numbers.formatInteger(order.totalAmount, 0)} + '₩'"></td>
+                    <td th:text="${order.paymentMethod}"></td>
+                    <td>
+                        <span th:switch="${order.status}">
+                            <span th:case="'paid'" class="badge normal">결제 완료</span>
+                            <span th:case="'pending'" class="badge pending">결제 대기</span>
+                            <span th:case="'refund_requested'" class="badge warning">환불 요청</span>
+                            <span th:case="'refunded'" class="badge canceled">환불 완료</span>
+                            <span th:case="*"
+                                  class="badge">알 수 없음</span>
+                        </span>
+                    </td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

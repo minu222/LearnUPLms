@@ -1,0 +1,190 @@
+<!-- ===============================
+DW Academy - 강의실 목록 (No JS, Fixed Layout)
+- 비반응형 고정 레이아웃
+- 스크립트 없음
+- :has()로 체크된 행 하이라이트(지원 브라우저에서만)
+=============================== -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>DW Academy</title>
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/adminpages/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/adminpages/css/menu.css}" />
+</head>
+
+<body>
+<div th:replace="adminpages/menu :: menu"></div>
+<main class="main">
+    <div class="content-box">
+        <!-- 헤더 -->
+        <div class="header">
+            <h2>강의실 목록</h2>
+        </div>
+
+        <!-- 검색/액션 -->
+        <form
+                class="search-area"
+                method="get"
+                th:action="@{/admin/classrooms-list}"
+                th:object="${filter}"
+        >
+            <div class="search-left">
+                <label for="category">카테고리:</label>
+                <select th:field="*{category}" id="category" name="category">
+                    <option value="">전체</option>
+                    <option
+                            th:each="cat : ${categories}"
+                            th:value="${cat}"
+                            th:text="${cat}"
+                    ></option>
+                </select>
+
+                <label for="status">상태:</label>
+                <select th:field="*{status}" id="status">
+                    <option value="">전체</option>
+                    <option value="draft" th:selected="${filter.status=='draft'}">
+                        미승인
+                    </option>
+                    <option
+                            value="published"
+                            th:selected="${filter.status=='published'}"
+                    >
+                        승인
+                    </option>
+                    <option value="closed" th:selected="${filter.status=='closed'}">
+                        폐쇄
+                    </option>
+                </select>
+
+                <label>강의실명:</label>
+                <input
+                        type="text"
+                        id="keyword"
+                        name="keyword"
+                        placeholder="검색어 입력"
+                        th:value="${filter.keyword}"
+                />
+                <button type="submit" class="rjator">
+                    <i class="fa-solid fa-magnifying-glass"></i> 검색
+                </button>
+            </div>
+        </form>
+
+        <form method="post" id="classroomForm">
+            <div class="search-actions" style="margin-top: 12px">
+                <button
+                        type="submit"
+                        th:formaction="@{/admin/classrooms/delete-selected}"
+                        class="btn-delete"
+                >
+                    선택 삭제
+                </button>
+            </div>
+            <div class="table-wrap">
+                <div class="table-scroller">
+                    <!-- 전체 선택 삭제 버튼 -->
+                    <table aria-label="강의실 목록">
+                        <colgroup>
+                            <col class="chk" />
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                        </colgroup>
+                        <thead class="thisbox3">
+                        <tr>
+                            <th>
+                                <input
+                                        id="checkAllRooms"
+                                        type="checkbox"
+                                        aria-label="전체 선택"
+                                />
+                            </th>
+                            <th>번호</th>
+                            <th>강의실명</th>
+                            <th>카테고리</th>
+                            <th class="num">학생 수</th>
+                            <th>상태</th>
+                            <th>강사 아이디</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="room, i : ${courses}">
+                            <td data-label="선택">
+                                <input
+                                        type="checkbox"
+                                        name="ids"
+                                        th:value="${room.classroomId}"
+                                />
+                            </td>
+                            <td
+                                    class="center"
+                                    data-label="번호"
+                                    th:text="${i.index + 1}"
+                            ></td>
+                            <td data-label="강의실명" th:text="${room.title}"></td>
+                            <td data-label="카테고리" th:text="${room.category}"></td>
+                            <td
+                                    class="num"
+                                    data-label="학생 수"
+                                    th:text="${room.studentCount}"
+                            ></td>
+                            <td
+                                    data-label="상태"
+                                    style="display: flex; align-items: center; gap: 8px"
+                            >
+                                <select
+                                        th:name="'statusMap[' + ${room.classroomId} + ']'"
+                                >
+                                    <option
+                                            value="draft"
+                                            th:selected="${room.status=='draft'}"
+                                    >
+                                        미승인
+                                    </option>
+                                    <option
+                                            value="published"
+                                            th:selected="${room.status=='published'}"
+                                    >
+                                        승인
+                                    </option>
+                                    <option
+                                            value="closed"
+                                            th:selected="${room.status=='closed'}"
+                                    >
+                                        폐쇄
+                                    </option>
+                                </select>
+                                <!-- 각 행별 저장 버튼 -->
+                                <button
+                                        type="submit"
+                                        th:formaction="@{/admin/classrooms/update-status-bulk}"
+                                        name="saveSingle"
+                                        th:value="${room.classroomId}"
+                                        class="btn-save"
+                                >
+                                    저장
+                                </button>
+                            </td>
+                            <td
+                                    data-label="강사 ID"
+                                    th:text="${room.instructorNickname}"
+                            ></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

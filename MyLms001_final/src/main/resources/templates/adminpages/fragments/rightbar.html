@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- (선택) 우측에 뭔가 보여줄 메인 공간 데모 -->
+
+<!-- 메일쓰기 팝업 -->
+<div
+        class="popup-overlay"
+        id="mailPopup"
+        role="dialog"
+        aria-modal="true"
+        aria-label="메일 쓰기"
+        hidden
+        th:fragment="rightbar"
+>
+    <div class="popup">
+        <div class="popup-header">
+            메일 쓰기
+            <button type="button" class="popup-close" aria-label="닫기">
+                &times;
+            </button>
+        </div>
+        <div class="popup-body">
+            <div class="form-group">
+                <label class="form-label">받는사람</label>
+                <div class="receiver-box">
+                    <div id="receiverList" class="receiver-list"></div>
+                    <input
+                            type="text"
+                            id="receiverInput"
+                            placeholder="이메일 입력 후 Enter"
+                    />
+                    <button
+                            type="button"
+                            class="address-book-btn"
+                            id="openAddressBook"
+                    >
+                        <i class="fa-solid fa-book"></i> 주소록
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">제목</label>
+                <div class="title-box">
+                    <input type="text" id="mailTitle" placeholder="제목 입력" />
+                    <select id="templateSelect">
+                        <option value="">템플릿 선택</option>
+                        <option>공지사항 안내</option>
+                        <option>업데이트 안내</option>
+                        <option>이벤트 초대</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">파일첨부</label>
+                <div id="fileDrop" class="file-drop-area">
+                    파일을 끌어오거나 클릭하여 업로드하세요.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">내용</label>
+                <div class="editor-toolbar">
+                    <select id="fontSizeSel">
+                        <option value="3">14px</option>
+                        <option value="4">18px</option>
+                        <option value="5">24px</option>
+                    </select>
+                    <button type="button" data-cmd="bold"><b>B</b></button>
+                    <button type="button" data-cmd="italic"><i>I</i></button>
+                    <button type="button" data-cmd="underline"><u>U</u></button>
+                    <button type="button" data-cmd="insertUnorderedList">
+                        <i class="fa fa-list-ul"></i>
+                    </button>
+                    <button type="button" data-cmd="insertOrderedList">
+                        <i class="fa fa-list-ol"></i>
+                    </button>
+                    <button type="button" id="linkBtn">
+                        <i class="fa fa-link"></i>
+                    </button>
+                    <button type="button" id="imgBtn">
+                        <i class="fa fa-image"></i>
+                    </button>
+                </div>
+                <div class="editor" id="mailEditor" contenteditable="true">
+                    여기에 내용을 입력하세요...
+                </div>
+            </div>
+
+            <button class="btn-submit" id="sendBtn">메일 보내기</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

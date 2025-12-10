@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>DW Academy - 새 글 작성</title>
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/adminpages/css/style.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/menu.css}">
+</head>
+<body>
+<div th:replace="adminpages/menu :: menu"></div>
+<main class="main">
+    <div class="content-box">
+        <div class="header"><h2>게시글 관리</h2></div>
+
+        <form class="search-area" method="get" th:action="@{/admin/posts-manage}">
+            <div class="search-left">
+                <label for="category">분류:</label>
+                <select id="category" name="category">
+                    <option value="" th:selected="${category == null}">전체</option>
+                    <option value="FREE" th:selected="${category=='FREE'}">자유</option>
+                    <option value="NOTICE" th:selected="${category=='NOTICE'}">공지</option>
+                </select>
+
+                <label for="ptype">검색:</label>
+                <select id="ptype" name="type">
+                    <option value="title" th:selected="${type=='title'}">제목</option>
+                    <option value="author" th:selected="${type=='author'}">작성자</option>
+                </select>
+
+                <input id="pkeyword" name="keyword" type="text" placeholder="검색어 입력" th:value="${keyword}" />
+                <button type="submit" class="rjator"><i class="fa-solid fa-magnifying-glass"></i> 검색</button>
+            </div>
+
+            <div class="search-actions">
+                <a class="btn-write" th:href="@{/admin/posts-manage/new}">
+                    <i class="fa-regular fa-square-plus "></i> 새 글 작성
+                </a>
+            </div>
+        </form>
+
+        <!-- 선택 삭제 form -->
+        <form th:action="@{/admin/posts-manage/delete}" method="post" id="deleteForm">
+            <button type="submit" onclick="return confirm('선택한 게시글을 삭제하시겠습니까?')" class="rjator" style="margin-bottom: 10px;">선택 삭제</button>
+
+            <table>
+                <thead>
+                <tr>
+                    <th><input type="checkbox" id="checkAll" onclick="toggleAll(this)"/></th>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>내용</th>
+                    <th>카테고리</th>
+                    <th>좋아요수</th>
+                    <th>조회수</th>
+                    <th>댓글수</th>
+                    <th>작성자</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p, i : ${posts}">
+                    <td>
+                        <input type="checkbox" name="postIds" th:value="${p.postId}" class="row-check"/>
+                    </td>
+                    <td th:text="${i.index + 1}">1</td>
+                    <td>
+                        <a th:href="@{/admin/posts-manage/{id}(id=${p.postId})}" th:text="${p.title}">제목</a>
+                    </td>
+                    <td th:text="${p.content}">내용</td>
+                    <td th:text="${p.category}">카테고리</td>
+                    <td th:text="${p.likes}">좋아요수</td>
+                    <td th:text="${p.views}">조회수</td>
+                    <td th:text="${p.commentsCount}">댓글수</td>
+                    <td th:text="${p.authorName}">작성자</td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+        <!-- /목록 -->
+    </div>
+</main>
+</div>
+
+<script>
+    function toggleAll(source) {
+        const checkboxes = document.querySelectorAll('.row-check');
+        checkboxes.forEach(cb => cb.checked = source.checked);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>강의 등록</title>
+    <style>
+        .alert { padding:12px 14px; border-radius:6px; margin:12px 0; }
+        .alert-danger { background:#ffe9e9; border:1px solid #f2b5b5; color:#b00020; }
+        .alert-success { background:#e9fff2; border:1px solid #b5f2c8; color:#0a7a2f; }
+        .is-invalid { border-color:#d93025 !important; outline:none; }
+        .invalid-feedback { color:#d93025; font-size:12px; margin-top:4px; display:block; }
+        .req::after { content:" *"; color:#d93025; }
+        .card { border:1px solid #e5e7eb; border-radius:10px; padding:16px; margin:14px 0; }
+        .row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+        .row > * { min-width: 220px; }
+        .hint { font-size:12px; color:#666; margin-top:4px; display:block; }
+    </style>
+</head>
+<body>
+<div th:fragment="content">
+    <form th:action="@{/instructor/courses/add}" th:object="${form}" method="post" enctype="multipart/form-data">
+        <!-- CSRF -->
+        <input type="hidden" th:if="${_csrf != null}"
+               th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <input type="hidden" name="instructorId" th:value="${instructorId}"/>
+        <div class="header">
+            <h2>강의 등록</h2>
+        </div>
+
+        <!-- 전역 메시지 -->
+        <div class="alert alert-danger" th:if="${#fields.hasErrors()}">
+            <strong>입력값을 확인하세요.</strong>
+            <ul style="margin:6px 0 0 18px;">
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+            </ul>
+        </div>
+        <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+        <div class="alert alert-success" th:if="${toast}" th:text="${toast}"></div>
+
+        <!-- 기본 정보 카드 -->
+        <div class="card">
+            <h3>기본 정보</h3>
+            <label class="req" for="courseType">과정구분</label>
+            <select id="courseType" name="courseType" required>
+                <option value="VOD">VOD</option>
+                <option value="개인강의">개인강의</option>
+                <option value="다수강의">다수강의</option>
+            </select>
+
+            <label class="req" for="courseName">과정명</label>
+            <input id="courseName" type="text" th:field="*{courseName}" placeholder="강의 이름 입력" required
+                   th:classappend="${#fields.hasErrors('courseName')} ? ' is-invalid'">
+            <small class="invalid-feedback" th:if="${#fields.hasErrors('courseName')}" th:errors="*{courseName}"></small>
+
+            <label for="mainImage">메인 이미지</label>
+            <input id="mainImage" name="mainImage" type="file" accept="image/*"/>
+            <img id="preview" alt="이미지 미리보기" src="" style="max-width:320px; display:none;"/>
+            <span class="hint">권장: JPG/PNG, 2MB 이하</span>
+        </div>
+
+        <!-- 수업 정보 카드 -->
+        <div class="card">
+            <h3>수업 정보</h3>
+            <div class="row">
+                <div>
+                    <label class="req" for="fee">교육비</label>
+                    <div class="row">
+                        <input id="fee" type="number" min="0" th:field="*{fee}" required
+                               th:classappend="${#fields.hasErrors('fee')} ? ' is-invalid'">
+                    </div>
+                    <small class="invalid-feedback" th:if="${#fields.hasErrors('fee')}" th:errors="*{fee}"></small>
+                </div>
+
+                <!-- 교육기간 -->
+                <div>
+                    <label class="req" for="periodStart">교육기간</label>
+                    <div class="row" style="align-items:center;">
+                        <input id="periodStart" type="date" required>
+                        <span>~</span>
+                        <input id="periodEnd" type="date" required>
+                    </div>
+                    <input id="period" type="hidden" th:field="*{period}" th:classappend="${#fields.hasErrors('period')} ? ' is-invalid'">
+                    <small class="invalid-feedback" th:if="${#fields.hasErrors('period')}" th:errors="*{period}"></small>
+                    <span class="hint">시작일과 종료일 선택하면 자동으로 기간 설정</span>
+                </div>
+
+                <div>
+                    <label for="dailyTime">1일 교육시간</label>
+                    <input id="dailyTime" name="dailyTime" type="number" min="1">
+                    <span id="dailyTimeNote" class="hint" style="display:none;">VOD 선택시 비활성화</span>
+                </div>
+            </div>
+            <label>교육대상</label>
+            <div id="targetField"></div>
+        </div>
+
+        <!-- VOD 동영상 -->
+        <div class="card" id="vodVideoGroup" style="display:none;">
+            <h3>VOD 동영상</h3>
+            <label class="req" for="videoFile">동영상 파일</label>
+            <input id="videoFile" name="videoFile" type="file" accept="video/*">
+            <span class="hint">권장: MP4(H.264/AAC) · 최대 500MB</span>
+            <video id="videoPreview" controls style="max-width:420px; display:none; margin-top:8px;"></video>
+        </div>
+
+        <!-- 상세 정보 -->
+        <div class="card">
+            <h3>상세 정보</h3>
+            <label class="req" for="description">과정설명</label>
+            <input id="description" type="text" th:field="*{description}" placeholder="과정 제목" required
+                   th:classappend="${#fields.hasErrors('description')} ? ' is-invalid'">
+            <small class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></small>
+
+            <label for="goal">학습목표</label>
+            <textarea id="goal" name="goal" rows="3"></textarea>
+
+            <label for="examFile">시험 파일</label>
+            <input id="examFile" name="examFile" type="file" accept=".csv">
+            <a href="/api/download" class="btn">파일 다운로드</a>
+        </div>
+
+        <!-- 등록 버튼 -->
+        <div style="text-align:right; margin-top:10px;">
+            <button id="registerBtn" class="btn-submit" type="submit">등록</button>
+        </div>
+    </form>
+
+    <script>
+        (function () {
+            const courseType = document.getElementById('courseType');
+            const dailyTime = document.getElementById('dailyTime');
+            const dailyTimeNote = document.getElementById('dailyTimeNote');
+            const mainImage = document.getElementById('mainImage');
+            const preview = document.getElementById('preview');
+            const vodVideoGroup = document.getElementById('vodVideoGroup');
+            const videoFile = document.getElementById('videoFile');
+            const videoPreview = document.getElementById('videoPreview');
+            const periodHidden = document.getElementById('period');
+            const periodStart = document.getElementById('periodStart');
+            const periodEnd = document.getElementById('periodEnd');
+
+            function pad(n){ return String(n).padStart(2,'0'); }
+            function syncDatesFromPeriod() {
+                const val = (periodHidden?.value || '').trim();
+                if (!val) return;
+                const parts = val.split('~').map(s => s.trim());
+                if (parts.length === 2) {
+                    periodStart.value = parts[0] || '';
+                    periodEnd.value = parts[1] || '';
+                    if (periodStart.value) periodEnd.min = periodStart.value;
+                }
+            }
+            function syncPeriodFromDates() {
+                const s = periodStart.value;
+                const e = periodEnd.value;
+                if (s && e) {
+                    if (e < s) periodEnd.setCustomValidity('종료일은 시작일 이후여야 합니다.');
+                    else periodEnd.setCustomValidity('');
+                    periodHidden.value = `${s} ~ ${e}`;
+                } else periodHidden.value = '';
+            }
+
+            periodStart?.addEventListener('change', () => {
+                if (periodEnd) { periodEnd.min = periodStart.value || ''; if(periodEnd.value<periodEnd.min) periodEnd.value=periodEnd.min; }
+                syncPeriodFromDates();
+            });
+            periodEnd?.addEventListener('change', syncPeriodFromDates);
+
+            syncDatesFromPeriod();
+            syncPeriodFromDates();
+
+            function toggleByCourseType() {
+                const isVOD = courseType?.value === 'VOD';
+                if(dailyTime){ dailyTime.disabled=isVOD; if(isVOD) dailyTime.value=''; }
+                if(dailyTimeNote) dailyTimeNote.style.display=isVOD?'inline':'none';
+                if(vodVideoGroup) vodVideoGroup.style.display=isVOD?'block':'none';
+                if(videoFile) { videoFile.required=isVOD; if(!isVOD){videoFile.value=''; if(videoPreview){ videoPreview.pause?.(); videoPreview.removeAttribute('src'); videoPreview.style.display='none'; }}}
+            }
+            courseType?.addEventListener('change', toggleByCourseType);
+            toggleByCourseType();
+
+            mainImage?.addEventListener('change',(e)=>{
+                const file=e.target.files[0]; if(!file){preview.style.display='none'; return;}
+                const reader=new FileReader();
+                reader.onload=()=>{preview.src=reader.result; preview.style.display='block';};
+                reader.readAsDataURL(file);
+            });
+
+            videoFile?.addEventListener('change',(e)=>{
+                const file=e.target.files[0]; if(!file){videoPreview.pause?.(); videoPreview.removeAttribute('src'); videoPreview.style.display='none'; return;}
+                const url=URL.createObjectURL(file); videoPreview.src=url; videoPreview.style.display='block';
+                videoPreview.onloadeddata=()=>URL.revokeObjectURL(url);
+            });
+
+            const form=document.querySelector('form');
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                syncPeriodFromDates();
+                if (!periodHidden.value) {
+                    alert('교육기간 선택해주세요');
+                    return;
+                }
+
+                const formData = new FormData(form);
+
+                // 1️⃣ CSRF 토큰 추가 (Thymeleaf용)
+                const csrfInput = form.querySelector('input[name="_csrf"]');
+                if (csrfInput) formData.append(csrfInput.name, csrfInput.value);
+
+                // 2️⃣ instructorId 추가
+                const instructorInput = form.querySelector('input[name="instructorId"]');
+                if (instructorInput) {
+                    formData.append('instructorId', instructorInput.value);
+                } else {
+                    console.warn('instructorId input not found!');
+                    alert('로그인 정보를 찾을 수 없습니다.');
+                    return;
+                }
+
+                try {
+                    // 3️⃣ 강의 등록 요청
+                    const res = await fetch(form.action, { method: 'POST', body: formData });
+                    if (!res.ok) {
+                        const text = await res.text();
+                        alert('강의 등록 실패:\n' + text);
+                        return;
+                    }
+
+                    const data = await res.json();
+                    alert('강의 등록 완료! Course ID: ' + data.courseId);
+
+
+
+                    // 4️⃣ CSV 업로드 진행
+                    const examFile = document.getElementById('examFile')?.files[0];
+                    if (examFile) {
+                        const csvFormData = new FormData();
+                        csvFormData.append("file", examFile); // 서버 컨트롤러에서 @RequestParam("file") MultipartFile file 로 받음
+                        csvFormData.append("courseId", data.courseId); // 어떤 강의의 시험인지 매핑하려면 추가
+
+                        const uploadRes = await fetch("/api/upload", {
+                            method: "POST",
+                            body: csvFormData
+                        });
+
+                        if (!uploadRes.ok) {
+                            const err = await uploadRes.text();
+                            alert("CSV 업로드 실패:\n" + err);
+                            return;
+                        }
+
+                        const uploadResult = await uploadRes.json();
+                        alert("CSV 업로드 성공! 업로드된 문제 수: " + uploadResult.count);
+                        window.location.href = "/myclass/teacher/classes";
+
+                    } else {
+                        alert("CSV 파일을 선택하지 않았습니다. (시험파일은 건너뜀)");
+                        window.location.href = "/myclass/teacher/classes";
+                    }
+
+                } catch (err) {
+                    console.error(err);
+                    alert('처리 중 오류 발생: ' + err.message);
+                }
+            });
+
+        })();
+    </script>
+</div>
+</body>
+</html>

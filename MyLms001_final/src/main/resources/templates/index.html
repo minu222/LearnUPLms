@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>메인 페이지</title>
+    <!-- ✅ 기존 공통 CSS는 그대로 사용하세요.
+         대시보드형 오버라이드는 제가 준 CSS( home--dashboard 관련 )를 공용 CSS 맨 아래에 추가하면 됩니다. -->
+</head>
+<body class="fx-aurora">
+<!-- templates/index.html -->
+<section th:fragment="indexContent">
+    <div class="home home--fluid">
+        <header class="hero">
+            <div class="hero__inner">
+                <h1 class="hero__title">열정을 현실로, 지금 시작하세요!</h1>
+                <p class="hero__subtitle">가볍게 시작하고 꾸준히 성장하는 학습 여정</p>
+                <div class="hero__actions">
+                    <a class="btn" href="/course">과정 둘러보기</a>
+                    <div th:switch="${role}">
+                        <a class="btn btn--ghost" th:case="'guest'"     th:href="@{/login}">내 강의실</a>
+                        <a class="btn btn--ghost" th:case="'student'"   th:href="@{/myclass/student/courses}">내 강의실</a>
+                        <a class="btn btn--ghost" th:case="'instructor'" th:href="@{/myclass/teacher/classes}">내 강의실</a>
+                        <a class="btn btn--ghost" th:case="'teacher'"    th:href="@{/myclass/teacher/classes}">내 강의실</a>
+                        <a class="btn btn--ghost" th:case="*"
+                           th:href="@{/myclass/entry}">내 강의실</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- KPI (선택) -->
+        <section class="section">
+            <h2 class="section__title">오늘 한눈에 보기</h2>
+            <div class="kpi-grid">
+                <div class="kpi">
+                    <span class="kpi__label">오늘 학습</span>
+                    <strong class="kpi__value" th:text="${kpiTodayStudy} ?: 0">128</strong>
+                </div>
+                <div class="kpi">
+                    <span class="kpi__label">신규 강좌</span>
+                    <strong class="kpi__value" th:text="${kpiNewCourses} ?: 0">6</strong>
+                </div>
+                <div class="kpi">
+                    <span class="kpi__label">공지</span>
+                    <strong class="kpi__value" th:text="${kpiNotices} ?: 0">3</strong>
+                </div>
+                <div class="kpi">
+                    <span class="kpi__label">메시지</span>
+                    <strong class="kpi__value" th:text="${kpiMessages} ?: 0">12</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- 인기차트 -->
+        <section class="section">
+            <div class="section__head">
+                <h2 class="section__title">10월 인기차트</h2>
+                <a class="link" href="/board">전체보기</a>
+            </div>
+            <div class="auto-grid auto-grid--3">
+                <article class="card card--list">
+                    <h3 class="card__title">인기글</h3>
+                    <ol class="rank-list">
+                        <li><em>1</em> 최신 교육 동향 분석</li>
+                        <li><em>2</em> 공부 습관 만드는 방법</li>
+                        <li><em>3</em> 수강생 후기 BEST 모음</li>
+                        <li><em>4</em> 강사 인터뷰</li>
+                        <li><em>5</em> 시험 합격 노하우</li>
+                    </ol>
+                </article>
+
+                <article class="card card--list">
+                    <h3 class="card__title">인기강사</h3>
+                    <ol class="rank-list">
+                        <li><em>1</em> 김철수 강사</li>
+                        <li><em>2</em> 이영희 강사</li>
+                        <li><em>3</em> 박민수 강사</li>
+                        <li><em>4</em> 정다은 강사</li>
+                        <li><em>5</em> 최지훈 강사</li>
+                    </ol>
+                </article>
+
+                <article class="card card--list">
+                    <h3 class="card__title">인기 강의 목록</h3>
+                    <ol class="rank-list">
+                        <li><em>1</em> 수학 심화 강의</li>
+                        <li><em>2</em> 영어 회화 완성</li>
+                        <li><em>3</em> 프로그래밍 기초</li>
+                        <li><em>4</em> 사회복지 자격 준비</li>
+                        <li><em>5</em> 예체능 입시 대비</li>
+                    </ol>
+                </article>
+            </div>
+        </section>
+
+        <!-- 추천/신규 강의 (자동 칼럼) -->
+        <section class="section">
+            <div class="section__head">
+                <h2 class="section__title">추천 강의 / 신규 강의</h2>
+                <a class="link" href="/course">더 보기</a>
+            </div>
+
+            <div class="auto-grid">
+                <article class="course">
+                    <img src="https://picsum.photos/640/400?random=11" alt="">
+                    <div class="course__body">
+                        <h3 class="course__title">데이터 분석 기초</h3>
+                        <p class="course__desc">실습 중심의 데이터 분석 입문 강의</p>
+                    </div>
+                </article>
+
+                <article class="course">
+                    <img src="https://picsum.photos/640/400?random=12" alt="">
+                    <div class="course__body">
+                        <h3 class="course__title">영어 회화 마스터</h3>
+                        <p class="course__desc">원어민 강사와 함께하는 실전 회화</p>
+                    </div>
+                </article>
+
+                <article class="course">
+                    <img src="https://picsum.photos/640/400?random=13" alt="">
+                    <div class="course__body">
+                        <h3 class="course__title">미술 입시 준비</h3>
+                        <p class="course__desc">포트폴리오 완성 과정</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </div>
+</section>
+</body>
+</html>

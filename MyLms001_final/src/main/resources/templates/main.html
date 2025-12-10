@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시험 페이지</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+<div class="container">
+    <form th:action="@{/exam/submit}" method="post">
+        <div class="grid">
+            <!-- ===============================
+                 문제 반복 영역
+                 서버에서 내려온 examQuestions 리스트를 사용
+                 =============================== -->
+            <div class="problem" th:each="q, iterStat : ${examQuestions}">
+                <!-- 문제 번호: iterStat.index + 1 -->
+                <h3 th:text="'문제 ' + ${iterStat.index + 1}"></h3>
+
+                <!-- 문제 내용: q.content -->
+                <p th:text="${q.content}"></p>
+
+                <!--
+                    답안 입력창
+                    - name 속성: answers[문제ID]
+                    - 백엔드에서 @RequestParam Map<String,String> answers 형태로 받음
+                    - q.id 부분을 DB에서 가져온 문제 ID로 변경 가능
+                -->
+                <input type="text" th:name="'answers[' + ${q.id} + ']'" placeholder="답 작성">
+            </div>
+        </div>
+
+        <div class="pagination-submit">
+            <!-- ===============================
+                 페이지네이션
+                 서버에서 pageNumbers 리스트를 내려서 반복 출력
+                 클릭 시 Ajax 또는 링크로 페이지 교체 가능
+                 =============================== -->
+            <div class="pagination">
+                <span th:each="page : ${pageNumbers}" th:text="${page}"></span>
+            </div>
+
+            <!-- 제출 버튼 -->
+            <button type="submit" class="submit-btn">제출하기</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="${post != null ? post.title + ' | MyLMS' : '공지사항 상세 | MyLMS'}">공지사항 상세 | MyLMS</title>
+    <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
+</head>
+<body>
+<div th:fragment="content">
+        <div class="board-container notice-detail">
+
+        <!-- 상단: 크럼브 + 타이틀 + 메타 -->
+        <div class="nd-head">
+            <div class="nd-crumbs">
+                <a th:href="@{|/board/${typeSlug}|}">공지사항</a>
+                <span class="sep">›</span>
+                <span>상세</span>
+            </div>
+
+            <!-- 제목: 기존 바인딩 유지 -->
+            <h1 class="nd-title" th:text="${post != null ? post.title : '공지사항 제목'}">공지사항 제목</h1>
+
+            <!-- 메타: 등록일은 기존 바인딩 유지, 나머지는 Map 안전 접근 -->
+            <div class="nd-meta">
+        <span class="meta-item">
+          <i class="i i-calendar" aria-hidden="true"></i>
+          <b>등록일</b>
+          <span th:text="${post != null ? #temporals.format(post.createdAt,'yyyy-MM-dd HH:mm') : '2025-09-01 12:00'}">2025-09-01 12:00</span>
+        </span>
+
+                <!-- 작성자 (post가 Map이어도 안전하게) -->
+
+
+                <!-- 조회수 (post가 Map이어도 안전하게) -->
+                <span class="dot"
+                      th:if="${post != null and #maps.containsKey(post,'viewCount') and post['viewCount'] != null}"></span>
+                <span class="meta-item"
+                      th:if="${post != null and #maps.containsKey(post,'viewCount') and post['viewCount'] != null}">
+          <i class="i i-eye" aria-hidden="true"></i>
+          <b>조회</b> <span th:text="${post['viewCount']}">0</span>
+        </span>
+            </div>
+        </div>
+
+        <!-- 본문: 기존 바인딩 유지 -->
+        <div class="nd-body post-content"
+             th:utext="${post != null ? post.content : '공지사항 내용이 여기에 표시됩니다.'}">
+            공지사항 내용이 여기에 표시됩니다.
+        </div>
+
+        <!-- 첨부파일: Map 안전 접근 -->
+        <div class="nd-files"
+             th:if="${post != null
+                 and #maps.containsKey(post,'attachments')
+                 and post['attachments'] != null
+                 and !#lists.isEmpty(post['attachments'])}">
+            <h3 class="files-title"><i class="i i-paperclip"></i> 첨부파일</h3>
+            <ul class="files-list">
+                <li th:each="f : ${post['attachments']}">
+                    <a class="file-link" th:href="@{|/files/${f.id}|}" th:text="${f.originalName}">첨부파일명</a>
+                    <span class="file-size" th:text="${f.sizeReadable}">1.2MB</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 액션: 기존 바인딩 유지 -->
+        <div class="nd-actions button-group">
+            <a class="btn back cancel-btn" th:href="@{|/board/${typeSlug}|}">목록으로</a>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

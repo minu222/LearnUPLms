@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.9">
+    <title>회원가입 | MyLMS</title>
+    <link rel="stylesheet" href="/css/signup.css" th:href="@{/css/signup.css}">
+</head>
+<body>
+<header class="nav-container">
+    <div class="logo"><a th:href="@{/}">MyLMS</a></div>
+</header>
+
+<div class="signup-container">
+    <div class="signup-box">
+        <h3>회원가입</h3>
+        <form id="signupForm"
+              action="/user/add"
+              method="post"
+              onsubmit="return validateSignup();">
+
+            <!-- 닉네임 -->
+            <div class="input-group">
+                <label for="nickname">아이디</label>
+                <input type="text" id="nickname" name="nickname" placeholder="아이디 입력">
+                <small id="idMsg"></small>
+            </div>
+
+
+            <!-- 비밀번호 -->
+            <div class="input-group">
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" name="password" placeholder="비밀번호 입력">
+                <small id="pwMsg"></small>
+            </div>
+
+            <!-- 비밀번호 확인 -->
+            <div class="input-group">
+                <label for="password2">비밀번호 확인</label>
+                <input type="password" id="password2" name="password2" placeholder="비밀번호 확인">
+                <small id="pw2Msg"></small>
+            </div>
+
+            <!-- 이메일 (추가) -->
+            <div class="input-group">
+                <label for="email">이메일</label>
+                <input type="email" id="email" name="email" placeholder="이메일 입력">
+            </div>
+
+            <!-- 성명 -->
+            <div class="input-group">
+                <label for="name">성명</label>
+                <input type="text" id="name" name="name" placeholder="성명 입력">
+            </div>
+
+            <!-- 생년월일 -->
+            <div class="input-group">
+                <label for="birth_day">생년월일</label>
+                <input type="date" id="birth_day" name="birth_day">
+            </div>
+
+            <!-- 성별 -->
+            <div class="input-group">
+                <label>성별</label>
+                <div class="gender-group">
+                    <button type="button" class="gender-btn" data-gender="MALE">남자</button>
+                    <button type="button" class="gender-btn" data-gender="FEMALE">여자</button>
+                </div>
+                <input type="hidden" id="gender" name="gender">
+            </div>
+
+            <!-- 주소 -->
+            <div class="input-group">
+                <label for="address">주소</label>
+                <input type="text" id="address" name="address" placeholder="주소 입력">
+            </div>
+
+            <!-- 상세주소 -->
+            <div class="input-group">
+                <label for="detailAddress">상세주소</label>
+                <input type="text" id="detailAddress" name="detailAddress" placeholder="상세주소 입력">
+            </div>
+
+            <!-- 휴대폰 -->
+            <div class="input-group">
+                <label for="phone">휴대폰</label>
+                <input type="tel" id="phone" name="phone" placeholder="010-1234-5678">
+                <small id="phoneMsg"></small>
+            </div>
+
+            <!-- 회원 구분 -->
+            <div class="input-group">
+                <label>회원 구분</label>
+                <input type="hidden" id="role" name="role" value="STUDENT">
+
+                <div class="role-group">
+                    <button type="button" class="role-btn" data-role="STUDENT">회원</button>
+                    <button type="button" class="role-btn" data-role="INSTRUCTOR">강사</button>
+                </div>
+            </div>
+
+            <!-- 강사 전용 입력 -->
+            <div id="teacherFields" style="display:none;">
+                <div class="input-group">
+                    <label for="affiliation">소속</label>
+                    <input type="text" id="affiliation" name="affiliation" placeholder="소속 입력">
+                </div>
+                <div class="input-group">
+                    <label for="bio">자기소개</label>
+                    <div class="memo-box">
+                        <textarea id="bio" name="bio" placeholder="자기소개를 입력하세요..."></textarea>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>경력</label>
+                    <div id="careerList"></div>
+                    <button type="button" class="add-career-btn">+ 경력 추가</button>
+                </div>
+            </div>
+
+            <!-- 수신동의 -->
+            <div class="input-group">
+                <label>수신 동의</label>
+                <div class="agree-options">
+                    <label class="agree-box">
+                        <input type="checkbox" name="noteAgree">
+                        <span class="checkmark"></span>
+                        <span class="agree-label">쪽지 수신 동의</span>
+                    </label>
+                    <label class="agree-box">
+                        <input type="checkbox" name="emailAgree">
+                        <span class="checkmark"></span>
+                        <span class="agree-label">이메일 수신 동의</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 서버 오류(Flash) 경고창 트리거 -->
+            <div id="serverError" th:if="${errorMessage}" th:text="${errorMessage}" style="display:none"></div>
+
+            <button type="submit" class="signup-btn">회원가입</button>
+            <div class="options">
+                <a href="/">취소</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const serverError = document.querySelector('#serverError');
+    if (serverError && serverError.textContent.trim()) {
+        alert(serverError.textContent.trim());
+    }
+    (function () {
+        const $ = (sel, p = document) => p.querySelector(sel);
+        const $$ = (sel, p = document) => Array.from(p.querySelectorAll(sel));
+        const showMsg = (el, text, ok) => {
+            if (!el) return;
+            el.textContent = text || '';
+            if (!text) return;
+            el.style.color = ok ? '#10b981' : '#e11d48';
+        };
+
+        const formatKRPhone = (s) => {
+            if (!s) return '';
+            let d = String(s).replace(/[^\d-]/g, '');
+            d = d.replace(/-+/g, '-').replace(/^-|-$/g, ''); // ★ 오타 수정
+            const only = d.replace(/-/g, '');
+            if (only.startsWith('02')) {
+                if (only.length <= 2) return only;
+                if (only.length <= 5) return only.replace(/(\d{2})(\d+)/, '$1-$2');
+                if (only.length <= 9) return only.replace(/(\d{2})(\d{3,4})(\d+)/, '$1-$2-$3');
+                return only.slice(0, 10).replace(/(\d{2})(\d{4})(\d{4})/, '$1-$2-$3');
+            }
+            if (only.length <= 3) return only;
+            if (only.length <= 7) return only.replace(/(\d{3})(\d+)/, '$1-$2');
+            if (only.length <= 11) return only.replace(/(\d{3})(\d{3,4})(\d{1,4})/, '$1-$2-$3');
+            return only.slice(0, 11).replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+        };
+        const sanitizePhoneKeepHyphen = (s) => {
+            if (!s) return '';
+            let t = String(s).replace(/[^\d-]/g, '');
+            t = t.replace(/-+/g, '-').replace(/^-|-$/g, ''); // ★ 오타 수정
+            return t;
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = $('#signupForm') || $('form');
+            if (!form) return;
+
+            // ★ 실제 폼엔 nickname이 있으므로 그것을 우선 사용
+            const idInput = $('#nickname') || $('#userid');
+            const idMsg = $('#idMsg');
+            const pw1 = $('#password');
+            const pw2 = $('#password2');
+            const pwMsg = $('#pwMsg');
+            const pw2Msg = $('#pw2Msg');
+            const phone = $('#phone');
+            const phoneMsg = $('#phoneMsg');
+            const hiddenRole = $('#role');
+            const teacherFields = $('#teacherFields');
+
+            const careerList = $('#careerList');
+            const addCareerBtn = $('.add-career-btn');
+
+            // ---------- 성별 버튼(라벨 하이라이트만) ----------
+            $$('.gender-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    $$('.gender-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const hiddenGender = $('#gender');
+                    if (hiddenGender) hiddenGender.value = btn.dataset.gender || '';
+                });
+            });
+
+            // ---------- 역할 버튼 (student | instructor) ----------
+            $$('.role-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    $$('.role-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const v = btn.dataset.role || 'STUDENT';  // 대문자 유지
+                    $('#role').value = v;
+                    $('#teacherFields').style.display = (v === 'INSTRUCTOR') ? '' : 'none';
+                });
+            });
+
+// 초기 동기화
+            (function initRoleUI() {
+                const v = ($('#role')?.value || 'STUDENT'); // 대문자 유지
+                $$('.role-btn').forEach(b => b.classList.toggle('active', (b.dataset.role || '') === v));
+                $('#teacherFields').style.display = (v === 'INSTRUCTOR') ? '' : 'none';
+            })();
+
+            // ---------- 아이디/닉네임 중복 체크 ----------
+            // 엔드포인트 없으면 그냥 통과하도록 true 시작
+            let idAvailable = true;
+            const validateIdShape = v => /^[A-Za-z0-9]{4,20}$/.test(v);
+
+            async function checkId() {
+                if (!idInput) {
+                    idAvailable = true;
+                    return;
+                }
+                const v = (idInput.value || '').trim();
+                idAvailable = false;
+                showMsg(idMsg, '');
+
+                if (!validateIdShape(v)) {
+                    showMsg(idMsg, '아이디는 영문/숫자 4~20자', false);
+                    return;
+                }
+
+                // 필요 시 input에 data-check-url="/api/auth/check-nickname" 같은 속성을 추가해서 사용
+                const url = idInput.dataset.checkUrl;
+                if (!url) {
+                    idAvailable = true;
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`${url}?value=${encodeURIComponent(v)}`);
+                    const json = await res.json().catch(() => ({}));
+                    if (json.ok && json.available) {
+                        showMsg(idMsg, '사용 가능한 아이디입니다.', true);
+                        idAvailable = true;
+                    } else {
+                        showMsg(idMsg, json.msg || '이미 사용 중인 아이디입니다.', false);
+                    }
+                } catch {
+                    showMsg(idMsg, '중복 확인 중 오류가 발생했습니다.', false);
+                }
+            }
+
+            idInput?.addEventListener('blur', checkId);
+            idInput?.addEventListener('input', () => {
+                idAvailable = false;
+                showMsg(idMsg, '');
+            });
+
+            // ---------- 비밀번호 즉시 검증 ----------
+            const validatePwLen = () => {
+                if (!pw1) return true;
+                if (pw1.value.length < 8) {
+                    showMsg(pwMsg, '비밀번호는 8자 이상', false);
+                    return false;
+                }
+                showMsg(pwMsg, '사용 가능한 비밀번호입니다.', true);
+                return true;
+            };
+            const validatePwEqual = () => {
+                if (!pw1 || !pw2) return true;
+                if (pw2.value && pw1.value !== pw2.value) {
+                    showMsg(pw2Msg, '비밀번호가 일치하지 않습니다.', false);
+                    return false;
+                }
+                showMsg(pw2Msg, pw2.value ? '비밀번호가 일치합니다.' : '', true);
+                return true;
+            };
+            pw1?.addEventListener('input', () => {
+                validatePwLen();
+                validatePwEqual();
+            });
+            pw2?.addEventListener('input', validatePwEqual);
+
+            // ---------- 휴대폰 제한/포맷 ----------
+            phone?.addEventListener('beforeinput', (e) => {
+                if (e.inputType === 'insertText' && e.data && !/[0-9-]/.test(e.data)) e.preventDefault();
+            });
+            phone?.addEventListener('input', () => {
+                const cur = phone.value, formatted = formatKRPhone(cur);
+                if (cur !== formatted) phone.value = formatted;
+                const only = formatted.replace(/-/g, '');
+                if (phoneMsg) showMsg(phoneMsg, (only.length >= 10 && only.length <= 11) ? '유효한 번호 형식입니다.' : '', true);
+            });
+
+            // ======================= 경력 UI =======================
+            const ensureCareersHidden = () => {
+                let h = $('#careersJson');
+                if (!h) {
+                    h = document.createElement('input');
+                    h.type = 'hidden';
+                    h.name = 'careersJson';
+                    h.id = 'careersJson';
+                    form.appendChild(h);
+                }
+                return h;
+            };
+            const addCareerRow = (data = {}) => {
+                if (!careerList) return;
+                const row = document.createElement('div');
+                row.className = 'career-row';
+                row.style.marginBottom = '8px';
+                row.innerHTML = `
+                    <input type="text" class="c-org"   placeholder="기관/회사" style="width:180px;">
+                    <input type="text" class="c-title" placeholder="직책/역할" style="width:160px;">
+                    <input type="month" class="c-start" title="시작" style="width:135px;">
+                    <input type="month" class="c-end"   title="종료" style="width:135px;">
+                    <button type="button" class="remove-career" style="margin-left:6px;">삭제</button>
+                            `;
+                if (data.org) row.querySelector('.c-org').value = data.org;
+                if (data.title) row.querySelector('.c-title').value = data.title;
+                if (data.start) row.querySelector('.c-start').value = data.start;
+                if (data.end) row.querySelector('.c-end').value = data.end;
+                careerList.appendChild(row);
+            };
+            addCareerBtn?.addEventListener('click', () => addCareerRow());
+            careerList?.addEventListener('click', (e) => {
+                const btn = e.target.closest('.remove-career');
+                if (!btn) return;
+                btn.closest('.career-row')?.remove();
+            });
+            const collectCareers = () => {
+                if (!careerList) return [];
+                return $$('.career-row', careerList).map(row => ({
+                    org: $('.c-org', row)?.value?.trim() || '',
+                    title: $('.c-title', row)?.value?.trim() || '',
+                    start: $('.c-start', row)?.value || '',
+                    end: $('.c-end', row)?.value || ''
+                })).filter(c => c.org || c.title || c.start || c.end);
+            };
+            // =======================================================
+
+            // ---------- 제출 (기본 폼 제출 유지: /user/add 로 전송) ----------
+            // onsubmit="return validateSignup()" 이 붙어있다면, 아래 전역 함수로 true/false 리턴
+            window.validateSignup = () => {
+                // 닉네임 검사 (필드가 있을 때만)
+                if (idInput) {
+                    const v = (idInput.value || '').trim();
+                    if (!validateIdShape(v)) {
+                        showMsg(idMsg, '아이디는 영문/숫자 4~20자', false);
+                        idInput.focus();
+                        return false;
+                    }
+                }
+                if (!validatePwLen() || !validatePwEqual()) return false;
+
+                // 전화번호 정리
+                if (phone && form.elements['phone']) form.elements['phone'].value = sanitizePhoneKeepHyphen(phone.value);
+
+                // role 보정
+                if (hiddenRole && !form.elements['role'].value) form.elements['role'].value = hiddenRole.value || 'student';
+
+                // instructor면 경력 JSON 동봉
+                if ((form.elements['role'].value || '').toLowerCase() === 'instructor') {
+                    ensureCareersHidden().value = JSON.stringify(collectCareers());
+                }
+                return true; // → 기본 폼 제출 진행 (/user/add)
+            };
+
+
+        });
+    })();
+</script>
+</body>
+</html>

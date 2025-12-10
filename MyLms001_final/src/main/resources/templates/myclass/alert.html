@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>알림</title>
+    <script th:inline="javascript">
+        alert([[${alertMessage}]]);
+        location.href = [[${redirectUrl}]];
+    </script>
+</head>
+<body></body>
+</html>

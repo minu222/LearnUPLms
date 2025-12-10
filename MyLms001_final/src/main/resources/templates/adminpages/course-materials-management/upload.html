@@ -1,0 +1,55 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="ko" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8" />-->
+<!--    <title>DW Academy</title>-->
+<!--    <link-->
+<!--            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"-->
+<!--            rel="stylesheet"-->
+<!--    />-->
+<!--    <link rel="stylesheet" th:href="@{/adminpages/css/style.css}">-->
+<!--    <link rel="stylesheet" th:href="@{/adminpages/css/menu.css}">-->
+<!--</head>-->
+
+<!--<body>-->
+<!--<div th:replace="adminpages/fragments/topbar :: topbar"></div>-->
+<!--<div class="container">-->
+<!--    <div th:replace="adminpages/fragments/sidebar :: sidebar"></div>-->
+<!--    <main class="main">-->
+<!--        <div class="content-box">-->
+<!--            <h2>수업 자료 업로드</h2>-->
+
+<!--            <form th:action="@{/admin/course-materials/upload}" method="post" enctype="multipart/form-data">-->
+<!--                <div class="form-group">-->
+<!--                    <label for="classroomName">강의실명</label>-->
+<!--                    <input type="text" name="classroomName" id="classroomName" placeholder="강의실명을 입력하세요" required/>-->
+<!--                </div>-->
+
+<!--                <div class="form-group">-->
+<!--                    <label for="file">업로드할 파일</label>-->
+<!--                    <input type="file" name="file" id="file" required/>-->
+<!--                </div>-->
+
+<!--                <div class="form-group">-->
+<!--                    <label>-->
+<!--                        <input type="checkbox" name="hasExam" value="true"/> 시험 자료 포함-->
+<!--                    </label>-->
+<!--                    <label>-->
+<!--                        <input type="checkbox" name="hasReplay" value="true" checked/> 다시보기 가능-->
+<!--                    </label>-->
+<!--                </div>-->
+
+<!--                <div class="form-actions">-->
+<!--                    <button type="submit" class="btn-submit">업로드</button>-->
+<!--                    <a th:href="@{/admin/course-materials}" class="btn-cancel">취소</a>-->
+<!--                </div>-->
+<!--            </form>-->
+
+<!--            &lt;!&ndash; 업로드 결과 메시지 &ndash;&gt;-->
+<!--            <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>-->
+<!--            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>-->
+<!--        </div>-->
+<!--    </main>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->

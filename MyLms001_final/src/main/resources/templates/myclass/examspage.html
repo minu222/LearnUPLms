@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>시험 페이지</title>
+
+    <style>
+        :root{
+            --accent:#ffb400; --muted:#8b95a1; --line:#eaecef; --text:#222;
+            --ok:#1a7f37; --okbg:#e6f6ea; --okbd:#bce5c6;
+            --bad:#b42318; --badbg:#fdeaea; --badbd:#f3c3c0;
+            --shadow:0 8px 18px rgba(0,0,0,.06);
+        }
+        *{box-sizing:border-box}
+        body{
+            background:#f6f7fb;color:var(--text);margin:0;
+            font-family:system-ui,-apple-system,Segoe UI,Roboto,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+        }
+
+        /* 워터마크(선택) */
+        #watermark{position:fixed;inset:0;pointer-events:none;opacity:.06;
+            background:repeating-linear-gradient(45deg,#000 0 2px,transparent 2px 24px);}
+
+        /* 시험 용지 컨테이너 */
+        #examPaper{
+            max-width:980px;margin:28px auto;background:#fff;border:1px solid #eee;border-radius:14px;
+            box-shadow:var(--shadow);padding:24px 26px 28px;
+        }
+
+        /* 헤더 */
+        #paperHead{display:flex;justify-content:space-between;gap:18px;padding-bottom:12px;border-bottom:3px solid var(--accent);}
+        #paperTitle{display:flex;align-items:center;gap:10px;margin:0;font-size:1.6rem;font-weight:800}
+        #paperBadge{display:inline-block;padding:2px 8px;border-radius:999px;background:#ffe3a8;border:1px solid #ffd27a;color:#a36200;font-size:.75rem;font-weight:700}
+        #paperMeta{display:flex;gap:14px;color:var(--muted);margin-top:6px;font-size:.95rem}
+        #paperScore{display:flex;align-items:flex-end;gap:14px;justify-content:flex-end;min-width:260px}
+
+        /* 툴바/타이머/안내 */
+        #examToolbar{display:flex;justify-content:space-between;align-items:center;margin:14px 0 10px}
+        #examInstr{background:#fffdf5;border:1px solid #ffe2a6;border-radius:10px;padding:10px 12px;color:#5d4a00}
+        #examBand{display:flex;gap:10px;align-items:center}
+        #examBand .time{font-weight:800}
+
+        /* 버튼 */
+        .actions{display:flex;gap:8px;justify-content:flex-end}
+        .btn{padding:8px 14px;border-radius:10px;border:1px solid #222;background:#222;color:#fff;cursor:pointer;font-weight:700}
+        .btn:hover{opacity:.95;transform:translateY(-1px)}
+        .btn.ghost{background:#fff;color:#222;border:1px solid #ddd}
+
+        /* 범례 */
+        #paperLegend{display:flex;gap:18px;align-items:center;color:var(--muted);margin:12px 0 6px}
+        .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;border:1px solid #ccc;vertical-align:-1px}
+        .dot.correct{background:#e7f3ff;border-color:#b7d7ff}
+        .dot.chosen{background:#fff4d6;border-color:#ffd27a}
+        .dot.wrong{background:#ffe7e7;border-color:#f3c3c0}
+
+        /* 섹션 타이틀 */
+        .section-title{margin:18px 0 8px;font-weight:900;border-left:6px solid var(--accent);padding-left:8px}
+
+        /* 문항 리스트 */
+        #qList{margin-top:6px}
+        .q-item{border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px;margin-bottom:12px;position:relative;background:#fff}
+        .q-head{display:flex;gap:12px;margin-bottom:10px}
+        .q-no{min-width:46px;height:32px;border-radius:8px;background:#f7f7fa;border:1px solid #e6e8ef;display:flex;align-items:center;justify-content:center;font-weight:900}
+        .q-text{font-weight:700}
+
+        .choices{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+        .choice{border:1px solid #eceef3;border-radius:10px;padding:10px 12px;position:relative;background:#fff;transition:box-shadow .15s ease,transform .15s ease}
+        .choice:hover{box-shadow:0 2px 8px rgba(0,0,0,.05);transform:translateY(-1px)}
+        .choice.correct{outline:2px solid #b7d7ff;background:#f7fbff}
+        .choice.chosen{outline:2px solid #ffd27a;background:#fffaf0}
+        .choice label{display:flex;align-items:flex-start;gap:10px;cursor:pointer}
+        .choice input{margin-top:3px}
+        .label-index{display:inline-block;min-width:20px;font-weight:800}
+        .mark{position:absolute;top:8px;right:10px;font-size:.75rem;border-radius:999px;padding:2px 8px;border:1px solid transparent;display:none}
+        .choice.chosen .mark{display:inline-block;background:#fff4d6;border-color:#ffd27a;color:#8a5a00}
+
+        /* 번호 그리드(OMR 느낌) */
+        #numGrid{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-top:8px}
+        .bubble{border:1px solid #e5e7ee;border-radius:8px;padding:6px 0;text-align:center;font-size:.9rem;color:#555;background:#fff}
+        .bubble.active{background:#fffbec;border-color:#ffd27a}
+
+        /* 풋터 */
+        #paperFoot{display:flex;justify-content:space-between;color:var(--muted);margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
+
+        /* 인쇄 최적화 */
+        .print-only{display:none}
+        @media print{
+            #watermark,#examToolbar,.actions{display:none!important}
+            .print-only{display:block}
+            body{background:#fff}
+            #examPaper{box-shadow:none;border:none;margin:0;padding:0}
+        }
+
+        /* 반응형 */
+        @media (max-width:820px){
+            #examPaper{margin:12px;border-radius:12px;padding:16px}
+            #paperHead{flex-direction:column;align-items:stretch}
+            .choices{grid-template-columns:1fr}
+        }
+
+        /* 코드 블록(서술형에 대비) */
+        pre{background:#f7f8fc;border:1px solid #e6e8ef;border-radius:10px;padding:10px;overflow:auto}
+        code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
+    </style>
+</head>
+<body>
+
+<!-- 필요 시 표시 -->
+<div id="watermark" style="display:none" aria-hidden="true"></div>
+
+<main id="examPaper">
+    <!-- 헤더 -->
+    <header id="paperHead">
+        <div>
+            <h1 id="paperTitle">
+                시험 페이지
+                <span id="paperBadge">EXAM</span>
+            </h1>
+            <div id="paperMeta">
+                <span>과목: <strong th:text="${courseTitle}">강의 제목</strong></span>
+                <span>문항: <strong th:text="${#lists.size(questions)}">0</strong>개</span>
+            </div>
+        </div>
+
+    </header>
+
+    <!-- 상단 툴바/안내 -->
+    <section id="examToolbar">
+        <div id="examInstr">
+            안내: 시험 중 새로고침/뒤로가기를 하지 마세요. 답안은 제출 시 서버에 저장됩니다.
+        </div>
+        <div class="legend" id="paperLegend">
+            <span><i class="dot chosen"></i>선택</span>
+            <span><i class="dot correct"></i>정답(채점 후)</span>
+        </div>
+    </section>
+
+    <!-- 문항 -->
+    <h2 class="section-title">문항</h2>
+    <form id="examForm" action="/submit" method="post">
+        <!-- 서버 바인딩 유지 -->
+        <input type="hidden" name="examId" th:value="${examId}">
+        <input type="hidden" name="courseTitle" th:value="${courseTitle}">
+        <input type="hidden" name="questionCount" th:value="${#lists.size(questions)}">
+
+        <div id="qList">
+            <article th:each="q, iterStat : ${questions}" class="q-item" th:attr="data-no=${iterStat.index + 1}">
+                <div class="q-head">
+                    <div class="q-no" th:text="${iterStat.index + 1}">1</div>
+                    <p class="q-text" th:text="${q.question}">문제 텍스트</p>
+                </div>
+
+                <div class="choices">
+                    <!-- A -->
+                    <label class="choice" th:if="${q.option1 != null}">
+                        <input type="radio" th:name="${'q' + iterStat.index}" th:value="'a'">
+                        <span class="label-index">A.</span>
+                        <span th:text="${q.option1}">옵션1</span>
+                        <span class="mark">내 선택</span>
+                    </label>
+
+                    <!-- B -->
+                    <label class="choice" th:if="${q.option2 != null}">
+                        <input type="radio" th:name="${'q' + iterStat.index}" th:value="'b'">
+                        <span class="label-index">B.</span>
+                        <span th:text="${q.option2}">옵션2</span>
+                        <span class="mark">내 선택</span>
+                    </label>
+
+                    <!-- C -->
+                    <label class="choice" th:if="${q.option3 != null}">
+                        <input type="radio" th:name="${'q' + iterStat.index}" th:value="'c'">
+                        <span class="label-index">C.</span>
+                        <span th:text="${q.option3}">옵션3</span>
+                        <span class="mark">내 선택</span>
+                    </label>
+
+                    <!-- D -->
+                    <label class="choice" th:if="${q.option4 != null}">
+                        <input type="radio" th:name="${'q' + iterStat.index}" th:value="'d'">
+                        <span class="label-index">D.</span>
+                        <span th:text="${q.option4}">옵션4</span>
+                        <span class="mark">내 선택</span>
+                    </label>
+                </div>
+            </article>
+        </div>
+
+        <div class="actions" style="margin-top:12px">
+            <button type="submit" class="btn">제출</button>
+        </div>
+    </form>
+
+    <!-- 번호표 -->
+    <h2 class="section-title">문항 번호</h2>
+    <div id="numGrid">
+        <div class="bubble"
+             th:each="i : ${#numbers.sequence(1, #lists.size(questions))}"
+             th:attr="data-no=${i}"
+             th:text="${i}">1</div>
+    </div>
+
+    <!-- 풋터 -->
+    <footer id="paperFoot">
+        <span th:text="${now}">2025-10-02</span>
+        <span class="print-only">Printed by MyLMS</span>
+    </footer>
+</main>
+
+
+<script>
+    (function(){
+        // 선택 시 카드와 번호표 하이라이트
+        document.addEventListener('change', function(e){
+            const el = e.target;
+            if(el.matches('input[type="radio"]')){
+                const qItem = el.closest('.q-item');
+                if(!qItem) return;
+
+                // 같은 문항 내에서 chosen 리셋
+                qItem.querySelectorAll('.choice').forEach(c => c.classList.remove('chosen'));
+                const chosenLabel = el.closest('.choice');
+                if(chosenLabel){
+                    chosenLabel.classList.add('chosen');
+                }
+
+                // 번호표 활성화
+                const no = qItem.getAttribute('data-no');
+                document.querySelectorAll('#numGrid .bubble').forEach(b => {
+                    if(b.getAttribute('data-no') === no){ b.classList.add('active'); }
+                });
+            }
+        });
+
+        // 탭 포커스 시 타이머 깜빡임(선택)
+        const timeEl = document.getElementById('timeLeft');
+        if(timeEl){
+            document.addEventListener('visibilitychange', () => {
+                if(document.hidden) timeEl.style.opacity = .6;
+                else timeEl.style.opacity = 1;
+            });
+        }
+    })();
+</script>
+
+
+</body>
+</html>

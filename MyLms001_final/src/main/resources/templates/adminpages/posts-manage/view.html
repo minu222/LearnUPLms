@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>DW Academy - 게시글 상세</title>
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/adminpages/css/style.css}">
+    <link rel="stylesheet" th:href="@{/adminpages/css/menu.css}">
+</head>
+<body>
+<div th:replace="adminpages/menu :: menu"></div>
+
+<main class="main">
+    <div class="content-box card" th:if="${post != null}">
+        <!-- 카드 래퍼 -->
+        <header class="card-header detail-head">
+            <h2 class="detail-title" th:text="${post.title != null ? post.title : '제목 없음'}">제목</h2>
+
+            <!-- 액션 버튼 -->
+            <div class="actions">
+                <a th:href="@{/admin/posts-manage/edit/{id}(id=${post.postId})}" class="btn-line" role="button">
+                    <i class="fa-solid fa-pen" aria-hidden="true"></i> 수정
+                </a>
+                <a th:href="@{/admin/posts-manage/delete/{id}(id=${post.postId})}" class="btn-line" role="button">
+                    <i class="fa-solid fa-trash" aria-hidden="true"></i> 삭제
+                </a>
+            </div>
+        </header>
+
+        <section class="card-body detail-body">
+            <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                <div class="muted">
+                    <strong>작성자</strong>
+                    <div class="helper-note" th:text="${post.authorName != null ? post.authorName : '작성자 없음'}">작성자명</div>
+                </div>
+                <div class="muted">
+                    <strong>카테고리</strong>
+                    <div class="helper-note" th:text="${post.category != null ? post.category : '없음'}">카테고리</div>
+                </div>
+                <div class="muted">
+                    <strong>조회수</strong>
+                    <div class="helper-note" th:text="${post.views != null ? post.views : 0}">0</div>
+                </div>
+                <div class="muted">
+                    <strong>좋아요 / 댓글</strong>
+                    <div class="helper-note">
+                        <span th:text="${post.likes != null ? post.likes : 0}">0</span> 좋아요 ·
+                        <span th:text="${post.commentsCount != null ? post.commentsCount : 0}">0</span> 댓글
+                    </div>
+                </div>
+            </div>
+
+            <hr style="border: none; border-top: 1px dashed rgba(84, 129, 255, 0.18); margin: 10px 0 18px;"/>
+
+            <!-- 본문 영역: HTML 그대로 렌더링 -->
+            <div class="form-textarea" style="background: transparent; border: none; padding: 0">
+                <div th:utext="${post.content != null ? post.content : '내용 없음'}">내용</div>
+            </div>
+        </section>
+
+        <footer class="detail-footer">
+            <a th:href="@{/admin/posts-manage}" class="btn-line">
+                <i class="fa-solid fa-list" aria-hidden="true"></i> 목록으로 돌아가기
+            </a>
+            <a th:href="@{/admin/posts-manage/new}" class="btn">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i> 새 글 작성
+            </a>
+        </footer>
+    </div>
+
+    <!-- post가 null일 경우 안내 -->
+    <div class="content-box card" th:if="${post == null}">
+        <p style="text-align: center; padding: 20px;">게시글을 찾을 수 없습니다.</p>
+        <a th:href="@{/admin/posts-manage}" class="btn-line">
+            <i class="fa-solid fa-list"></i> 목록으로 돌아가기
+        </a>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SmartCafe</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/corurse/course.css}">
+    <link rel="stylesheet" th:href="@{/css/corurse/courseIntroArts.css}">
+    <link rel="stylesheet" th:href="@{/css/corurse/courseIntroLiberal.css}">
+    <link rel="stylesheet" th:href="@{/css/corurse/courseIntroScience.css}">
+    <link rel="stylesheet" th:href="@{/css/corurse/courseLecture.css}">
+    <link rel="stylesheet" th:href="@{/css/info/info.css}">
+    <link rel="stylesheet" th:href="@{/css/board/board.css}">
+    <link rel="stylesheet" th:href="@{/css/board/qnaboard.css}">
+    <link rel="stylesheet" th:href="@{/css/board/qnaDetail.css}">
+    <link rel="stylesheet" th:href="@{/css/board/faqboard.css}">
+    <link rel="stylesheet" th:href="@{/css/board/noticeboard.css}">
+    <link rel="stylesheet" th:href="@{/css/board/noticeDetail.css}">
+    <link rel="stylesheet" th:href="@{/css/board/freeBoard.css}">
+    <link rel="stylesheet" th:href="@{/css/board/freeDetail.css}">
+    <link rel="stylesheet" th:href="@{/css/board/courseReview.css}">
+    <link rel="stylesheet" th:href="@{/css/board/courseReviewDetail.css}">
+    <link rel="stylesheet" th:href="@{/css/board/teacherReview.css}">
+    <link rel="stylesheet" th:href="@{/css/board/teacherReviewDetail.css}">
+    <link rel="stylesheet" th:href="@{/css/myclass/myInfo.css}"/>
+    <link rel="stylesheet" th:href="@{/css/myclass/teacherRegisterClass.css}"/>
+    <link rel="stylesheet" th:href="@{/css/myclass/teacherClasses.css}"/>
+    <link rel="stylesheet" th:href="@{/css/myclass/myMessage.css}"/>
+    <link rel="stylesheet" th:href="@{/css/myclass/paymentHistoryList.css}"/>
+    <link rel="stylesheet" th:href="@{/css/corurse/courseLecture.css}"/>
+    <link rel="stylesheet" th:href="@{/css/myclass/studentCourses.css}"/>
+</head>
+<body>
+
+<!-- 헤더 -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- ✅ 여기: 본문 래퍼 div (질문에 준 그 줄) -->
+<div class="page"
+     th:classappend="${(#bools.isTrue(showSidebar) ? ' with-sidebar' : ' no-sidebar') + (activeCategory == 'home' ? ' home-full' : '')}"
+     th:attr="data-category=${activeCategory}">
+
+
+
+    <!-- 사이드바: 켜진 경우에만 렌더(여백 없음) -->
+    <aside th:if="${#bools.isTrue(showSidebar)}"
+           class="sidebar"
+           th:replace="~{fragments/sidebar :: sidebar(${activeCategory}, ${userRole}, ${showSidebar})}">
+    </aside>
+
+
+    <!-- 본문: 반드시 '파일 :: 프래그먼트명' -->
+    <main class="content" th:replace="~{__${bodyFragment}__}"></main>
+</div>
+
+<!-- 푸터 -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/pager.js}"></script>
+<script th:src="@{/js/header.js}"></script>
+<script th:src="@{/js/info/bookRecommendation.js}"></script>
+<script th:src="@{/js/info/examSchedule.js}"></script>
+<script th:src="@{/js/info/teacherIntro.js}"></script>
+<script th:src="@{/js/board/faqboard.js}"></script>
+<script th:src="@{/js/board/write.js}"></script>
+<script th:src="@{/js/board/noticBoard.js}"></script>
+<script th:src="@{/js/board/teacherReviewDetail.js}"></script>
+<script th:src="@{/js/board/freeBoard.js}"></script>
+<script th:src="@{/js/myclass/teacherRegisterClass.js}"></script>
+<script th:src="@{/js/myclass/studentCourses.js}"></script>
+<script th:src="@{/js/myclass/teacherClasses.js}"></script>
+<script th:src="@{/js/myclass/myBoard.js}"></script>
+<script th:src="@{/js/coure/courseLecture.js}"></script>
+<script th:src="@{/js/paymentModal.js}"></script>
+<script th:src="@{/js/paymentHistoryList.js}"></script>
+</body>
+</html>

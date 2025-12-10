@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="content">
+        <main class="main-content">
+        <h2>자료실</h2>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="검색어를 입력하세요">
+                <select id="filter">
+                    <option value="">전체</option>
+                    <option value="1">이름</option>
+                    <option value="2">강사</option>
+                    <option value="3">관리자</option>
+                </select>
+                <button id="searchBtn">검색</button>
+            </div>
+        <table>
+            <thead>
+            <tr>
+                <th>No</th>
+                <th class="title">제목</th>
+                <th>작성자</th>
+                <th>상태</th>
+                <th>등록일<</th>
+                <th>조회수</th>
+                <th>다운로드</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>5</td>
+                <td class="title">2025년 교육자료.zip</td>
+                <td>홍길동</td>
+                <td>관리자</td>
+                <td>2025-09-10</td>
+                <td>123</td>
+                <td><button class="download-btn">다운로드</button></td>
+            </tr>
+            </tbody>
+        </table>
+
+    </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,184 @@
+/* =========================================================
+   MyLMS - 수강목록 (완성본)
+========================================================= */
+
+/* ===== Tone ===== */
+:root{
+    --accent:#ffb400;
+    --accent-strong:#f39a00;
+    --line:#eaecef;
+    --muted:#8b95a1;
+    --text:#222;
+    --shadow:0 8px 18px rgba(0,0,0,.06);
+}
+
+/* ===== 컨테이너 ===== */
+.course-container{
+    max-width:1100px;
+    margin:22px auto 36px;
+    background:#fff;
+    border:1px solid #eee;
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    padding:22px 22px 26px;
+}
+
+/* ===== 헤더 ===== */
+.course-list-head{
+    display:flex; align-items:flex-end; justify-content:space-between;
+    margin-bottom:16px; padding-bottom:12px;
+    border-bottom:3px solid var(--accent);
+}
+.course-list-head .left .title{ display:flex; align-items:center; gap:8px; }
+.course-list-head .left .title h2{ font-size:24px; line-height:1; }
+.course-list-head .badge-pill{
+    display:inline-block; font-size:12px; padding:4px 8px; border-radius:999px;
+    background:#fff5e0; color:#a56300; border:1px solid #ffd89a;
+}
+.course-list-head .sub{ display:block; color:var(--muted); margin-top:6px; }
+.course-list-head .count{ margin-top:6px; font-size:13px; color:#4b5563;}
+.course-list-head .right{ display:flex; align-items:flex-end; gap:10px; }
+.course-list-head .filters select{
+    height:36px; border:1px solid #e5e7eb; border-radius:8px; padding:0 10px;
+    background:#fff;
+}
+.course-list-head .search{ display:flex; gap:8px; }
+.course-list-head .search input{
+    height:36px; border:1px solid #e5e7eb; border-radius:8px; padding:0 10px; width:240px;
+}
+.course-list-head .search button{
+    height:36px; padding:0 14px; border:none; border-radius:8px; cursor:pointer;
+    background:var(--accent); color:#fff; font-weight:600;
+}
+.course-list-head .search button:hover{ background:var(--accent-strong); }
+
+/* ===== 그리드 ===== */
+.course-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:22px;
+    margin-top:18px;
+}
+@media(max-width:1024px){ .course-grid{ grid-template-columns:repeat(2, 1fr); } }
+@media(max-width:680px){ .course-grid{ grid-template-columns:1fr; } }
+
+/* ===== 카드 ===== */
+#courseGrid .course-card,
+#courseGrid .card{
+    border-radius:16px; border:1px solid #e9edf5; box-shadow:0 8px 20px rgba(15,23,42,.08);
+    overflow:hidden; background:#fff; display:flex; flex-direction:column;
+}
+#courseGrid .course-card img{ width:100%; aspect-ratio:16/9; object-fit:cover; display:block; }
+
+/* 본문(간단 버전 유지) */
+#courseGrid .course-card h3{ font-size:17px; margin:12px 14px 6px; color:#111827; letter-spacing:-.2px; }
+#courseGrid .course-card p{ margin:2px 14px; color:#606a78; font-size:13px; }
+
+/* ===== 액션(버튼) — 항상 개행 가능 & 버튼 너비 자동 ===== */
+#courseGrid .card-actions,
+#courseGrid .actions{
+    display:flex;
+    flex-wrap:wrap;                /* 항상 개행 허용 */
+    justify-content:flex-start;
+    align-items:center;
+    gap:10px;
+    padding:12px 14px 16px;
+    border-top:1px solid #eef2f7;
+    background:linear-gradient(180deg,#ffffff 0%, #fafbff 100%);
+}
+
+#courseGrid .actions > a,
+#courseGrid .actions > button{
+    flex:1 1 calc(50% - 10px);    /* 기본 2×2 */
+    min-width:140px;
+    padding:10px 14px;
+    font-size:13px;
+    border-radius:11px;
+    white-space:nowrap;
+    overflow:visible;
+    text-overflow:clip;
+    border:1px solid #e5e7eb;
+    background:#fff;
+    cursor:pointer;
+}
+#courseGrid .actions > a:hover,
+#courseGrid .actions > button:hover{ border-color:#d1d5db; }
+
+@media (min-width: 1400px){
+    #courseGrid .actions > a,
+    #courseGrid .actions > button{
+        flex:0 0 auto;              /* 넓을 땐 1줄 */
+        min-width:120px;
+    }
+}
+
+/* 기본 강조(첫 버튼: 입장) */
+#courseGrid .actions > *:nth-child(1){
+    background:var(--accent); color:#fff; border-color:var(--accent);
+    box-shadow:0 9px 16px rgba(255,140,0,.32);
+}
+#courseGrid .actions > *:nth-child(1):hover{
+    background:var(--accent-strong); border-color:var(--accent-strong);
+}
+
+/* ===== 후기 버튼 공통 룩(강의후기/강사후기 동일) ===== */
+/* 후기 버튼 공통 룩(강의후기/강사후기 동일) */
+#courseGrid .actions .btn-review{
+    background:#fff;
+    border:1px solid #e7edf6;
+    color:#111827;
+}
+#courseGrid .actions .btn-review:hover{
+    border-color:#d1d5db;
+}
+
+/* 비활성(후기 잠금) */
+#courseGrid .actions .btn-review[aria-disabled="true"],
+#courseGrid .actions .btn-review[data-disabled="true"]{
+    opacity:.55;
+    cursor:not-allowed !important;
+}
+
+/* ===== 페이지네이션 ===== */
+.pagination{ display:flex; justify-content:center; gap:8px; margin-top:20px; flex-wrap:wrap; }
+.pagination button{
+    min-width:34px; height:34px; border:1px solid #e5e7eb; background:#fff; border-radius:8px;
+    cursor:pointer; padding:0 10px;
+}
+.pagination button.active{ background:var(--accent); color:#fff; border-color:var(--accent); }
+.pagination button:hover{ border-color:#d1d5db; }
+
+/*시험추가사항*/
+
+/* === 액션 버튼 텍스트가 숨지지 않도록 리셋 === */
+#courseGrid .actions > a,
+#courseGrid .actions > button{
+    display: inline-flex;               /* 텍스트 중앙 정렬 */
+    align-items: center;
+    justify-content: center;
+    color: #111827 !important;          /* 전역 white/transparent 무력화 */
+    font-size: 13px !important;
+    line-height: 1.1;
+    text-indent: 0 !important;          /* 아이콘버튼 전역 규칙 대비 */
+}
+#courseGrid .actions > a > span,
+#courseGrid .actions > button > span{
+    display: inline;                     /* 혹시 span이 display:none 되는 경우 방지 */
+}
+
+/* === 시험보기 버튼 기본 톤(입장 버튼과 나란히 보이도록) === */
+#courseGrid .actions .btn-exam{
+    background: #e68a00;
+    border: 1px solid #f38618;
+}
+#courseGrid .actions .btn-exam:hover{
+    border-color: #d1d5db;
+}
+
+/* (참고) 입장 버튼 강조는 기존 규칙 유지 */
+#courseGrid .actions > *:nth-child(1){
+    background:#ffb400; color:#fff !important; border-color:#ffb400;
+}
+#courseGrid .actions > *:nth-child(1):hover{
+    background:#f39a00; border-color:#f39a00;
+}

@@ -1,0 +1,87 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>강의실 목록</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link rel="stylesheet" th:href="@{/css/teacherClasses.css}">
+</head>
+<body>
+<div th:fragment="content">
+    <section class="course-container">
+        <!-- 상단 헤더: 좌 타이틀/서브/카운트 + 우 필터/검색 -->
+        <div class="course-header">
+            <div class="left">
+                <div class="title">
+                    <h2>강의실 목록</h2>
+                    <span class="badge-pill">TEACHER</span>
+                </div>
+                <small class="sub">내가 운영 중인 강의들을 한눈에 관리해요</small>
+            </div>
+
+            <div class="right">
+                <!-- 검색 -->
+                <div class="search">
+                    <input id="searchBox" type="text" placeholder="강의명/설명 검색">
+                    <button id="searchBtn" type="button">검색</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 강의 카드 그리드 (JS로 주입) -->
+        <div id="courseGrid" class="course-grid"></div>
+
+        <!-- 페이지네이션 (필요 시 JS에서 구성) -->
+        <div class="pagination" id="pagination"></div>
+    </section>
+
+    <!-- 학생 모달 -->
+    <div id="studentModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h3 id="modalTitle">학생 목록</h3>
+            <ul id="studentList"></ul>
+            <div id="studentPagination"></div>
+            <button type="button" class="closeModal"
+                    onclick="document.getElementById('studentModal').style.display='none'">X</button>
+        </div>
+    </div>
+
+    <!-- 강의 수정 모달 -->
+    <div id="editModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h3>강의 수정</h3>
+            <form id="editForm" class="edit-form">
+                <input type="hidden" id="editId">
+
+                <label for="editName">강의명</label>
+                <input id="editName" type="text">
+
+                <label for="editPeriod">기간</label>
+                <input id="editPeriod" type="text" placeholder="예: 2025-01-01 ~ 2025-02-01">
+
+                <label for="editType">유형</label>
+                <select id="editType">
+                    <option value="VOD">VOD</option>
+                    <option value="개인강의">개인강의</option>
+                    <option value="다수강의">다수강의</option>
+                </select>
+
+                <label for="editStatus">상태</label>
+                <select id="editStatus">
+                    <option value="정상">정상</option>
+                    <option value="중지">중지</option>
+                </select>
+
+                <button type="submit">수정 완료</button>
+            </form>
+
+            <button type="button" class="closeModal"
+                    onclick="document.getElementById('editModal').style.display='none'">X</button>
+        </div>
+    </div>
+
+    <!-- 스크립트 -->
+    <script th:src="@{/js/myclass/teacherClasses.js}"></script>
+</div>
+</body>
+</html>

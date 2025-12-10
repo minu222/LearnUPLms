@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>강사 소개</title>
+    <!-- 프로젝트 경로에 맞게 조정 -->
+    <link rel="stylesheet" th:href="@{/css/info.css}" href="/css/info.css">
+
+</head>
+<body>
+<div th:fragment="content">
+    <main class="main-content">
+        <div id="instructor-root">
+        <h2>강사 소개</h2>
+
+        <!-- 검색바 -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="검색어를 입력하세요">
+            <select id="filter">
+                <option value="">전체</option>
+                <option value="1">이름</option>
+                <option value="2">소속</option>
+            </select>
+            <button id="searchBtn">검색</button>
+        </div>
+
+        <!-- 카드 그리드 -->
+        <div class="card-grid" id="cardGrid">
+            <!-- JS가 9명 카드 렌더링 -->
+        </div>
+        </div>
+    </main>
+
+    <!-- 모달 -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose" onclick="document.getElementById('modal').classList.remove('open')">&times;</button>
+
+            <div class="modal-header">
+                <h2 id="mName">강사 상세정보</h2>
+            </div>
+
+            <div class="modal-body">
+                <!-- 사진 -->
+                <div class="modal-photo">
+                    <img id="mPhoto" th:src="@{/images/dw.png}" alt="강사 사진">
+                </div>
+
+                <!-- 기본 정보 -->
+                <div class="modal-info" id="mInfo">
+                    <!-- JS가 채움 -->
+                </div>
+            </div>
+
+            <!-- 강사 소개 -->
+            <div class="modal-intro">
+                <h3>강사 소개</h3>
+                <p id="mIntro">
+                    <!-- JS가 채움 -->
+                </p>
+            </div>
+
+            <!-- 강의 목록 (이미지 썸네일) -->
+            <div class="modal-courses">
+                <h3>강의 목록</h3>
+                <div class="course-grid" id="mCourses">
+                    <!-- JS가 썸네일 채움 -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

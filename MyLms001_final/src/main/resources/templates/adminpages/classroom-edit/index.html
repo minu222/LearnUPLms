@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>강의실 수정</title>
+    <link rel="stylesheet" href="/style.css" />
+    
+    
+  </head>
+  <body>
+    <div class="container">
+      <main class="main">
+        <div class="content-box">
+          <h2>강의실 수정</h2>
+
+          <div class="search-box classroom-edit-search">
+            <input type="text" placeholder="강의실 코드 검색" />
+            <button class="btn-search">조회</button>
+          </div>
+
+          <form class="classroom-edit-form">
+            <div>
+              <label>
+                강의실 코드
+                <input type="text" value="A-101" class="form-input" />
+              </label>
+              <label>
+                수용 인원
+                <input type="number" value="30" class="form-input" />
+              </label>
+            </div>
+
+            <label class="full-row">
+              비고
+              <textarea rows="6" class="form-textarea">
+프로젝터, 화이트보드</textarea
+              >
+            </label>
+
+            <div class="form-actions">
+              <button type="button" class="btn-reset">삭제</button>
+              <button type="submit" class="btn-submit">수정 저장</button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

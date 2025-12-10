@@ -1,0 +1,107 @@
+<div th:fragment="content">
+    <main class="main-content notice-board">
+        <div class="board-head">
+            <h2 class="board-title">
+                공지사항 <span class="badge-pill">NOTICE</span>
+                <small class="sub">이벤트 / 업데이트 안내</small>
+            </h2>
+
+            <!-- 검색 제거, 글쓰기만 우측 정렬 -->
+
+        </div>
+
+        <table id="noticeTable" class="table-notice">
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>등록일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- JS로 목록 삽입 -->
+            <!-- 필요 시 tr 에 data-created-at / data-has-file / data-preview 사용
+                 예) <tr data-created-at="2025-09-29T11:02:00" data-has-file="true" data-preview="내용 첫 줄 미리보기"> -->
+            </tbody>
+        </table>
+
+        <div class="empty-state" id="noticeEmpty" hidden>
+            <div class="icon">🗒️</div>
+            <p>등록된 공지사항이 없습니다.</p>
+        </div>
+
+        <div class="pagination" id="pagination"></div>
+    </main>
+
+    <script th:inline="javascript">
+        window.postCategory = /*[[${postCategory}]]*/ 'NOTICE';
+    </script>
+
+    <!-- 제목 셀 자동 꾸미기: 목록 렌더 후에도 자동 반영 -->
+    <script>
+        (function () {
+            function enhanceRow(tr) {
+                if (tr.dataset.enhanced) return;
+
+                const td = tr.querySelector('td:nth-child(2)');
+                if (!td) return;
+
+                // 기존 링크가 있으면 재활용, 없으면 새로 만든다
+                let link = td.querySelector('a');
+                let href = link?.getAttribute('href') || '#';
+                let rawText = (link?.textContent || td.textContent || '').trim();
+
+                // 제목 셀 구조 덮어쓰기
+                td.classList.add('title-cell');
+                td.innerHTML = `
+          <div class="title-line">
+            <a href="${href}"><span class="title-text"></span></a>
+            <span class="badge-new" hidden>NEW</span>
+            <span class="arrow">›</span>
+          </div>
+          <span class="title-preview" hidden></span>
+        `;
+                td.querySelector('.title-text').textContent = rawText;
+
+                // data-* 기준으로 배지/프리뷰 표시
+                const hasFile   = tr.dataset.hasFile === 'true';
+                const createdAt = tr.dataset.createdAt;
+                const preview   = tr.dataset.preview;
+
+                if (hasFile) td.querySelector('.badge-file').hidden = false;
+
+                if (createdAt) {
+                    const diff = Date.now() - new Date(createdAt).getTime();
+                    const THREE_DAYS = 1000 * 60 * 60 * 24 * 3;
+                    if (diff < THREE_DAYS) td.querySelector('.badge-new').hidden = false;
+                }
+
+                if (preview) {
+                    const pv = td.querySelector('.title-preview');
+                    pv.textContent = preview;
+                    pv.hidden = false;
+                }
+
+                tr.dataset.enhanced = '1';
+            }
+
+            function enhanceAll() {
+                document
+                    .querySelectorAll('.notice-board .table-notice tbody tr')
+                    .forEach(enhanceRow);
+            }
+
+            // 초기 실행
+            document.addEventListener('DOMContentLoaded', enhanceAll);
+
+            // 동적 갱신에 대응 (목록을 다시 그리면 자동 적용)
+            const tbody = document.querySelector('.notice-board .table-notice tbody');
+            if (tbody && 'MutationObserver' in window) {
+                new MutationObserver(enhanceAll).observe(tbody, { childList: true });
+            }
+
+            // 필요 시 목록 렌더 직후 수동 호출도 가능
+            window.decorateNoticeRows = enhanceAll;
+        })();
+    </script>
+</div>
